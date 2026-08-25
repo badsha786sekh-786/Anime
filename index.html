@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BOSS444 — Late-Night Anime Guide</title>
+<title>🅑🅐🅓🅢🅗🅐 — Late-Night Anime Guide</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -174,7 +174,7 @@
 <header>
   <div class="logo">
     <span class="dot"></span>
-    <span class="mark">BOSS444</span>
+    <span class="mark">🅑🅐🅓🅢🅗🅐</span>
     <span class="tagline">late-night anime guide</span>
   </div>
   <div class="search-wrap">
@@ -416,7 +416,7 @@ async function openModal(id){
         <h3>Synopsis</h3>
         <div class="voice-controls">
           <button class="voice-btn" id="listenEnBtn">▸ ENGLISH NARRATION</button>
-          <button class="voice-btn" id="listenHiBtn">▸ हिंदी वॉइसओवर</button>
+          <button class="voice-btn" id="listenHiBtn">▸ HINDI VOICEOVER</button>
           <button class="voice-btn stop" id="stopBtn" style="display:none;">⏹ STOP</button>
           <span class="voice-status" id="voiceStatus"></span>
         </div>
@@ -448,7 +448,7 @@ function setupVoiceControls(text){
 
   if(!('speechSynthesis' in window)){
     enBtn.disabled = true; hiBtn.disabled = true;
-    status.textContent = 'इस डिवाइस पर वॉइस सपोर्ट नहीं है।';
+    status.textContent = 'Is device par voice support nahi hai.';
     return;
   }
 
@@ -472,7 +472,7 @@ function setupVoiceControls(text){
 
   hiBtn.addEventListener('click', async ()=>{
     if(hindiCache){ status.textContent=''; speak(hindiCache, 'hi-IN'); return; }
-    status.textContent = 'वॉइसओवर तैयार हो रहा है…';
+    status.textContent = 'Voiceover taiyar ho raha hai…';
     hiBtn.disabled = true;
     try{
       // Strip trailing source citations like "(Source: MAL Rewrite)" before narrating
@@ -487,7 +487,7 @@ function setupVoiceControls(text){
       status.textContent = '';
       speak(hindiCache, 'hi-IN');
     }catch(e){
-      status.textContent = 'वॉइसओवर उपलब्ध नहीं — दोबारा कोशिश करें।';
+      status.textContent = 'Voiceover uplabdh nahi — dobara koshish karein.';
     }finally{
       hiBtn.disabled = false;
     }
@@ -503,4 +503,3 @@ loadTrending();
 </script>
 </body>
 </html>
-
