@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BOSS444 — Late-Night Anime Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0E1116;
+    --surface:#171B24;
+    --surface-2:#1E2330;
+    --line:#2A3140;
+    --paper:#F4F1EA;
+    --muted:#8B93A7;
+    --amber:#FFB454;
+    --signal:#FF4B5C;
+    --radius:2px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{background:var(--bg); color:var(--paper); font-family:'Inter',sans-serif; min-height:100%;}
+  body{-webkit-font-smoothing:antialiased;}
+  a{color:inherit; text-decoration:none;}
+
+  .noise{
+    position:fixed; inset:0; pointer-events:none; opacity:0.03; z-index:1;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  header{
+    position:sticky; top:0; z-index:20;
+    background:rgba(14,17,22,0.92); backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+    padding:16px 20px;
+    display:flex; align-items:center; justify-content:space-between; gap:16px;
+    flex-wrap:wrap;
+  }
+  .logo{display:flex; align-items:baseline; gap:10px;}
+  .logo .mark{
+    font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:3px; color:var(--paper);
+  }
+  .logo .dot{width:8px; height:8px; border-radius:50%; background:var(--signal); display:inline-block; animation:pulse 1.6s infinite;}
+  .logo .tagline{font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--muted); letter-spacing:1px; text-transform:uppercase;}
+  @keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(255,75,92,0.5);}50%{opacity:.5;box-shadow:0 0 0 5px rgba(255,75,92,0);}}
+
+  .search-wrap{position:relative; flex:1; max-width:420px; min-width:220px;}
+  .search-wrap input{
+    width:100%; background:var(--surface); border:1px solid var(--line); color:var(--paper);
+    padding:10px 14px; font-family:'Inter',sans-serif; font-size:14px; border-radius:var(--radius);
+    outline:none; transition:border-color .15s;
+  }
+  .search-wrap input:focus{border-color:var(--amber);}
+  .search-wrap input::placeholder{color:var(--muted);}
+
+  main{position:relative; z-index:2; max-width:1180px; margin:0 auto; padding:0 20px 80px;}
+
+  /* HERO */
+  .hero{
+    margin-top:28px; border:1px solid var(--line); border-radius:var(--radius);
+    background:var(--surface); overflow:hidden; display:grid; grid-template-columns:220px 1fr;
+    min-height:280px;
+  }
+  .hero-art{background-size:cover; background-position:center; position:relative;}
+  .hero-art::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg, rgba(14,17,22,0) 60%, var(--surface) 100%);}
+  .hero-body{padding:28px 28px 24px; display:flex; flex-direction:column; gap:12px;}
+  .onair{
+    display:inline-flex; align-items:center; gap:6px; width:fit-content;
+    font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:1.5px; text-transform:uppercase;
+    color:var(--signal); border:1px solid var(--signal); padding:3px 8px; border-radius:var(--radius);
+  }
+  .onair .d{width:6px;height:6px;border-radius:50%;background:var(--signal); animation:pulse 1.6s infinite;}
+  .hero-title{font-family:'Bebas Neue',sans-serif; font-size:42px; line-height:1.02; letter-spacing:1px; color:var(--paper);}
+  .hero-meta{font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--amber); display:flex; gap:16px; flex-wrap:wrap;}
+  .hero-syn{color:var(--muted); font-size:14px; line-height:1.55; max-width:640px;}
+  .hero-tags{display:flex; gap:8px; flex-wrap:wrap; margin-top:4px;}
+  .tag{font-size:11px; font-family:'IBM Plex Mono',monospace; color:var(--muted); border:1px solid var(--line); padding:3px 8px; border-radius:var(--radius);}
+  .hero-cta{margin-top:6px; display:inline-flex; align-items:center; gap:8px; color:var(--amber); font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:1px; text-transform:uppercase; cursor:pointer; width:fit-content;}
+  .hero-cta:hover{text-decoration:underline;}
+
+  /* SECTION LABEL */
+  .section-label{
+    display:flex; align-items:baseline; gap:12px; margin:48px 0 18px;
+  }
+  .section-label h2{font-family:'Bebas Neue',sans-serif; font-size:24px; letter-spacing:2px; color:var(--paper);}
+  .section-label .rule{flex:1; height:1px; background:var(--line);}
+  .section-label .count{font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--muted);}
+
+  /* GRID */
+  .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:14px;}
+  .card{
+    background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+    cursor:pointer; overflow:hidden; position:relative; transition:border-color .15s, transform .15s;
+  }
+  .card:hover{border-color:var(--amber); transform:translateY(-2px);}
+  .card .ch-num{
+    position:absolute; top:8px; left:8px; z-index:2;
+    font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:600; color:var(--bg);
+    background:var(--amber); padding:2px 6px; border-radius:var(--radius); letter-spacing:0.5px;
+  }
+  .card .score{
+    position:absolute; top:8px; right:8px; z-index:2;
+    font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--paper);
+    background:rgba(14,17,22,0.75); padding:2px 6px; border-radius:var(--radius); backdrop-filter:blur(2px);
+  }
+  .card img{width:100%; aspect-ratio:2/3; object-fit:cover; display:block; background:var(--surface-2);}
+  .card .info{padding:10px 10px 12px;}
+  .card .title{font-size:13px; font-weight:600; line-height:1.3; color:var(--paper); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;}
+  .card .sub{font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--muted); margin-top:4px; text-transform:uppercase; letter-spacing:0.5px;}
+
+  .state{font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--muted); padding:40px 0; text-align:center;}
+
+  /* MODAL */
+  .modal-bg{
+    position:fixed; inset:0; background:rgba(6,7,10,0.85); z-index:50;
+    display:none; align-items:flex-start; justify-content:center; padding:40px 16px; overflow-y:auto;
+  }
+  .modal-bg.open{display:flex;}
+  .modal{
+    background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+    max-width:760px; width:100%; overflow:hidden; animation:rise .2s ease;
+  }
+  @keyframes rise{from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);}}
+  .modal-head{display:grid; grid-template-columns:180px 1fr; gap:0;}
+  .modal-head img{width:100%; height:100%; object-fit:cover; display:block; min-height:220px;}
+  .modal-head-body{padding:22px 22px 16px; position:relative;}
+  .close-btn{
+    position:absolute; top:14px; right:14px; background:none; border:1px solid var(--line); color:var(--muted);
+    width:28px; height:28px; border-radius:var(--radius); cursor:pointer; font-size:14px; line-height:1;
+  }
+  .close-btn:hover{color:var(--paper); border-color:var(--amber);}
+  .modal-title{font-family:'Bebas Neue',sans-serif; font-size:30px; letter-spacing:1px; padding-right:36px; line-height:1.05;}
+  .modal-meta{font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--amber); margin-top:8px; display:flex; gap:14px; flex-wrap:wrap;}
+  .modal-tags{display:flex; gap:6px; flex-wrap:wrap; margin-top:12px;}
+  .modal-body{padding:20px 22px 26px;}
+  .modal-body h3{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); margin-bottom:8px;}
+  .modal-body p{font-size:14px; line-height:1.6; color:var(--paper); opacity:0.9; margin-bottom:20px;}
+
+  .voice-controls{display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:14px;}
+  .voice-btn{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.5px; text-transform:uppercase;
+    background:var(--surface-2); border:1px solid rgba(91,141,239,0.55); color:var(--paper); padding:7px 12px;
+    border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:6px;
+    box-shadow:0 0 0 1px rgba(91,141,239,0.12), 0 0 14px rgba(91,141,239,0.30);
+    transition:border-color .15s, color .15s, box-shadow .15s;
+  }
+  .voice-btn:hover{border-color:#6FA3FF; color:#9FC1FF; box-shadow:0 0 0 1px rgba(111,163,255,0.25), 0 0 20px rgba(111,163,255,0.55);}
+  .voice-btn.stop{border-color:var(--signal); color:var(--signal); box-shadow:0 0 14px rgba(255,75,92,0.30);}
+  .voice-status{font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--muted);}
+
+  footer{
+    border-top:1px solid var(--line); margin-top:60px; padding:24px 20px;
+    font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--muted); text-align:center;
+  }
+
+  @media(max-width:560px){
+    .hero{grid-template-columns:1fr;}
+    .hero-art{height:180px;}
+    .hero-title{font-size:32px;}
+    .modal-head{grid-template-columns:1fr;}
+    .modal-head img{max-height:220px;}
+  }
+
+  :focus-visible{outline:2px solid var(--amber); outline-offset:2px;}
+  @media (prefers-reduced-motion: reduce){
+    .logo .dot, .onair .d{animation:none;}
+    .card{transition:none;}
+  }
+</style>
+</head>
+<body>
+<div class="noise"></div>
+
+<header>
+  <div class="logo">
+    <span class="dot"></span>
+    <span class="mark">BOSS444</span>
+    <span class="tagline">late-night anime guide</span>
+  </div>
+  <div class="search-wrap">
+    <input id="searchInput" type="text" placeholder="Search a title, e.g. Frieren, Bocchi..." autocomplete="off">
+  </div>
+</header>
+
+<main>
+  <div id="heroSlot"></div>
+
+  <div class="section-label">
+    <h2 id="gridTitle">NOW TRENDING</h2>
+    <div class="rule"></div>
+    <span class="count" id="gridCount"></span>
+  </div>
+  <div class="grid" id="grid"></div>
+</main>
+
+<footer>
+  MADE BY BADSHA
+</footer>
+
+<div class="modal-bg" id="modalBg">
+  <div class="modal" id="modalContent"></div>
+</div>
+
+<script>
+const API = "https://graphql.anilist.co";
+const grid = document.getElementById('grid');
+const gridTitle = document.getElementById('gridTitle');
+const gridCount = document.getElementById('gridCount');
+const heroSlot = document.getElementById('heroSlot');
+const modalBg = document.getElementById('modalBg');
+const modalContent = document.getElementById('modalContent');
+const searchInput = document.getElementById('searchInput');
+
+function esc(s){ return (s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+const FORMAT_LABEL = {TV:'TV', TV_SHORT:'TV Short', MOVIE:'Movie', SPECIAL:'Special', OVA:'OVA', ONA:'ONA', MUSIC:'Music'};
+const STATUS_LABEL = {FINISHED:'Finished', RELEASING:'Airing', NOT_YET_RELEASED:'Upcoming', CANCELLED:'Cancelled', HIATUS:'Hiatus'};
+
+// Normalize an AniList Media object into the shape the UI expects
+function normalize(m){
+  return {
+    mal_id: m.id,
+    title: m.title?.english || m.title?.romaji || m.title?.native || 'Untitled',
+    images: { jpg: { image_url: m.coverImage?.large || '', large_image_url: m.coverImage?.extraLarge || m.coverImage?.large || '' } },
+    score: (m.averageScore != null) ? (m.averageScore/10).toFixed(1) : null,
+    type: FORMAT_LABEL[m.format] || m.format || '—',
+    episodes: m.episodes || null,
+    status: STATUS_LABEL[m.status] || m.status || '',
+    genres: (m.genres||[]).map(g=>({name:g})),
+    synopsis: (m.description||'').replace(/<br\s*\/?>/gi,' ').replace(/<[^>]+>/g,''),
+    rating: m.isAdult ? '18+' : '',
+    aired: { string: formatDate(m.startDate) },
+    studios: (m.studios?.nodes||[]).map(s=>({name:s.name}))
+  };
+}
+function formatDate(d){
+  if(!d || !d.year) return '—';
+  const parts = [d.year];
+  if(d.month) parts.unshift(String(d.month).padStart(2,'0'));
+  if(d.day) parts.unshift(String(d.day).padStart(2,'0'));
+  return parts.reverse().join('-');
+}
+
+function renderHero(a){
+  if(!a){ heroSlot.innerHTML = ''; return; }
+  const img = a.images?.jpg?.large_image_url || a.images?.jpg?.image_url || '';
+  const genres = (a.genres||[]).slice(0,4).map(g=>`<span class="tag">${esc(g.name)}</span>`).join('');
+  heroSlot.innerHTML = `
+    <div class="hero">
+      <div class="hero-art" style="background-image:url('${img}')"></div>
+      <div class="hero-body">
+        <span class="onair"><span class="d"></span>Featured Broadcast</span>
+        <div class="hero-title">${esc(a.title)}</div>
+        <div class="hero-meta">
+          <span>SCORE ${a.score ?? '—'}</span>
+          <span>${esc(a.type||'—')}</span>
+          <span>${a.episodes ? a.episodes+' EP' : '—'}</span>
+          <span>${esc(a.status||'')}</span>
+        </div>
+        <div class="hero-syn">${esc((a.synopsis||'No synopsis available.').slice(0,220))}${a.synopsis && a.synopsis.length>220 ? '…' : ''}</div>
+        <div class="hero-tags">${genres}</div>
+        <div class="hero-cta" data-id="${a.mal_id}">▸ VIEW FULL PROGRAM</div>
+      </div>
+    </div>`;
+  heroSlot.querySelector('.hero-cta').addEventListener('click', ()=>openModal(a.mal_id));
+}
+
+function cardHTML(a, index){
+  const img = a.images?.jpg?.image_url || '';
+  const label = index != null ? String(index+1).padStart(2,'0') : (a.type||'').slice(0,2).toUpperCase();
+  return `
+    <div class="card" data-id="${a.mal_id}">
+      <span class="ch-num">${label}</span>
+      <span class="score">${a.score ?? '—'}</span>
+      <img loading="lazy" src="${img}" alt="${esc(a.title)}">
+      <div class="info">
+        <div class="title">${esc(a.title)}</div>
+        <div class="sub">${esc(a.type||'—')} · ${a.episodes ? a.episodes+' ep' : '?'}</div>
+      </div>
+    </div>`;
+}
+
+function renderGrid(list, indexed){
+  grid.innerHTML = list.map((a,i)=>cardHTML(a, indexed ? i : null)).join('');
+  grid.querySelectorAll('.card').forEach(c=>{
+    c.addEventListener('click', ()=>openModal(c.dataset.id));
+  });
+}
+
+// POST a GraphQL query to AniList, retrying on 429/5xx with backoff
+async function gql(query, variables, attempt=0){
+  const res = await fetch(API, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify({ query, variables })
+  });
+  if((res.status === 429 || res.status >= 500) && attempt < 3){
+    await new Promise(r => setTimeout(r, 700 * (attempt+1)));
+    return gql(query, variables, attempt+1);
+  }
+  const json = await res.json();
+  if(!res.ok || json.errors){
+    const err = new Error(json.errors?.[0]?.message || ('HTTP ' + res.status));
+    err.status = res.status;
+    throw err;
+  }
+  return json.data;
+}
+
+const MEDIA_FIELDS = `
+  id
+  title { romaji english native }
+  coverImage { large extraLarge }
+  averageScore
+  episodes
+  format
+  status
+  genres
+  description(asHtml: false)
+  isAdult
+`;
+
+const TRENDING_QUERY = `
+  query ($perPage: Int) {
+    Page(page: 1, perPage: $perPage) {
+      media(sort: TRENDING_DESC, type: ANIME) { ${MEDIA_FIELDS} }
+    }
+  }`;
+
+const SEARCH_QUERY = `
+  query ($search: String, $perPage: Int) {
+    Page(page: 1, perPage: $perPage) {
+      media(search: $search, type: ANIME, sort: SEARCH_MATCH) { ${MEDIA_FIELDS} }
+    }
+  }`;
+
+const DETAIL_QUERY = `
+  query ($id: Int) {
+    Media(id: $id, type: ANIME) {
+      ${MEDIA_FIELDS}
+      startDate { year month day }
+      studios { nodes { name } }
+    }
+  }`;
+
+async function loadTrending(){
+  gridTitle.textContent = 'NOW TRENDING';
+  grid.innerHTML = '<div class="state">TUNING IN…</div>';
+  try{
+    const data = await gql(TRENDING_QUERY, { perPage: 19 });
+    const list = (data.Page.media || []).map(normalize);
+    if(list.length === 0){
+      grid.innerHTML = '<div class="state">NO SIGNAL — the guide returned nothing. Try reloading.</div>';
+      gridCount.textContent = '';
+      return;
+    }
+    gridCount.textContent = list.length + ' SIGNALS';
+    renderHero(list[0]);
+    renderGrid(list.slice(1), true);
+  }catch(e){
+    grid.innerHTML = `<div class="state">SIGNAL LOST — ${e.status === 429 ? 'too many requests, wait a moment and reload.' : 'could not reach the guide (' + e.message + ').'}</div>`;
+  }
+}
+
+let searchTimer;
+searchInput.addEventListener('input', (e)=>{
+  clearTimeout(searchTimer);
+  const q = e.target.value.trim();
+  if(!q){ loadTrending(); return; }
+  searchTimer = setTimeout(()=>doSearch(q), 450);
+});
+
+async function doSearch(q){
+  gridTitle.textContent = `RESULTS FOR "${q.toUpperCase()}"`;
+  grid.innerHTML = '<div class="state">SCANNING FREQUENCIES…</div>';
+  heroSlot.innerHTML = '';
+  try{
+    const data = await gql(SEARCH_QUERY, { search: q, perPage: 18 });
+    const list = (data.Page.media || []).map(normalize);
+    gridCount.textContent = list.length + ' FOUND';
+    if(list.length === 0){
+      grid.innerHTML = '<div class="state">NO SIGNAL FOUND. Try a different title.</div>';
+      return;
+    }
+    renderGrid(list, false);
+  }catch(e){
+    grid.innerHTML = `<div class="state">SIGNAL LOST — ${e.status === 429 ? 'too many requests, wait a moment and try again.' : 'search failed (' + e.message + ').'}</div>`;
+  }
+}
+
+async function openModal(id){
+  modalBg.classList.add('open');
+  modalContent.innerHTML = '<div class="state" style="padding:60px 0;">LOADING PROGRAM DATA…</div>';
+  try{
+    const data = await gql(DETAIL_QUERY, { id: Number(id) });
+    const a = normalize(data.Media);
+    const img = a.images?.jpg?.large_image_url || '';
+    const genres = (a.genres||[]).concat(a.themes||[]).slice(0,6).map(g=>`<span class="tag">${esc(g.name)}</span>`).join('');
+    modalContent.innerHTML = `
+      <div class="modal-head">
+        <img src="${img}" alt="${esc(a.title)}">
+        <div class="modal-head-body">
+          <button class="close-btn" id="closeBtn">✕</button>
+          <div class="modal-title">${esc(a.title)}</div>
+          <div class="modal-meta">
+            <span>SCORE ${a.score ?? '—'}</span>
+            <span>${esc(a.type||'—')}</span>
+            <span>${a.episodes ? a.episodes+' EP' : '—'}</span>
+            <span>${esc(a.status||'')}</span>
+            <span>${esc(a.rating||'')}</span>
+          </div>
+          <div class="modal-tags">${genres}</div>
+        </div>
+      </div>
+      <div class="modal-body">
+        <h3>Synopsis</h3>
+        <div class="voice-controls">
+          <button class="voice-btn" id="listenEnBtn">▸ ENGLISH NARRATION</button>
+          <button class="voice-btn" id="listenHiBtn">▸ हिंदी वॉइसओवर</button>
+          <button class="voice-btn stop" id="stopBtn" style="display:none;">⏹ STOP</button>
+          <span class="voice-status" id="voiceStatus"></span>
+        </div>
+        <p>${esc(a.synopsis || 'No synopsis available.')}</p>
+        <h3>Aired</h3>
+        <p>${esc(a.aired?.string || '—')} &nbsp;·&nbsp; Studio: ${esc((a.studios||[]).map(s=>s.name).join(', ') || '—')}</p>
+      </div>`;
+    document.getElementById('closeBtn').addEventListener('click', closeModal);
+    setupVoiceControls(a.synopsis || '');
+  }catch(e){
+    modalContent.innerHTML = '<div class="state" style="padding:60px 0;">Could not load program data.</div>';
+  }
+}
+function closeModal(){
+  modalBg.classList.remove('open');
+  if('speechSynthesis' in window) window.speechSynthesis.cancel();
+}
+modalBg.addEventListener('click', (e)=>{ if(e.target === modalBg) closeModal(); });
+document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeModal(); });
+
+// Text-to-speech + English→Hindi translation for the synopsis
+let hindiCache = '';
+function setupVoiceControls(text){
+  const enBtn = document.getElementById('listenEnBtn');
+  const hiBtn = document.getElementById('listenHiBtn');
+  const stopBtn = document.getElementById('stopBtn');
+  const status = document.getElementById('voiceStatus');
+  hindiCache = '';
+
+  if(!('speechSynthesis' in window)){
+    enBtn.disabled = true; hiBtn.disabled = true;
+    status.textContent = 'इस डिवाइस पर वॉइस सपोर्ट नहीं है।';
+    return;
+  }
+
+  function speak(t, lang){
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(t);
+    utter.lang = lang;
+    const voices = window.speechSynthesis.getVoices();
+    const voice = voices.find(v=>v.lang === lang) || voices.find(v=>v.lang.startsWith(lang.split('-')[0]));
+    if(voice) utter.voice = voice;
+    utter.onstart = ()=> stopBtn.style.display = 'inline-flex';
+    utter.onend = ()=> stopBtn.style.display = 'none';
+    utter.onerror = ()=> { stopBtn.style.display = 'none'; };
+    window.speechSynthesis.speak(utter);
+  }
+
+  enBtn.addEventListener('click', ()=>{
+    status.textContent = '';
+    speak(text, 'en-US');
+  });
+
+  hiBtn.addEventListener('click', async ()=>{
+    if(hindiCache){ status.textContent=''; speak(hindiCache, 'hi-IN'); return; }
+    status.textContent = 'वॉइसओवर तैयार हो रहा है…';
+    hiBtn.disabled = true;
+    try{
+      // Strip trailing source citations like "(Source: MAL Rewrite)" before narrating
+      const cleanText = text.replace(/\(\s*Source:[^)]*\)\s*$/i, '').trim();
+      const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=hi&dt=t&q=${encodeURIComponent(cleanText)}`);
+      if(!res.ok) throw new Error('HTTP '+res.status);
+      const data = await res.json();
+      let hi = (data[0]||[]).map(chunk=>chunk[0]).join('');
+      // Light cleanup: collapse stray spaces before punctuation, normalize whitespace
+      hi = hi.replace(/\s+([।,.!?])/g, '$1').replace(/\s{2,}/g, ' ').trim();
+      hindiCache = hi;
+      status.textContent = '';
+      speak(hindiCache, 'hi-IN');
+    }catch(e){
+      status.textContent = 'वॉइसओवर उपलब्ध नहीं — दोबारा कोशिश करें।';
+    }finally{
+      hiBtn.disabled = false;
+    }
+  });
+
+  stopBtn.addEventListener('click', ()=>{
+    window.speechSynthesis.cancel();
+    stopBtn.style.display = 'none';
+  });
+}
+
+loadTrending();
+</script>
+</body>
+</html>
+
