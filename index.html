@@ -38,9 +38,27 @@
   }
   .logo{display:flex; align-items:baseline; gap:10px;}
   .logo .mark{
-    font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:3px; color:var(--paper);
+    font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:3px;
+    background:linear-gradient(90deg, #FF4B5C, #FFB454, #5B8DEF, #FF4B5C);
+    background-size:300% 100%;
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    animation:markShift 4s linear infinite;
+    filter:drop-shadow(0 0 6px rgba(255,180,84,0.35));
   }
-  .logo .dot{width:8px; height:8px; border-radius:50%; background:var(--signal); display:inline-block; animation:pulse 1.6s infinite;}
+  @keyframes markShift{
+    0%{background-position:0% 50%;}
+    100%{background-position:300% 50%;}
+  }
+  .logo .dot{
+    width:8px; height:8px; border-radius:50%; background:#3DDC84; display:inline-block;
+    box-shadow:0 0 0 0 rgba(61,220,132,0.6);
+    animation:dotPulse 1.6s infinite;
+  }
+  @keyframes dotPulse{
+    0%{box-shadow:0 0 0 0 rgba(61,220,132,0.6); opacity:1;}
+    70%{box-shadow:0 0 0 8px rgba(61,220,132,0); opacity:0.6;}
+    100%{box-shadow:0 0 0 0 rgba(61,220,132,0); opacity:1;}
+  }
   .logo .tagline{font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--muted); letter-spacing:1px; text-transform:uppercase;}
   @keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(255,75,92,0.5);}50%{opacity:.5;box-shadow:0 0 0 5px rgba(255,75,92,0);}}
 
@@ -104,6 +122,11 @@
     background:rgba(14,17,22,0.75); padding:2px 6px; border-radius:var(--radius); backdrop-filter:blur(2px);
   }
   .card img{width:100%; aspect-ratio:2/3; object-fit:cover; display:block; background:var(--surface-2);}
+  .card .img-fallback{
+    width:100%; aspect-ratio:2/3; display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(135deg, var(--surface-2), var(--surface));
+    color:var(--muted); font-family:'Bebas Neue',sans-serif; font-size:48px; letter-spacing:1px;
+  }
   .card .info{padding:10px 10px 12px;}
   .card .title{font-size:13px; font-weight:600; line-height:1.3; color:var(--paper); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;}
   .card .sub{font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--muted); margin-top:4px; text-transform:uppercase; letter-spacing:0.5px;}
@@ -146,11 +169,64 @@
   }
   .voice-btn:hover{border-color:#6FA3FF; color:#9FC1FF; box-shadow:0 0 0 1px rgba(111,163,255,0.25), 0 0 20px rgba(111,163,255,0.55);}
   .voice-btn.stop{border-color:var(--signal); color:var(--signal); box-shadow:0 0 14px rgba(255,75,92,0.30);}
-  .voice-status{font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--muted);}
+  .watch-actions{display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:14px;}
+  .watch-btn{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.5px; text-transform:uppercase;
+    background:var(--surface-2); border:1px solid rgba(61,220,132,0.55); color:var(--paper); padding:8px 14px;
+    border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:6px;
+    box-shadow:0 0 0 1px rgba(61,220,132,0.12), 0 0 14px rgba(61,220,132,0.30);
+    transition:border-color .15s, color .15s, box-shadow .15s;
+  }
+  .watch-btn:hover{border-color:#5CE89A; color:#8FF0BB; box-shadow:0 0 0 1px rgba(92,232,154,0.25), 0 0 20px rgba(92,232,154,0.55);}
+  .watch-btn.link-btn{border-color:rgba(255,180,84,0.55); box-shadow:0 0 0 1px rgba(255,180,84,0.12), 0 0 14px rgba(255,180,84,0.30);}
+  .watch-btn.link-btn:hover{border-color:var(--amber); color:var(--amber); box-shadow:0 0 0 1px rgba(255,180,84,0.25), 0 0 20px rgba(255,180,84,0.55);}
+  .watch-status{font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--muted);}
+
+  .top-nav{display:flex; gap:8px;}
+  .nav-btn{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:1px; text-transform:uppercase;
+    background:transparent; border:1px solid var(--line); color:var(--muted); padding:8px 12px;
+    border-radius:var(--radius); cursor:pointer; transition:border-color .15s, color .15s, background .15s;
+  }
+  .nav-btn:hover{color:var(--paper); border-color:var(--amber);}
+  .nav-btn.active{color:var(--bg); background:var(--amber); border-color:var(--amber);}
+
+  .card .remove-btn{
+    position:absolute; top:8px; right:8px; z-index:3;
+    font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--signal);
+    background:rgba(14,17,22,0.85); border:1px solid var(--signal); padding:2px 8px; border-radius:var(--radius);
+    cursor:pointer; line-height:1.6;
+  }
+  .card .remove-btn:hover{background:var(--signal); color:var(--bg);}
+  .card .watch-badge{
+    position:absolute; top:8px; left:8px; z-index:2;
+    font-family:'IBM Plex Mono',monospace; font-size:10px; font-weight:600; color:var(--bg);
+    background:#3DDC84; padding:2px 6px; border-radius:var(--radius); letter-spacing:0.5px;
+  }
+
+  .quote-block{
+    border-left:2px solid var(--amber); background:var(--surface-2); border-radius:var(--radius);
+    padding:14px 16px; margin-bottom:20px;
+  }
+  .quote-block .q-text{font-size:14px; line-height:1.6; color:var(--paper); font-style:italic;}
+  .quote-block .q-char{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--amber);
+    margin-top:8px; text-transform:uppercase; letter-spacing:0.5px;
+  }
+  .quote-block.loading .q-text{color:var(--muted); font-style:normal;}
 
   footer{
     border-top:1px solid var(--line); margin-top:60px; padding:24px 20px;
-    font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--muted); text-align:center;
+    font-family:'IBM Plex Mono',monospace; font-size:11px; text-align:center;
+  }
+  footer .credit{
+    background:linear-gradient(90deg, #5B8DEF, #FF4B5C, #FFB454, #5B8DEF);
+    background-size:300% 100%;
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    animation:markShift 4s linear infinite;
+  }
+  @media (prefers-reduced-motion: reduce){
+    footer .credit{animation:none; color:var(--muted);}
   }
 
   @media(max-width:560px){
@@ -164,6 +240,7 @@
   :focus-visible{outline:2px solid var(--amber); outline-offset:2px;}
   @media (prefers-reduced-motion: reduce){
     .logo .dot, .onair .d{animation:none;}
+    .logo .mark{animation:none;}
     .card{transition:none;}
   }
 </style>
@@ -174,9 +251,13 @@
 <header>
   <div class="logo">
     <span class="dot"></span>
-    <span class="mark">🅑🅐🅓🅢🅗🅐</span>
+    <span class="mark">✿BOSS✿</span>
     <span class="tagline">late-night anime guide</span>
   </div>
+  <nav class="top-nav">
+    <button class="nav-btn active" id="navTrendingBtn">TRENDING</button>
+    <button class="nav-btn" id="navListBtn">MY LIST</button>
+  </nav>
   <div class="search-wrap">
     <input id="searchInput" type="text" placeholder="Search a title, e.g. Frieren, Bocchi..." autocomplete="off">
   </div>
@@ -194,7 +275,7 @@
 </main>
 
 <footer>
-  MADE BY BADSHA
+  <span class="credit">MADE BY ✿BADSHA✿</span>
 </footer>
 
 <div class="modal-bg" id="modalBg">
@@ -210,8 +291,98 @@ const heroSlot = document.getElementById('heroSlot');
 const modalBg = document.getElementById('modalBg');
 const modalContent = document.getElementById('modalContent');
 const searchInput = document.getElementById('searchInput');
+const navTrendingBtn = document.getElementById('navTrendingBtn');
+const navListBtn = document.getElementById('navListBtn');
 
 function esc(s){ return (s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+// Persistent storage for saved watch links — backed by Pantry (getpantry.cloud),
+// a free JSON storage service. All watch links live as top-level keys inside one
+// basket, so saving on any device updates the same basket everyone else reads from.
+// Falls back to localStorage (this device only) if the network/Pantry is unreachable.
+const PANTRY_ID = '7c315112-9d29-4d70-867e-e4cb227bd02c';
+const PANTRY_BASKET = 'watchlinks';
+const PANTRY_BASE = `https://getpantry.cloud/apiv1/pantry/${PANTRY_ID}/basket/${PANTRY_BASKET}`;
+
+function pantryKey(key){
+  // Pantry JSON object keys can't contain ':' safely across all clients — sanitize.
+  return key.replace(/:/g, '__');
+}
+
+async function pantryFetch(url, options){
+  const ctrl = new AbortController();
+  const timeout = setTimeout(()=>ctrl.abort(), 7000);
+  try{
+    return await fetch(url, { ...options, signal: ctrl.signal });
+  }finally{
+    clearTimeout(timeout);
+  }
+}
+
+async function pantryGetAll(){
+  try{
+    const res = await pantryFetch(PANTRY_BASE, { method: 'GET' });
+    if(res.status === 400 || res.status === 404) return {}; // basket doesn't exist yet
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    return await res.json();
+  }catch(e){
+    return null; // signals "couldn't reach Pantry" so callers can fall back
+  }
+}
+
+async function storageGet(key){
+  const pk = pantryKey(key);
+  const all = await pantryGetAll();
+  if(all !== null){
+    return (pk in all) ? JSON.stringify(all[pk]) : null;
+  }
+  try{ return localStorage.getItem(key); }catch(e){ return null; }
+}
+async function storageSet(key, value){
+  const pk = pantryKey(key);
+  try{
+    const res = await pantryFetch(PANTRY_BASE, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ [pk]: JSON.parse(value) })
+    });
+    if(res.ok){
+      try{ localStorage.setItem(key, value); }catch(e){}
+      return true;
+    }
+  }catch(e){ /* fall through to local */ }
+  try{ localStorage.setItem(key, value); return true; }catch(e){ return false; }
+}
+async function storageDelete(key){
+  const pk = pantryKey(key);
+  try{
+    const all = await pantryGetAll();
+    if(all !== null && (pk in all)){
+      delete all[pk];
+      await pantryFetch(PANTRY_BASE, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(all)
+      });
+    }
+  }catch(e){ /* ignore, still clear local copy below */ }
+  try{ localStorage.removeItem(key); return true; }catch(e){ return false; }
+}
+async function storageListKeys(prefix){
+  const pp = pantryKey(prefix);
+  const all = await pantryGetAll();
+  if(all !== null){
+    return Object.keys(all).filter(k=>k.startsWith(pp)).map(k=>k.replace(/__/g, ':'));
+  }
+  try{
+    const keys = [];
+    for(let i=0;i<localStorage.length;i++){
+      const k = localStorage.key(i);
+      if(k && k.startsWith(prefix)) keys.push(k);
+    }
+    return keys;
+  }catch(e){ return []; }
+}
 
 const FORMAT_LABEL = {TV:'TV', TV_SHORT:'TV Short', MOVIE:'Movie', SPECIAL:'Special', OVA:'OVA', ONA:'ONA', MUSIC:'Music'};
 const STATUS_LABEL = {FINISHED:'Finished', RELEASING:'Airing', NOT_YET_RELEASED:'Upcoming', CANCELLED:'Cancelled', HIATUS:'Hiatus'};
@@ -247,7 +418,7 @@ function renderHero(a){
   const genres = (a.genres||[]).slice(0,4).map(g=>`<span class="tag">${esc(g.name)}</span>`).join('');
   heroSlot.innerHTML = `
     <div class="hero">
-      <div class="hero-art" style="background-image:url('${img}')"></div>
+      <div class="hero-art" style="background-image:url('${img}'); background-color:var(--surface-2);"></div>
       <div class="hero-body">
         <span class="onair"><span class="d"></span>Featured Broadcast</span>
         <div class="hero-title">${esc(a.title)}</div>
@@ -268,11 +439,14 @@ function renderHero(a){
 function cardHTML(a, index){
   const img = a.images?.jpg?.image_url || '';
   const label = index != null ? String(index+1).padStart(2,'0') : (a.type||'').slice(0,2).toUpperCase();
+  const imgTag = img
+    ? `<img loading="lazy" src="${img}" alt="${esc(a.title)}" onerror="this.onerror=null;this.replaceWith(Object.assign(document.createElement('div'),{className:'img-fallback',textContent:'${esc((a.title||'?').charAt(0))}'}));">`
+    : `<div class="img-fallback">${esc((a.title||'?').charAt(0))}</div>`;
   return `
     <div class="card" data-id="${a.mal_id}">
       <span class="ch-num">${label}</span>
       <span class="score">${a.score ?? '—'}</span>
-      <img loading="lazy" src="${img}" alt="${esc(a.title)}">
+      ${imgTag}
       <div class="info">
         <div class="title">${esc(a.title)}</div>
         <div class="sub">${esc(a.type||'—')} · ${a.episodes ? a.episodes+' ep' : '?'}</div>
@@ -370,7 +544,24 @@ searchInput.addEventListener('input', (e)=>{
   searchTimer = setTimeout(()=>doSearch(q), 450);
 });
 
+function setActiveNav(which){
+  navTrendingBtn.classList.toggle('active', which === 'trending');
+  navListBtn.classList.toggle('active', which === 'list');
+}
+navTrendingBtn.addEventListener('click', ()=>{
+  setActiveNav('trending');
+  searchInput.value = '';
+  loadTrending();
+});
+navListBtn.addEventListener('click', ()=>{
+  setActiveNav('list');
+  searchInput.value = '';
+  renderMyList();
+});
+
+
 async function doSearch(q){
+  setActiveNav('trending');
   gridTitle.textContent = `RESULTS FOR "${q.toUpperCase()}"`;
   grid.innerHTML = '<div class="state">SCANNING FREQUENCIES…</div>';
   heroSlot.innerHTML = '';
@@ -398,7 +589,7 @@ async function openModal(id){
     const genres = (a.genres||[]).concat(a.themes||[]).slice(0,6).map(g=>`<span class="tag">${esc(g.name)}</span>`).join('');
     modalContent.innerHTML = `
       <div class="modal-head">
-        <img src="${img}" alt="${esc(a.title)}">
+        <img src="${img}" alt="${esc(a.title)}" onerror="this.onerror=null;this.style.objectFit='none';this.style.background='var(--surface-2)';this.removeAttribute('src');">
         <div class="modal-head-body">
           <button class="close-btn" id="closeBtn">✕</button>
           <div class="modal-title">${esc(a.title)}</div>
@@ -410,9 +601,19 @@ async function openModal(id){
             <span>${esc(a.rating||'')}</span>
           </div>
           <div class="modal-tags">${genres}</div>
+          <div class="watch-actions">
+            <button class="watch-btn" id="watchBtn">▸ WATCH</button>
+            <button class="watch-btn link-btn" id="setLinkBtn">✎ ADD LINK</button>
+            <span class="watch-status" id="watchStatus"></span>
+          </div>
         </div>
       </div>
       <div class="modal-body">
+        <div class="quote-block loading" id="quoteBlock" style="display:none;">
+          <div class="q-text" id="quoteText">Loading a quote…</div>
+          <div class="q-char" id="quoteChar"></div>
+          <button class="voice-btn" id="listenQuoteBtn" style="display:none; margin-top:10px;">▸ LISTEN TO QUOTE</button>
+        </div>
         <h3>Synopsis</h3>
         <div class="voice-controls">
           <button class="voice-btn" id="listenEnBtn">▸ ENGLISH NARRATION</button>
@@ -426,10 +627,184 @@ async function openModal(id){
       </div>`;
     document.getElementById('closeBtn').addEventListener('click', closeModal);
     setupVoiceControls(a.synopsis || '');
+    setupWatchLink(a);
+    loadQuote(a.title);
   }catch(e){
     modalContent.innerHTML = '<div class="state" style="padding:60px 0;">Could not load program data.</div>';
   }
 }
+
+// AnimeChan quote lookup — tries a title-matched quote first, falls back to a
+// random quote across all anime, and hides the block entirely if both fail
+// (no API key required, so failures are usually rate limits or a title with no quotes).
+async function loadQuote(title){
+  const block = document.getElementById('quoteBlock');
+  const textEl = document.getElementById('quoteText');
+  const charEl = document.getElementById('quoteChar');
+  if(!block) return;
+  block.style.display = 'block';
+  block.classList.add('loading');
+  textEl.textContent = 'Loading a quote…';
+  charEl.textContent = '';
+
+  async function tryFetch(url){
+    const ctrl = new AbortController();
+    const timeout = setTimeout(()=>ctrl.abort(), 6000);
+    let res;
+    try{
+      res = await fetch(url, { signal: ctrl.signal });
+    }finally{
+      clearTimeout(timeout);
+    }
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    const json = await res.json();
+    // Correct base domain is api.animechan.io — responses are wrapped as { status, data: {...} }
+    const item = json?.data || json;
+    if(!item || !item.content) throw new Error('empty');
+    return item;
+  }
+
+  try{
+    let quote = null;
+    try{
+      quote = await tryFetch('https://api.animechan.io/v1/quotes/random/anime?title=' + encodeURIComponent(title));
+    }catch(e){
+      quote = await tryFetch('https://api.animechan.io/v1/quotes/random');
+    }
+    block.classList.remove('loading');
+    textEl.textContent = '“' + quote.content + '”';
+    charEl.textContent = '— ' + (quote.character?.name || 'Unknown') + (quote.anime?.name ? ' · ' + quote.anime.name : '');
+    const listenBtn = document.getElementById('listenQuoteBtn');
+    if(listenBtn && ('speechSynthesis' in window)){
+      listenBtn.style.display = 'inline-flex';
+      listenBtn.addEventListener('click', ()=> speak(quote.content, 'en-US'));
+    }
+  }catch(e){
+    block.style.display = 'none';
+  }
+}
+
+// Watch link handling — persisted via storageSet/Get, which now syncs through
+// Pantry across all your devices (falls back to local-only if offline).
+const watchLinks = {};
+async function setupWatchLink(a){
+  const id = String(a.mal_id);
+  const watchBtn = document.getElementById('watchBtn');
+  const setLinkBtn = document.getElementById('setLinkBtn');
+  const status = document.getElementById('watchStatus');
+
+  function refreshStatus(){
+    if(!watchLinks[id]){ status.textContent = 'No link yet'; return; }
+    status.textContent = 'Saved — synced across your devices';
+  }
+
+  status.textContent = 'Checking saved link…';
+  try{
+    const raw = await storageGet('watchlink:'+id);
+    if(raw){
+      const saved = JSON.parse(raw);
+      watchLinks[id] = saved.link;
+    }
+  }catch(e){ /* ignore, treat as no saved link */ }
+  refreshStatus();
+
+  watchBtn.addEventListener('click', ()=>{
+    const link = watchLinks[id];
+    if(!link){
+      status.textContent = 'Add a link first';
+      return;
+    }
+    window.open(link, '_blank', 'noopener');
+  });
+
+  setLinkBtn.addEventListener('click', async ()=>{
+    const pass = window.prompt('Enter password to add/edit link:');
+    if(pass === null) return;
+    if(pass !== '1mnbvcxz'){
+      status.textContent = 'Wrong password';
+      return;
+    }
+    const entered = window.prompt(`Paste the watch link for "${a.title}":`, watchLinks[id] || 'https://');
+    if(entered === null) return;
+    const trimmed = entered.trim();
+    if(!trimmed){ return; }
+    const link = /^https?:\/\//i.test(trimmed) ? trimmed : ('https://' + trimmed);
+    watchLinks[id] = link;
+    status.textContent = 'Saving…';
+    const record = {
+      id, title: a.title, img: a.images?.jpg?.image_url || '',
+      type: a.type, episodes: a.episodes, link, addedAt: Date.now()
+    };
+    const ok = await storageSet('watchlink:'+id, JSON.stringify(record));
+    if(!ok){ status.textContent = 'Could not save — try again'; return; }
+    refreshStatus();
+  });
+}
+
+async function renderMyList(){
+  gridTitle.textContent = 'MY LIST';
+  gridCount.textContent = '';
+  heroSlot.innerHTML = '';
+  grid.innerHTML = '<div class="state">LOADING YOUR SAVED LINKS…</div>';
+  try{
+    const keys = await storageListKeys('watchlink:');
+    if(!keys.length){
+      grid.innerHTML = '<div class="state">Your list is empty. Open any title and tap ADD LINK to save one here.</div>';
+      return;
+    }
+    const items = [];
+    for(const k of keys){
+      const raw = await storageGet(k);
+      if(!raw) continue;
+      try{ items.push(JSON.parse(raw)); }catch(e){ /* skip bad entry */ }
+    }
+    items.sort((x,y)=> (y.addedAt||0) - (x.addedAt||0));
+    if(!items.length){
+      grid.innerHTML = '<div class="state">Your list is empty. Open any title and tap ADD LINK to save one here.</div>';
+      return;
+    }
+    gridCount.textContent = items.length + ' SAVED';
+    grid.innerHTML = items.map(listCardHTML).join('');
+    grid.querySelectorAll('.card').forEach(c=>{
+      c.addEventListener('click', (e)=>{
+        if(e.target.closest('.remove-btn')) return;
+        openModal(c.dataset.id);
+      });
+    });
+    grid.querySelectorAll('.remove-btn').forEach(btn=>{
+      btn.addEventListener('click', async (e)=>{
+        e.stopPropagation();
+        const id = btn.dataset.id;
+        const pass = window.prompt('Enter password to remove this link:');
+        if(pass === null) return;
+        if(pass !== '1mnbvcxz'){ alert('Wrong password'); return; }
+        await storageDelete('watchlink:'+id);
+        delete watchLinks[id];
+        renderMyList();
+      });
+    });
+  }catch(e){
+    grid.innerHTML = '<div class="state">Could not load your list. Try again.</div>';
+  }
+}
+
+function listCardHTML(a){
+  const img = a.img || '';
+  const imgTag = img
+    ? `<img loading="lazy" src="${img}" alt="${esc(a.title)}" onerror="this.onerror=null;this.replaceWith(Object.assign(document.createElement('div'),{className:'img-fallback',textContent:'${esc((a.title||'?').charAt(0))}'}));">`
+    : `<div class="img-fallback">${esc((a.title||'?').charAt(0))}</div>`;
+  return `
+    <div class="card" data-id="${a.id}">
+      <span class="watch-badge">SAVED</span>
+      <button class="remove-btn" data-id="${a.id}" title="Remove">✕</button>
+      ${imgTag}
+      <div class="info">
+        <div class="title">${esc(a.title)}</div>
+        <div class="sub">${esc(a.type||'—')} · ${a.episodes ? a.episodes+' ep' : '?'}</div>
+      </div>
+    </div>`;
+}
+
 function closeModal(){
   modalBg.classList.remove('open');
   if('speechSynthesis' in window) window.speechSynthesis.cancel();
@@ -437,8 +812,27 @@ function closeModal(){
 modalBg.addEventListener('click', (e)=>{ if(e.target === modalBg) closeModal(); });
 document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeModal(); });
 
-// Text-to-speech + English→Hindi translation for the synopsis
+
+
+// Text-to-speech + English→Hindi translation for the synopsis (and quote)
 let hindiCache = '';
+// Shared speak helper — any part of the modal (synopsis buttons, quote button) can call this.
+// stopBtn is looked up fresh each call since the modal content is re-rendered per anime.
+function speak(t, lang){
+  if(!('speechSynthesis' in window)) return;
+  const stopBtn = document.getElementById('stopBtn');
+  window.speechSynthesis.cancel();
+  const utter = new SpeechSynthesisUtterance(t);
+  utter.lang = lang;
+  const voices = window.speechSynthesis.getVoices();
+  const voice = voices.find(v=>v.lang === lang) || voices.find(v=>v.lang.startsWith(lang.split('-')[0]));
+  if(voice) utter.voice = voice;
+  utter.onstart = ()=> { if(stopBtn) stopBtn.style.display = 'inline-flex'; };
+  utter.onend = ()=> { if(stopBtn) stopBtn.style.display = 'none'; };
+  utter.onerror = ()=> { if(stopBtn) stopBtn.style.display = 'none'; };
+  window.speechSynthesis.speak(utter);
+}
+
 function setupVoiceControls(text){
   const enBtn = document.getElementById('listenEnBtn');
   const hiBtn = document.getElementById('listenHiBtn');
@@ -450,19 +844,6 @@ function setupVoiceControls(text){
     enBtn.disabled = true; hiBtn.disabled = true;
     status.textContent = 'Is device par voice support nahi hai.';
     return;
-  }
-
-  function speak(t, lang){
-    window.speechSynthesis.cancel();
-    const utter = new SpeechSynthesisUtterance(t);
-    utter.lang = lang;
-    const voices = window.speechSynthesis.getVoices();
-    const voice = voices.find(v=>v.lang === lang) || voices.find(v=>v.lang.startsWith(lang.split('-')[0]));
-    if(voice) utter.voice = voice;
-    utter.onstart = ()=> stopBtn.style.display = 'inline-flex';
-    utter.onend = ()=> stopBtn.style.display = 'none';
-    utter.onerror = ()=> { stopBtn.style.display = 'none'; };
-    window.speechSynthesis.speak(utter);
   }
 
   enBtn.addEventListener('click', ()=>{
@@ -503,3 +884,4 @@ loadTrending();
 </script>
 </body>
 </html>
+
