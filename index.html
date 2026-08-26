@@ -181,6 +181,36 @@
   .watch-btn.link-btn{border-color:rgba(255,180,84,0.55); box-shadow:0 0 0 1px rgba(255,180,84,0.12), 0 0 14px rgba(255,180,84,0.30);}
   .watch-btn.link-btn:hover{border-color:var(--amber); color:var(--amber); box-shadow:0 0 0 1px rgba(255,180,84,0.25), 0 0 20px rgba(255,180,84,0.55);}
   .watch-status{font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--muted);}
+  .playlist-panel{
+    margin-top:12px; border:1px solid var(--line); border-radius:var(--radius);
+    background:var(--surface-2); overflow:hidden;
+  }
+  .playlist-row{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    padding:9px 12px; border-bottom:1px solid var(--line);
+  }
+  .playlist-row:last-child{border-bottom:none;}
+  .playlist-ep{font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--paper); display:flex; align-items:center; gap:8px;}
+  .playlist-ep .ep-num{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:20px; height:20px; border-radius:50%; background:var(--surface); color:var(--muted);
+    font-size:10px; font-weight:600; border:1px solid var(--line);
+  }
+  .playlist-row.has-link .ep-num{background:var(--amber); color:var(--bg); border-color:var(--amber);}
+  .playlist-actions{display:flex; align-items:center; gap:6px;}
+  .playlist-play, .playlist-edit{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.5px;
+    background:var(--surface); border:1px solid var(--line); color:var(--muted); padding:5px 10px;
+    border-radius:6px; cursor:pointer;
+  }
+  .playlist-play{border-color:rgba(61,220,132,0.55); color:var(--paper);}
+  .playlist-play:hover{border-color:#5CE89A; color:#8FF0BB;}
+  .playlist-edit:hover{border-color:var(--amber); color:var(--amber);}
+  .playlist-panel-head{
+    display:flex; align-items:center; justify-content:space-between; gap:8px;
+    padding:8px 12px; border-bottom:1px solid var(--line);
+    font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px;
+  }
 
   .top-nav{display:flex; gap:8px;}
   .nav-btn{
@@ -602,10 +632,10 @@ async function openModal(id){
           </div>
           <div class="modal-tags">${genres}</div>
           <div class="watch-actions">
-            <button class="watch-btn" id="watchBtn">▸ WATCH</button>
-            <button class="watch-btn link-btn" id="setLinkBtn">✎ ADD LINK</button>
+            <button class="watch-btn" id="playlistBtn">▸ PLAYLIST (1-10)</button>
             <span class="watch-status" id="watchStatus"></span>
           </div>
+          <div id="playlistPanel" class="playlist-panel" style="display:none;"></div>
         </div>
       </div>
       <div class="modal-body">
@@ -627,7 +657,7 @@ async function openModal(id){
       </div>`;
     document.getElementById('closeBtn').addEventListener('click', closeModal);
     setupVoiceControls(a.synopsis || '');
-    setupWatchLink(a);
+    setupPlaylist(a);
     loadQuote(a.title);
   }catch(e){
     modalContent.innerHTML = '<div class="state" style="padding:60px 0;">Could not load program data.</div>';
@@ -675,69 +705,107 @@ async function loadQuote(title){
     textEl.textContent = '“' + quote.content + '”';
     charEl.textContent = '— ' + (quote.character?.name || 'Unknown') + (quote.anime?.name ? ' · ' + quote.anime.name : '');
     const listenBtn = document.getElementById('listenQuoteBtn');
-    if(listenBtn && ('speechSynthesis' in window)){
+    if(listenBtn){
       listenBtn.style.display = 'inline-flex';
-      listenBtn.addEventListener('click', ()=> speak(quote.content, 'en-US'));
+      listenBtn.addEventListener('click', ()=> speak(quote.content, 'en-US', 'en'));
     }
   }catch(e){
     block.style.display = 'none';
   }
 }
 
-// Watch link handling — persisted via storageSet/Get, which now syncs through
-// Pantry across all your devices (falls back to local-only if offline).
-const watchLinks = {};
-async function setupWatchLink(a){
+// Playlist handling — each anime stores up to 10 episode links as one record,
+// persisted via storageSet/Get, which syncs through Pantry across all your devices
+// (falls back to local-only if offline).
+const PLAYLIST_PASSWORD = '1mnbvcxz';
+async function setupPlaylist(a){
   const id = String(a.mal_id);
-  const watchBtn = document.getElementById('watchBtn');
-  const setLinkBtn = document.getElementById('setLinkBtn');
+  const playlistBtn = document.getElementById('playlistBtn');
+  const panel = document.getElementById('playlistPanel');
   const status = document.getElementById('watchStatus');
+  let record = null;
+  let editUnlocked = false;
+  let panelOpen = false;
 
-  function refreshStatus(){
-    if(!watchLinks[id]){ status.textContent = 'No link yet'; return; }
-    status.textContent = 'Saved — synced across your devices';
+  function emptyRecord(){
+    return {
+      id, title: a.title, img: a.images?.jpg?.image_url || '',
+      type: a.type, episodes: a.episodes, links: {}, updatedAt: Date.now()
+    };
   }
 
-  status.textContent = 'Checking saved link…';
+  function renderPanel(){
+    const links = (record && record.links) || {};
+    const rows = [];
+    for(let ep=1; ep<=10; ep++){
+      const link = links[ep];
+      rows.push(`
+        <div class="playlist-row ${link ? 'has-link' : ''}">
+          <span class="playlist-ep"><span class="ep-num">${ep}</span>Episode ${ep}</span>
+          <span class="playlist-actions">
+            ${link ? `<button class="playlist-play" data-ep="${ep}">▶ Play</button>` : `<span class="watch-status">No link</span>`}
+            <button class="playlist-edit" data-ep="${ep}">✎</button>
+          </span>
+        </div>`);
+    }
+    panel.innerHTML = `
+      <div class="playlist-panel-head">
+        <span>1–10 episode links</span>
+        <span>${editUnlocked ? 'Edit mode — tap ✎ to set a link' : 'Tap ✎ once to unlock editing'}</span>
+      </div>
+      ${rows.join('')}`;
+
+    panel.querySelectorAll('.playlist-play').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const ep = btn.dataset.ep;
+        const link = record.links[ep];
+        if(link) window.open(link, '_blank', 'noopener');
+      });
+    });
+    panel.querySelectorAll('.playlist-edit').forEach(btn=>{
+      btn.addEventListener('click', async ()=>{
+        if(!editUnlocked){
+          const pass = window.prompt('Enter password to edit this playlist:');
+          if(pass === null) return;
+          if(pass !== PLAYLIST_PASSWORD){ status.textContent = 'Wrong password'; return; }
+          editUnlocked = true;
+        }
+        const ep = btn.dataset.ep;
+        const existing = (record.links && record.links[ep]) || '';
+        const entered = window.prompt(`Link for Episode ${ep}:`, existing || 'https://');
+        if(entered === null) return;
+        const trimmed = entered.trim();
+        if(!record) record = emptyRecord();
+        if(!record.links) record.links = {};
+        if(!trimmed){
+          delete record.links[ep];
+        }else{
+          record.links[ep] = /^https?:\/\//i.test(trimmed) ? trimmed : ('https://' + trimmed);
+        }
+        record.updatedAt = Date.now();
+        status.textContent = 'Saving…';
+        const hasAny = Object.keys(record.links).length > 0;
+        const ok = hasAny
+          ? await storageSet('playlist:'+id, JSON.stringify(record))
+          : await storageDelete('playlist:'+id);
+        status.textContent = ok ? 'Saved — synced across your devices' : 'Could not save — try again';
+        renderPanel();
+      });
+    });
+  }
+
+  status.textContent = 'Checking saved playlist…';
   try{
-    const raw = await storageGet('watchlink:'+id);
-    if(raw){
-      const saved = JSON.parse(raw);
-      watchLinks[id] = saved.link;
-    }
-  }catch(e){ /* ignore, treat as no saved link */ }
-  refreshStatus();
+    const raw = await storageGet('playlist:'+id);
+    if(raw) record = JSON.parse(raw);
+  }catch(e){ /* no saved playlist yet */ }
+  const count = record && record.links ? Object.keys(record.links).length : 0;
+  status.textContent = count ? `${count}/10 episodes saved` : 'No episodes saved yet';
 
-  watchBtn.addEventListener('click', ()=>{
-    const link = watchLinks[id];
-    if(!link){
-      status.textContent = 'Add a link first';
-      return;
-    }
-    window.open(link, '_blank', 'noopener');
-  });
-
-  setLinkBtn.addEventListener('click', async ()=>{
-    const pass = window.prompt('Enter password to add/edit link:');
-    if(pass === null) return;
-    if(pass !== '1mnbvcxz'){
-      status.textContent = 'Wrong password';
-      return;
-    }
-    const entered = window.prompt(`Paste the watch link for "${a.title}":`, watchLinks[id] || 'https://');
-    if(entered === null) return;
-    const trimmed = entered.trim();
-    if(!trimmed){ return; }
-    const link = /^https?:\/\//i.test(trimmed) ? trimmed : ('https://' + trimmed);
-    watchLinks[id] = link;
-    status.textContent = 'Saving…';
-    const record = {
-      id, title: a.title, img: a.images?.jpg?.image_url || '',
-      type: a.type, episodes: a.episodes, link, addedAt: Date.now()
-    };
-    const ok = await storageSet('watchlink:'+id, JSON.stringify(record));
-    if(!ok){ status.textContent = 'Could not save — try again'; return; }
-    refreshStatus();
+  playlistBtn.addEventListener('click', ()=>{
+    panelOpen = !panelOpen;
+    panel.style.display = panelOpen ? 'block' : 'none';
+    if(panelOpen) renderPanel();
   });
 }
 
@@ -745,22 +813,25 @@ async function renderMyList(){
   gridTitle.textContent = 'MY LIST';
   gridCount.textContent = '';
   heroSlot.innerHTML = '';
-  grid.innerHTML = '<div class="state">LOADING YOUR SAVED LINKS…</div>';
+  grid.innerHTML = '<div class="state">LOADING YOUR SAVED PLAYLISTS…</div>';
   try{
-    const keys = await storageListKeys('watchlink:');
+    const keys = await storageListKeys('playlist:');
     if(!keys.length){
-      grid.innerHTML = '<div class="state">Your list is empty. Open any title and tap ADD LINK to save one here.</div>';
+      grid.innerHTML = '<div class="state">Your list is empty. Open any title and tap PLAYLIST to save episode links here.</div>';
       return;
     }
     const items = [];
     for(const k of keys){
       const raw = await storageGet(k);
       if(!raw) continue;
-      try{ items.push(JSON.parse(raw)); }catch(e){ /* skip bad entry */ }
+      try{
+        const rec = JSON.parse(raw);
+        if(rec.links && Object.keys(rec.links).length > 0) items.push(rec);
+      }catch(e){ /* skip bad entry */ }
     }
-    items.sort((x,y)=> (y.addedAt||0) - (x.addedAt||0));
+    items.sort((x,y)=> (y.updatedAt||0) - (x.updatedAt||0));
     if(!items.length){
-      grid.innerHTML = '<div class="state">Your list is empty. Open any title and tap ADD LINK to save one here.</div>';
+      grid.innerHTML = '<div class="state">Your list is empty. Open any title and tap PLAYLIST to save episode links here.</div>';
       return;
     }
     gridCount.textContent = items.length + ' SAVED';
@@ -775,11 +846,10 @@ async function renderMyList(){
       btn.addEventListener('click', async (e)=>{
         e.stopPropagation();
         const id = btn.dataset.id;
-        const pass = window.prompt('Enter password to remove this link:');
+        const pass = window.prompt('Enter password to remove this playlist:');
         if(pass === null) return;
-        if(pass !== '1mnbvcxz'){ alert('Wrong password'); return; }
-        await storageDelete('watchlink:'+id);
-        delete watchLinks[id];
+        if(pass !== PLAYLIST_PASSWORD){ alert('Wrong password'); return; }
+        await storageDelete('playlist:'+id);
         renderMyList();
       });
     });
@@ -790,12 +860,13 @@ async function renderMyList(){
 
 function listCardHTML(a){
   const img = a.img || '';
+  const count = a.links ? Object.keys(a.links).length : 0;
   const imgTag = img
     ? `<img loading="lazy" src="${img}" alt="${esc(a.title)}" onerror="this.onerror=null;this.replaceWith(Object.assign(document.createElement('div'),{className:'img-fallback',textContent:'${esc((a.title||'?').charAt(0))}'}));">`
     : `<div class="img-fallback">${esc((a.title||'?').charAt(0))}</div>`;
   return `
     <div class="card" data-id="${a.id}">
-      <span class="watch-badge">SAVED</span>
+      <span class="watch-badge">${count}/10 EP</span>
       <button class="remove-btn" data-id="${a.id}" title="Remove">✕</button>
       ${imgTag}
       <div class="info">
@@ -814,11 +885,62 @@ document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeModal();
 
 
 
-// Text-to-speech + English→Hindi translation for the synopsis (and quote)
+// Text-to-speech via Audexum API, called through a Cloudflare Worker proxy so the
+// real API key stays on the server and never ships inside this HTML file.
+// Set this to your deployed Worker's URL (see audexum-worker.js setup instructions).
+// Falls back to the browser's built-in speechSynthesis if the proxy is unreachable
+// or WORKER_URL is left blank.
+const WORKER_URL = 'https://anime.badsha90sekh.workers.dev'; // deployed Audexum proxy Worker
 let hindiCache = '';
-// Shared speak helper — any part of the modal (synopsis buttons, quote button) can call this.
-// stopBtn is looked up fresh each call since the modal content is re-rendered per anime.
-function speak(t, lang){
+let currentAudio = null;
+
+async function audexumSpeak(text, lang, voice, instruct){
+  if(!WORKER_URL) throw new Error('worker_not_configured');
+  const stopBtn = document.getElementById('stopBtn');
+  if(currentAudio){ currentAudio.pause(); currentAudio = null; }
+
+  async function tryCall(payload){
+    const res = await fetch(WORKER_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if(!res.ok){
+      let detail = '';
+      try{ detail = await res.text(); }catch(e){}
+      const err = new Error(detail ? detail.slice(0,120) : ('HTTP ' + res.status));
+      err.status = res.status;
+      throw err;
+    }
+    return res.blob();
+  }
+
+  const basePayload = { text: text.slice(0, 4900), lang: lang, format: 'mp3' };
+  let blob;
+  if(instruct){
+    // Try the expressive V3 Ultra tier first for a more natural, dubbing-style delivery.
+    try{
+      blob = await tryCall({ ...basePayload, backend: 'v3', voice: 'Atlas', instruct });
+    }catch(e){
+      // 402 = feature needs a paid plan — fall back to the cheaper V2 Studio tier
+      if(e.status !== 402) throw e;
+      blob = await tryCall({ ...basePayload, backend: 'supertonic', voice: voice || 'F1' });
+    }
+  }else{
+    blob = await tryCall({ ...basePayload, backend: 'supertonic', voice: voice || 'F1' });
+  }
+
+  const url = URL.createObjectURL(blob);
+  const audio = new Audio(url);
+  currentAudio = audio;
+  audio.onplay = ()=> { if(stopBtn) stopBtn.style.display = 'inline-flex'; };
+  audio.onended = ()=> { if(stopBtn) stopBtn.style.display = 'none'; URL.revokeObjectURL(url); };
+  audio.onerror = ()=> { if(stopBtn) stopBtn.style.display = 'none'; };
+  await audio.play();
+}
+
+// Browser fallback (used only if Audexum call fails)
+function browserSpeak(t, lang){
   if(!('speechSynthesis' in window)) return;
   const stopBtn = document.getElementById('stopBtn');
   window.speechSynthesis.cancel();
@@ -833,6 +955,30 @@ function speak(t, lang){
   window.speechSynthesis.speak(utter);
 }
 
+// Unified entry point: try Audexum first, fall back to the browser's voice on any failure.
+// Returns true if Audexum succeeded, false if it fell back (so the caller knows whether
+// to clear the status message or leave the fallback explanation visible).
+async function speak(t, lang, audexumLang, statusEl, instruct){
+  try{
+    await audexumSpeak(t, audexumLang || 'en', null, instruct);
+    return true;
+  }catch(e){
+    if(statusEl){
+      if(e.message === 'worker_not_configured'){
+        statusEl.textContent = 'Device ki awaaz use ho rahi hai (Worker set nahi hai).';
+      }else if(e.status === 402){
+        statusEl.textContent = 'Voice credits khatam — device ki awaaz use ho rahi hai.';
+      }else if(e.status){
+        statusEl.textContent = `Voice error (${e.status}: ${e.message}) — device ki awaaz use ho rahi hai.`;
+      }else{
+        statusEl.textContent = `Voice service unreachable (${e.message||'network'}) — device ki awaaz use ho rahi hai.`;
+      }
+    }
+    browserSpeak(t, lang);
+    return false;
+  }
+}
+
 function setupVoiceControls(text){
   const enBtn = document.getElementById('listenEnBtn');
   const hiBtn = document.getElementById('listenHiBtn');
@@ -840,33 +986,37 @@ function setupVoiceControls(text){
   const status = document.getElementById('voiceStatus');
   hindiCache = '';
 
-  if(!('speechSynthesis' in window)){
-    enBtn.disabled = true; hiBtn.disabled = true;
-    status.textContent = 'Is device par voice support nahi hai.';
-    return;
-  }
-
-  enBtn.addEventListener('click', ()=>{
-    status.textContent = '';
-    speak(text, 'en-US');
+  enBtn.addEventListener('click', async ()=>{
+    status.textContent = 'Generating…';
+    enBtn.disabled = true;
+    try{
+      const ok = await speak(text, 'en-US', 'en', status);
+      if(ok) status.textContent = '';
+    }catch(e){
+      status.textContent = 'Could not play audio.';
+    }finally{
+      enBtn.disabled = false;
+    }
   });
 
   hiBtn.addEventListener('click', async ()=>{
-    if(hindiCache){ status.textContent=''; speak(hindiCache, 'hi-IN'); return; }
     status.textContent = 'Voiceover taiyar ho raha hai…';
     hiBtn.disabled = true;
     try{
-      // Strip trailing source citations like "(Source: MAL Rewrite)" before narrating
-      const cleanText = text.replace(/\(\s*Source:[^)]*\)\s*$/i, '').trim();
-      const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=hi&dt=t&q=${encodeURIComponent(cleanText)}`);
-      if(!res.ok) throw new Error('HTTP '+res.status);
-      const data = await res.json();
-      let hi = (data[0]||[]).map(chunk=>chunk[0]).join('');
-      // Light cleanup: collapse stray spaces before punctuation, normalize whitespace
-      hi = hi.replace(/\s+([।,.!?])/g, '$1').replace(/\s{2,}/g, ' ').trim();
-      hindiCache = hi;
-      status.textContent = '';
-      speak(hindiCache, 'hi-IN');
+      let hi = hindiCache;
+      if(!hi){
+        // Strip trailing source citations like "(Source: MAL Rewrite)" before narrating
+        const cleanText = text.replace(/\(\s*Source:[^)]*\)\s*$/i, '').trim();
+        const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=hi&dt=t&q=${encodeURIComponent(cleanText)}`);
+        if(!res.ok) throw new Error('HTTP '+res.status);
+        const data = await res.json();
+        hi = (data[0]||[]).map(chunk=>chunk[0]).join('');
+        hi = hi.replace(/\s+([।,.!?])/g, '$1').replace(/\s{2,}/g, ' ').trim();
+        hindiCache = hi;
+      }
+      // Full Devanagari Hindi read by a native Hindi voice — natural, anime-dubbing-style narration
+      const ok = await speak(hindiCache, 'hi-IN', 'hi', status, 'energetic, expressive anime dubbing style, warm and lively');
+      if(ok) status.textContent = '';
     }catch(e){
       status.textContent = 'Voiceover uplabdh nahi — dobara koshish karein.';
     }finally{
@@ -875,7 +1025,8 @@ function setupVoiceControls(text){
   });
 
   stopBtn.addEventListener('click', ()=>{
-    window.speechSynthesis.cancel();
+    if(currentAudio){ currentAudio.pause(); currentAudio = null; }
+    if('speechSynthesis' in window) window.speechSynthesis.cancel();
     stopBtn.style.display = 'none';
   });
 }
