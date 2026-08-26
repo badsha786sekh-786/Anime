@@ -38,6 +38,7 @@
   }
   .logo{display:flex; align-items:baseline; gap:10px;}
   .logo .mark{
+    margin:0; font-weight:normal;
     font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:3px;
     background:linear-gradient(90deg, #FF4B5C, #FFB454, #5B8DEF, #FF4B5C);
     background-size:300% 100%;
@@ -59,10 +60,13 @@
     70%{box-shadow:0 0 0 8px rgba(61,220,132,0); opacity:0.6;}
     100%{box-shadow:0 0 0 0 rgba(61,220,132,0); opacity:1;}
   }
-  .logo .tagline{font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--muted); letter-spacing:1px; text-transform:uppercase;}
+  .logo .tagline{font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--muted); letter-spacing:1px; text-transform:uppercase;}
   @keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(255,75,92,0.5);}50%{opacity:.5;box-shadow:0 0 0 5px rgba(255,75,92,0);}}
 
-  .search-wrap{position:relative; flex:1; max-width:420px; min-width:220px;}
+  .search-wrap{position:relative; flex:1; max-width:420px; min-width:220px; margin-top:8px;}
+  @media(min-width:769px){
+    .search-wrap{margin-top:0;}
+  }
   .search-wrap input{
     width:100%; background:var(--surface); border:1px solid var(--line); color:var(--paper);
     padding:10px 14px; font-family:'Inter',sans-serif; font-size:14px; border-radius:var(--radius);
@@ -84,12 +88,16 @@
   .hero-body{padding:28px 28px 24px; display:flex; flex-direction:column; gap:12px;}
   .onair{
     display:inline-flex; align-items:center; gap:6px; width:fit-content;
-    font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:1.5px; text-transform:uppercase;
+    font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.3px;
     color:var(--signal); border:1px solid var(--signal); padding:3px 8px; border-radius:var(--radius);
   }
   .onair .d{width:6px;height:6px;border-radius:50%;background:var(--signal); animation:pulse 1.6s infinite;}
   .hero-title{font-family:'Bebas Neue',sans-serif; font-size:42px; line-height:1.02; letter-spacing:1px; color:var(--paper);}
-  .hero-meta{font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--amber); display:flex; gap:16px; flex-wrap:wrap;}
+  .hero-meta{
+    font-family:'IBM Plex Mono',monospace; font-size:12px; font-weight:600; color:var(--amber);
+    display:flex; gap:16px; flex-wrap:wrap;
+    padding:6px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+  }
   .hero-syn{color:var(--muted); font-size:14px; line-height:1.55; max-width:640px;}
   .hero-tags{display:flex; gap:8px; flex-wrap:wrap; margin-top:4px;}
   .tag{font-size:11px; font-family:'IBM Plex Mono',monospace; color:var(--muted); border:1px solid var(--line); padding:3px 8px; border-radius:var(--radius);}
@@ -98,17 +106,23 @@
 
   /* SECTION LABEL */
   .section-label{
-    display:flex; align-items:baseline; gap:12px; margin:48px 0 18px;
+    display:flex; align-items:center; gap:10px; margin:48px 0 18px;
   }
   .section-label h2{font-family:'Bebas Neue',sans-serif; font-size:24px; letter-spacing:2px; color:var(--paper);}
-  .section-label .rule{flex:1; height:1px; background:var(--line);}
-  .section-label .count{font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--muted);}
+  .section-label .rule{flex:1; height:1px; background:var(--line); order:3;}
+  .section-label .count{
+    order:2;
+    font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--amber);
+    background:var(--surface-2); border:1px solid var(--line);
+    padding:3px 8px; border-radius:12px;
+  }
 
   /* GRID */
   .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:14px;}
   .card{
     background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
     cursor:pointer; overflow:hidden; position:relative; transition:border-color .15s, transform .15s;
+    display:flex; flex-direction:column;
   }
   .card:hover{border-color:var(--amber); transform:translateY(-2px);}
   .card .ch-num{
@@ -121,11 +135,12 @@
     font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--paper);
     background:rgba(14,17,22,0.75); padding:2px 6px; border-radius:var(--radius); backdrop-filter:blur(2px);
   }
-  .card img{width:100%; aspect-ratio:2/3; object-fit:cover; display:block; background:var(--surface-2);}
+  .card img{width:100%; aspect-ratio:2/3; object-fit:cover; object-position:center top; display:block; background:var(--surface-2); flex:0 0 auto;}
   .card .img-fallback{
     width:100%; aspect-ratio:2/3; display:flex; align-items:center; justify-content:center;
     background:linear-gradient(135deg, var(--surface-2), var(--surface));
     color:var(--muted); font-family:'Bebas Neue',sans-serif; font-size:48px; letter-spacing:1px;
+    flex:0 0 auto;
   }
   .card .info{padding:10px 10px 12px;}
   .card .title{font-size:13px; font-weight:600; line-height:1.3; color:var(--paper); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;}
@@ -281,7 +296,7 @@
 <header>
   <div class="logo">
     <span class="dot"></span>
-    <span class="mark">✿BOSS✿</span>
+    <h1 class="mark">✿BOSS✿</h1>
     <span class="tagline">late-night anime guide</span>
   </div>
   <nav class="top-nav">
@@ -298,8 +313,8 @@
 
   <div class="section-label">
     <h2 id="gridTitle">NOW TRENDING</h2>
-    <div class="rule"></div>
     <span class="count" id="gridCount"></span>
+    <div class="rule"></div>
   </div>
   <div class="grid" id="grid"></div>
 </main>
@@ -450,7 +465,7 @@ function renderHero(a){
     <div class="hero">
       <div class="hero-art" style="background-image:url('${img}'); background-color:var(--surface-2);"></div>
       <div class="hero-body">
-        <span class="onair"><span class="d"></span>Featured Broadcast</span>
+        <span class="onair"><span class="d"></span>Now airing</span>
         <div class="hero-title">${esc(a.title)}</div>
         <div class="hero-meta">
           <span>SCORE ${a.score ?? '—'}</span>
