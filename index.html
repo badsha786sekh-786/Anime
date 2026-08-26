@@ -219,6 +219,7 @@
     font-size:10px; font-weight:600; border:1px solid var(--line);
   }
   .playlist-row.has-link .ep-num{background:var(--amber); color:var(--bg); border-color:var(--amber);}
+  .playlist-row.has-link .playlist-ep:hover{color:var(--amber);}
   .playlist-actions{display:flex; align-items:center; gap:6px;}
   .playlist-play, .playlist-edit{
     font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.5px;
@@ -266,6 +267,32 @@
     margin-top:8px; text-transform:uppercase; letter-spacing:0.5px;
   }
   .quote-block.loading .q-text{color:var(--muted); font-style:normal;}
+
+  .prompt-bg{
+    position:fixed; inset:0; background:rgba(6,7,10,0.85); z-index:60;
+    display:none; align-items:center; justify-content:center; padding:16px;
+  }
+  .prompt-bg.open{display:flex;}
+  .prompt-box{
+    background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+    max-width:340px; width:100%; padding:20px; animation:rise .15s ease;
+  }
+  .prompt-title{font-size:14px; color:var(--paper); margin-bottom:12px; line-height:1.4;}
+  .prompt-input{
+    width:100%; background:var(--surface-2); border:1px solid var(--line); color:var(--paper);
+    padding:10px 12px; font-family:'Inter',sans-serif; font-size:14px; border-radius:var(--radius);
+    outline:none; margin-bottom:14px;
+  }
+  .prompt-input:focus{border-color:var(--amber);}
+  .prompt-actions{display:flex; justify-content:flex-end; gap:8px;}
+  .prompt-btn{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.5px; text-transform:uppercase;
+    padding:8px 14px; border-radius:6px; cursor:pointer;
+    background:var(--surface-2); border:1px solid var(--line); color:var(--muted);
+  }
+  .prompt-btn.ok{border-color:var(--amber); color:var(--amber);}
+  .prompt-btn.ok:hover{background:var(--amber); color:var(--bg);}
+  .prompt-btn.cancel:hover{color:var(--paper); border-color:var(--paper);}
 
   footer{
     border-top:1px solid var(--line); margin-top:60px; padding:24px 20px;
@@ -335,6 +362,17 @@
   <div class="modal" id="modalContent"></div>
 </div>
 
+<div class="prompt-bg" id="promptBg">
+  <div class="prompt-box">
+    <div class="prompt-title" id="promptTitle"></div>
+    <input class="prompt-input" id="promptInput" type="text" autocomplete="off">
+    <div class="prompt-actions">
+      <button class="prompt-btn cancel" id="promptCancel">Cancel</button>
+      <button class="prompt-btn ok" id="promptOk">OK</button>
+    </div>
+  </div>
+</div>
+
 <script>
 const API = "https://graphql.anilist.co";
 const grid = document.getElementById('grid');
@@ -348,6 +386,55 @@ const navTrendingBtn = document.getElementById('navTrendingBtn');
 const navListBtn = document.getElementById('navListBtn');
 
 function esc(s){ return (s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+// Custom in-page dialog, replacing window.prompt/alert.
+// Many WebViews (apps that embed a web page without a full browser UI) don't
+// implement window.prompt/alert at all, so they silently do nothing when called.
+// This dialog is built from plain DOM elements and always works.
+function customDialog({title, defaultValue=null, password=false, alertOnly=false}){
+  return new Promise(resolve=>{
+    const bg = document.getElementById('promptBg');
+    const titleEl = document.getElementById('promptTitle');
+    const input = document.getElementById('promptInput');
+    const okBtn = document.getElementById('promptOk');
+    const cancelBtn = document.getElementById('promptCancel');
+    titleEl.textContent = title;
+    if(alertOnly){
+      input.style.display = 'none';
+      cancelBtn.style.display = 'none';
+    }else{
+      input.style.display = 'block';
+      input.type = password ? 'password' : 'text';
+      input.value = defaultValue || '';
+      cancelBtn.style.display = 'inline-flex';
+    }
+    bg.classList.add('open');
+    if(!alertOnly) setTimeout(()=>{ input.focus(); input.select(); }, 50);
+
+    function cleanup(val){
+      bg.classList.remove('open');
+      okBtn.removeEventListener('click', onOk);
+      cancelBtn.removeEventListener('click', onCancel);
+      input.removeEventListener('keydown', onKey);
+      resolve(val);
+    }
+    function onOk(){ cleanup(alertOnly ? true : input.value); }
+    function onCancel(){ cleanup(null); }
+    function onKey(e){
+      if(e.key === 'Enter'){ e.preventDefault(); onOk(); }
+      if(e.key === 'Escape'){ onCancel(); }
+    }
+    okBtn.addEventListener('click', onOk);
+    cancelBtn.addEventListener('click', onCancel);
+    input.addEventListener('keydown', onKey);
+  });
+}
+function customPrompt(title, defaultValue='', password=false){
+  return customDialog({ title, defaultValue, password });
+}
+function customAlert(message){
+  return customDialog({ title: message, alertOnly: true });
+}
 
 // Persistent storage for saved watch links — backed by Pantry (getpantry.cloud),
 // a free JSON storage service. All watch links live as top-level keys inside one
@@ -766,7 +853,7 @@ async function setupPlaylist(a){
       const link = links[ep];
       rows.push(`
         <div class="playlist-row ${link ? 'has-link' : ''}">
-          <span class="playlist-ep"><span class="ep-num">${ep}</span>Episode ${ep}</span>
+          <span class="playlist-ep" data-ep="${ep}" style="${link ? 'cursor:pointer;' : ''}"><span class="ep-num">${ep}</span>Episode ${ep}</span>
           <span class="playlist-actions">
             ${link ? `<button class="playlist-play" data-ep="${ep}">▶ Play</button>` : `<span class="watch-status">No link</span>`}
             <button class="playlist-edit" data-ep="${ep}">✎</button>
@@ -787,20 +874,27 @@ async function setupPlaylist(a){
         if(link) window.open(link, '_blank', 'noopener');
       });
     });
+    panel.querySelectorAll('.playlist-ep').forEach(el=>{
+      el.addEventListener('click', ()=>{
+        const ep = el.dataset.ep;
+        const link = record && record.links && record.links[ep];
+        if(link) window.open(link, '_blank', 'noopener');
+      });
+    });
     panel.querySelectorAll('.playlist-edit').forEach(btn=>{
       btn.addEventListener('click', async ()=>{
         if(!editUnlocked){
-          const pass = window.prompt('Enter password to edit this playlist:');
+          const pass = await customPrompt('Enter password to edit this playlist:', '', true);
           if(pass === null) return;
           if(pass !== PLAYLIST_PASSWORD){ status.textContent = 'Wrong password'; return; }
           editUnlocked = true;
         }
         const ep = btn.dataset.ep;
+        if(!record) record = emptyRecord();
         const existing = (record.links && record.links[ep]) || '';
-        const entered = window.prompt(`Link for Episode ${ep}:`, existing || 'https://');
+        const entered = await customPrompt(`Link for Episode ${ep}:`, existing || 'https://');
         if(entered === null) return;
         const trimmed = entered.trim();
-        if(!record) record = emptyRecord();
         if(!record.links) record.links = {};
         if(!trimmed){
           delete record.links[ep];
@@ -871,9 +965,9 @@ async function renderMyList(){
       btn.addEventListener('click', async (e)=>{
         e.stopPropagation();
         const id = btn.dataset.id;
-        const pass = window.prompt('Enter password to remove this playlist:');
+        const pass = await customPrompt('Enter password to remove this playlist:', '', true);
         if(pass === null) return;
-        if(pass !== PLAYLIST_PASSWORD){ alert('Wrong password'); return; }
+        if(pass !== PLAYLIST_PASSWORD){ await customAlert('Wrong password'); return; }
         await storageDelete('playlist:'+id);
         renderMyList();
       });
