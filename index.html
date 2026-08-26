@@ -829,7 +829,20 @@ async function loadQuote(title){
 // Playlist handling — each anime stores up to 10 episode links as one record,
 // persisted via storageSet/Get, which syncs through Pantry across all your devices
 // (falls back to local-only if offline).
-const PLAYLIST_PASSWORD = '1mnbvcxz';
+// The raw password is never stored in the source — only its SHA-256 hash.
+// This stops someone from reading the password directly via "View Source" or
+// DevTools; they'd have to brute-force/reverse the hash instead. Note: this
+// raises the bar but is not real security — the check still runs entirely in
+// the browser, so a determined person could still find a match by trying
+// passwords and comparing hashes. Genuine protection needs a server-side check
+// (e.g. through the Cloudflare Worker already used for TTS).
+const PLAYLIST_PASSWORD_HASH = 'be0858b7c0792dec453ee56bd5f99c753052eeb4c168d15e396523cebcb42414';
+async function checkPlaylistPassword(pass){
+  const bytes = new TextEncoder().encode(pass || '');
+  const digest = await crypto.subtle.digest('SHA-256', bytes);
+  const hex = Array.from(new Uint8Array(digest)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  return hex === PLAYLIST_PASSWORD_HASH;
+}
 async function setupPlaylist(a){
   const id = String(a.mal_id);
   const playlistBtn = document.getElementById('playlistBtn');
@@ -886,7 +899,7 @@ async function setupPlaylist(a){
         if(!editUnlocked){
           const pass = await customPrompt('Enter password to edit this playlist:', '', true);
           if(pass === null) return;
-          if(pass !== PLAYLIST_PASSWORD){ status.textContent = 'Wrong password'; return; }
+          if(!(await checkPlaylistPassword(pass))){ status.textContent = 'Wrong password'; return; }
           editUnlocked = true;
         }
         const ep = btn.dataset.ep;
@@ -967,7 +980,7 @@ async function renderMyList(){
         const id = btn.dataset.id;
         const pass = await customPrompt('Enter password to remove this playlist:', '', true);
         if(pass === null) return;
-        if(pass !== PLAYLIST_PASSWORD){ await customAlert('Wrong password'); return; }
+        if(!(await checkPlaylistPassword(pass))){ await customAlert('Wrong password'); return; }
         await storageDelete('playlist:'+id);
         renderMyList();
       });
@@ -1155,4 +1168,3 @@ loadTrending();
 </script>
 </body>
 </html>
-
