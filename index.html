@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🅑🅐🅓🅢🅗🅐 — Late-Night Anime Guide</title>
+<title> — Late-Night Anime Guide</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -86,6 +86,11 @@
   .hero-art{background-size:cover; background-position:center; position:relative;}
   .hero-art::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg, rgba(14,17,22,0) 60%, var(--surface) 100%);}
   .hero-body{padding:28px 28px 24px; display:flex; flex-direction:column; gap:12px;}
+  .hero-rank{
+    position:absolute; top:10px; left:10px; z-index:2;
+    font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:600; color:var(--bg);
+    background:var(--amber); padding:2px 6px; border-radius:var(--radius); letter-spacing:0.5px;
+  }
   .onair{
     display:inline-flex; align-items:center; gap:6px; width:fit-content;
     font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.3px;
@@ -108,7 +113,10 @@
   .section-label{
     display:flex; align-items:center; gap:10px; margin:48px 0 18px;
   }
-  .section-label h2{font-family:'Bebas Neue',sans-serif; font-size:24px; letter-spacing:2px; color:var(--paper);}
+  .section-label h2{
+    font-family:'Bebas Neue',sans-serif; font-size:24px; letter-spacing:2px; color:var(--paper);
+    text-transform:uppercase;
+  }
   .section-label .rule{flex:1; height:1px; background:var(--line); order:3;}
   .section-label .count{
     order:2;
@@ -118,11 +126,14 @@
   }
 
   /* GRID */
-  .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); align-items:start; gap:14px;}
+  .grid{
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+    align-items:start; grid-auto-rows:1fr; gap:14px;
+  }
   .card{
     background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
     cursor:pointer; overflow:hidden; position:relative; transition:border-color .15s, transform .15s;
-    display:flex; flex-direction:column;
+    display:flex; flex-direction:column; height:100%;
   }
   .card:hover{border-color:var(--amber); transform:translateY(-2px);}
   .card .ch-num{
@@ -135,15 +146,22 @@
     font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--paper);
     background:rgba(14,17,22,0.75); padding:2px 6px; border-radius:var(--radius); backdrop-filter:blur(2px);
   }
-  .card img{width:100%; aspect-ratio:2/3; object-fit:cover; object-position:center top; display:block; background:var(--surface-2); flex:0 0 auto;}
+  .card img{
+    width:100%; aspect-ratio:2/3; object-fit:cover; object-position:center center;
+    display:block; background:var(--surface-2); flex:0 0 auto;
+  }
   .card .img-fallback{
     width:100%; aspect-ratio:2/3; display:flex; align-items:center; justify-content:center;
     background:linear-gradient(135deg, var(--surface-2), var(--surface));
     color:var(--muted); font-family:'Bebas Neue',sans-serif; font-size:48px; letter-spacing:1px;
     flex:0 0 auto;
   }
-  .card .info{padding:10px 10px 12px;}
-  .card .title{font-size:13px; font-weight:600; line-height:1.3; color:var(--paper); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;}
+  .card .info{padding:10px 10px 12px; flex:1 1 auto; display:flex; flex-direction:column;}
+  .card .title{
+    font-size:13px; font-weight:600; line-height:1.3; color:var(--paper);
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+    min-height:calc(1.3em * 2);
+  }
   .card .sub{font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--muted); margin-top:4px; text-transform:uppercase; letter-spacing:0.5px;}
 
   .state{font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--muted); padding:40px 0; text-align:center;}
@@ -303,6 +321,8 @@
     background-size:300% 100%;
     -webkit-background-clip:text; background-clip:text; color:transparent;
     animation:markShift 4s linear infinite;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
   }
   @media (prefers-reduced-motion: reduce){
     footer .credit{animation:none; color:var(--muted);}
@@ -331,7 +351,7 @@
 <header>
   <div class="logo">
     <span class="dot"></span>
-    <h1 class="mark">✿BOSS✿</h1>
+    <h1 class="mark">BOSS</h1>
     <span class="tagline">late-night anime guide</span>
   </div>
   <nav class="top-nav">
@@ -347,7 +367,7 @@
   <div id="heroSlot"></div>
 
   <div class="section-label">
-    <h2 id="gridTitle">NOW TRENDING</h2>
+    <h2 id="gridTitle">Now Trending</h2>
     <span class="count" id="gridCount"></span>
     <div class="rule"></div>
   </div>
@@ -355,7 +375,7 @@
 </main>
 
 <footer>
-  <span class="credit">MADE BY ✿BADSHA✿</span>
+  <span class="credit">Made by Badsha</span>
 </footer>
 
 <div class="modal-bg" id="modalBg">
@@ -436,13 +456,17 @@ function customAlert(message){
   return customDialog({ title: message, alertOnly: true });
 }
 
-// Persistent storage for saved watch links — backed by Pantry (getpantry.cloud),
-// a free JSON storage service. All watch links live as top-level keys inside one
-// basket, so saving on any device updates the same basket everyone else reads from.
-// Falls back to localStorage (this device only) if the network/Pantry is unreachable.
-const PANTRY_ID = '7c315112-9d29-4d70-867e-e4cb227bd02c';
-const PANTRY_BASKET = 'watchlinks';
-const PANTRY_BASE = `https://getpantry.cloud/apiv1/pantry/${PANTRY_ID}/basket/${PANTRY_BASKET}`;
+// Persistent storage for saved watch links — routed through a Cloudflare Worker
+// proxy (see pantry-worker.js) instead of calling getpantry.cloud directly.
+// This keeps the real Pantry basket ID off the client entirely: the Worker holds
+// it as a server-side secret, so nobody reading this page's source can see or
+// reuse it. The Worker forwards GET/POST to Pantry and returns the same JSON shape.
+// Falls back to localStorage (this device only) if the network/Worker is unreachable.
+//
+// SETUP: deploy pantry-worker.js to Cloudflare Workers (see comments in that file),
+// then paste the deployed URL below.
+const PANTRY_WORKER_URL = 'https://pantry-proxy.badsha90sekh.workers.dev';
+const PANTRY_BASE = PANTRY_WORKER_URL;
 
 function pantryKey(key){
   // Pantry JSON object keys can't contain ':' safely across all clients — sanitize.
@@ -459,13 +483,25 @@ async function pantryFetch(url, options){
   }
 }
 
+let lastPantryError = '';
+
 async function pantryGetAll(){
+  // Skip the network attempt entirely when the device is known to be offline,
+  // so we don't generate a failed-fetch entry in the console for nothing.
+  if(typeof navigator !== 'undefined' && navigator.onLine === false){
+    lastPantryError = 'device reports offline';
+    return null;
+  }
   try{
     const res = await pantryFetch(PANTRY_BASE, { method: 'GET' });
     if(res.status === 400 || res.status === 404) return {}; // basket doesn't exist yet
-    if(!res.ok) throw new Error('HTTP '+res.status);
+    if(!res.ok){
+      lastPantryError = 'HTTP ' + res.status;
+      throw new Error(lastPantryError);
+    }
     return await res.json();
   }catch(e){
+    lastPantryError = e && e.message ? e.message : String(e);
     return null; // signals "couldn't reach Pantry" so callers can fall back
   }
 }
@@ -488,13 +524,15 @@ async function storageSet(key, value){
     });
     if(res.ok){
       try{ localStorage.setItem(key, value); }catch(e){}
-      return true;
+      return { ok:true, synced:true };
     }
-  }catch(e){ /* fall through to local */ }
-  try{ localStorage.setItem(key, value); return true; }catch(e){ return false; }
+    lastPantryError = 'HTTP ' + res.status;
+  }catch(e){ lastPantryError = e && e.message ? e.message : String(e); }
+  try{ localStorage.setItem(key, value); return { ok:true, synced:false }; }catch(e){ return { ok:false, synced:false }; }
 }
 async function storageDelete(key){
   const pk = pantryKey(key);
+  let synced = false;
   try{
     const all = await pantryGetAll();
     if(all !== null && (pk in all)){
@@ -504,9 +542,12 @@ async function storageDelete(key){
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(all)
       });
+      synced = true;
+    }else if(all !== null){
+      synced = true; // key never existed remotely — nothing to sync, not an offline case
     }
-  }catch(e){ /* ignore, still clear local copy below */ }
-  try{ localStorage.removeItem(key); return true; }catch(e){ return false; }
+  }catch(e){ /* ignore, still clear local copy below — synced stays false */ }
+  try{ localStorage.removeItem(key); return { ok:true, synced }; }catch(e){ return { ok:false, synced:false }; }
 }
 async function storageListKeys(prefix){
   const pp = pantryKey(prefix);
@@ -527,12 +568,18 @@ async function storageListKeys(prefix){
 const FORMAT_LABEL = {TV:'TV', TV_SHORT:'TV Short', MOVIE:'Movie', SPECIAL:'Special', OVA:'OVA', ONA:'ONA', MUSIC:'Music'};
 const STATUS_LABEL = {FINISHED:'Finished', RELEASING:'Airing', NOT_YET_RELEASED:'Upcoming', CANCELLED:'Cancelled', HIATUS:'Hiatus'};
 
-// Normalize an AniList Media object into the shape the UI expects
+// Normalize an AniList Media object into the shape the UI expects.
+// Fix #2: return null for entries with no usable title AND no cover image, so
+// callers can filter them out instead of rendering an empty metadata-only card.
 function normalize(m){
+  if(!m) return null;
+  const title = m.title?.english || m.title?.romaji || m.title?.native || '';
+  const cover = m.coverImage?.large || '';
+  if(!title && !cover) return null;
   return {
     mal_id: m.id,
-    title: m.title?.english || m.title?.romaji || m.title?.native || 'Untitled',
-    images: { jpg: { image_url: m.coverImage?.large || '', large_image_url: m.coverImage?.extraLarge || m.coverImage?.large || '' } },
+    title: title || 'Untitled',
+    images: { jpg: { image_url: cover, large_image_url: m.coverImage?.extraLarge || cover } },
     score: (m.averageScore != null) ? (m.averageScore/10).toFixed(1) : null,
     type: FORMAT_LABEL[m.format] || m.format || '—',
     episodes: m.episodes || null,
@@ -552,13 +599,17 @@ function formatDate(d){
   return parts.reverse().join('-');
 }
 
+// Fix #3: hero now carries a rank badge (rank 1) so the visible sequence
+// in NOW TRENDING reads 01 (hero)  02, 03, 04... in the grid, with no gaps.
 function renderHero(a){
   if(!a){ heroSlot.innerHTML = ''; return; }
   const img = a.images?.jpg?.large_image_url || a.images?.jpg?.image_url || '';
   const genres = (a.genres||[]).slice(0,4).map(g=>`<span class="tag">${esc(g.name)}</span>`).join('');
   heroSlot.innerHTML = `
     <div class="hero">
-      <div class="hero-art" style="background-image:url('${img}'); background-color:var(--surface-2);"></div>
+      <div class="hero-art" style="background-image:url('${img}'); background-color:var(--surface-2);">
+        <span class="hero-rank">01</span>
+      </div>
       <div class="hero-body">
         <span class="onair"><span class="d"></span>Now airing</span>
         <div class="hero-title">${esc(a.title)}</div>
@@ -570,15 +621,17 @@ function renderHero(a){
         </div>
         <div class="hero-syn">${esc((a.synopsis||'No synopsis available.').slice(0,220))}${a.synopsis && a.synopsis.length>220 ? '…' : ''}</div>
         <div class="hero-tags">${genres}</div>
-        <div class="hero-cta" data-id="${a.mal_id}">▸ VIEW FULL PROGRAM</div>
+        <div class="hero-cta" data-id="${a.mal_id}"> VIEW FULL PROGRAM</div>
       </div>
     </div>`;
   heroSlot.querySelector('.hero-cta').addEventListener('click', ()=>openModal(a.mal_id));
 }
 
-function cardHTML(a, index){
+// Fix #3: `rankOffset` lets the grid continue the numbering sequence started
+// by the hero card, instead of always counting from 01 for whatever's left.
+function cardHTML(a, index, rankOffset){
   const img = a.images?.jpg?.image_url || '';
-  const label = index != null ? String(index+1).padStart(2,'0') : (a.type||'').slice(0,2).toUpperCase();
+  const label = index != null ? String(index + 1 + (rankOffset||0)).padStart(2,'0') : (a.type||'').slice(0,2).toUpperCase();
   const imgTag = img
     ? `<img loading="lazy" src="${img}" alt="${esc(a.title)}" onerror="this.onerror=null;this.replaceWith(Object.assign(document.createElement('div'),{className:'img-fallback',textContent:'${esc((a.title||'?').charAt(0))}'}));">`
     : `<div class="img-fallback">${esc((a.title||'?').charAt(0))}</div>`;
@@ -594,8 +647,8 @@ function cardHTML(a, index){
     </div>`;
 }
 
-function renderGrid(list, indexed){
-  grid.innerHTML = list.map((a,i)=>cardHTML(a, indexed ? i : null)).join('');
+function renderGrid(list, indexed, rankOffset){
+  grid.innerHTML = list.map((a,i)=>cardHTML(a, indexed ? i : null, rankOffset)).join('');
   grid.querySelectorAll('.card').forEach(c=>{
     c.addEventListener('click', ()=>openModal(c.dataset.id));
   });
@@ -658,11 +711,13 @@ const DETAIL_QUERY = `
   }`;
 
 async function loadTrending(){
-  gridTitle.textContent = 'NOW TRENDING';
+  gridTitle.textContent = 'Now Trending';
   grid.innerHTML = '<div class="state">TUNING IN…</div>';
   try{
     const data = await gql(TRENDING_QUERY, { perPage: 19 });
-    const list = (data.Page.media || []).map(normalize);
+    // Fix #2: normalize() may return null for sparse entries — filter those out
+    // before they ever reach the grid, instead of rendering empty placeholder cards.
+    const list = (data.Page.media || []).map(normalize).filter(Boolean);
     if(list.length === 0){
       grid.innerHTML = '<div class="state">NO SIGNAL — the guide returned nothing. Try reloading.</div>';
       gridCount.textContent = '';
@@ -670,7 +725,9 @@ async function loadTrending(){
     }
     gridCount.textContent = list.length + ' SIGNALS';
     renderHero(list[0]);
-    renderGrid(list.slice(1), true);
+    // Fix #3: pass rankOffset=1 so the grid picks up numbering at 02, continuing
+    // from the hero's rank 1 instead of restarting at 01.
+    renderGrid(list.slice(1), true, 1);
   }catch(e){
     grid.innerHTML = `<div class="state">SIGNAL LOST — ${e.status === 429 ? 'too many requests, wait a moment and reload.' : 'could not reach the guide (' + e.message + ').'}</div>`;
   }
@@ -702,12 +759,12 @@ navListBtn.addEventListener('click', ()=>{
 
 async function doSearch(q){
   setActiveNav('trending');
-  gridTitle.textContent = `RESULTS FOR "${q.toUpperCase()}"`;
+  gridTitle.textContent = `Results for "${q}"`;
   grid.innerHTML = '<div class="state">SCANNING FREQUENCIES…</div>';
   heroSlot.innerHTML = '';
   try{
     const data = await gql(SEARCH_QUERY, { search: q, perPage: 18 });
-    const list = (data.Page.media || []).map(normalize);
+    const list = (data.Page.media || []).map(normalize).filter(Boolean);
     gridCount.textContent = list.length + ' FOUND';
     if(list.length === 0){
       grid.innerHTML = '<div class="state">NO SIGNAL FOUND. Try a different title.</div>';
@@ -726,10 +783,14 @@ async function openModal(id){
   try{
     const data = await gql(DETAIL_QUERY, { id: Number(id) });
     const a = normalize(data.Media);
+    if(!a){
+      modalContent.innerHTML = '<div class="state" style="padding:60px 0;">Could not load program data.</div>';
+      return;
+    }
     const img = a.images?.jpg?.large_image_url || '';
     const genres = (a.genres||[]).concat(a.themes||[]).slice(0,6).map(g=>`<span class="tag">${esc(g.name)}</span>`).join('');
     modalContent.innerHTML = `
-      <button class="close-btn" id="closeBtn" aria-label="Close">✕</button>
+      <button class="close-btn" id="closeBtn" aria-label="Close"></button>
       <div class="modal-head">
         <img src="${img}" alt="${esc(a.title)}" onerror="this.onerror=null;this.style.objectFit='none';this.style.background='var(--surface-2)';this.removeAttribute('src');">
         <div class="modal-head-body">
@@ -743,7 +804,7 @@ async function openModal(id){
           </div>
           <div class="modal-tags">${genres}</div>
           <div class="watch-actions">
-            <button class="watch-btn primary" id="playlistBtn">▸ PLAYLIST (1-10)</button>
+            <button class="watch-btn primary" id="playlistBtn"> PLAYLIST (1-10)</button>
             <span class="watch-status" id="watchStatus"></span>
           </div>
           <div id="playlistPanel" class="playlist-panel" style="display:none;"></div>
@@ -753,13 +814,13 @@ async function openModal(id){
         <div class="quote-block loading" id="quoteBlock" style="display:none;">
           <div class="q-text" id="quoteText">Loading a quote…</div>
           <div class="q-char" id="quoteChar"></div>
-          <button class="voice-btn" id="listenQuoteBtn" style="display:none; margin-top:10px;">▸ LISTEN TO QUOTE</button>
+          <button class="voice-btn" id="listenQuoteBtn" style="display:none; margin-top:10px;"> LISTEN TO QUOTE</button>
         </div>
         <h3>Listen</h3>
         <div class="voice-controls">
-          <button class="voice-btn" id="listenEnBtn">▸ ENGLISH NARRATION</button>
-          <button class="voice-btn" id="listenHiBtn">▸ HINDI VOICEOVER</button>
-          <button class="voice-btn stop" id="stopBtn" style="display:none;">⏹ STOP</button>
+          <button class="voice-btn" id="listenEnBtn"> ENGLISH NARRATION</button>
+          <button class="voice-btn" id="listenHiBtn"> HINDI VOICEOVER</button>
+          <button class="voice-btn stop" id="stopBtn" style="display:none;"> STOP</button>
           <span class="voice-status" id="voiceStatus"></span>
         </div>
         <h3>Synopsis</h3>
@@ -868,15 +929,15 @@ async function setupPlaylist(a){
         <div class="playlist-row ${link ? 'has-link' : ''}">
           <span class="playlist-ep" data-ep="${ep}" style="${link ? 'cursor:pointer;' : ''}"><span class="ep-num">${ep}</span>Episode ${ep}</span>
           <span class="playlist-actions">
-            ${link ? `<button class="playlist-play" data-ep="${ep}">▶ Play</button>` : `<span class="watch-status">No link</span>`}
-            <button class="playlist-edit" data-ep="${ep}">✎</button>
+            ${link ? `<button class="playlist-play" data-ep="${ep}"> Play</button>` : `<span class="watch-status">No link</span>`}
+            <button class="playlist-edit" data-ep="${ep}"></button>
           </span>
         </div>`);
     }
     panel.innerHTML = `
       <div class="playlist-panel-head">
         <span>1–10 episode links</span>
-        <span>${editUnlocked ? 'Edit mode — tap ✎ to set a link' : 'Tap ✎ once to unlock editing'}</span>
+        <span>${editUnlocked ? 'Edit mode — tap  to set a link' : 'Tap  once to unlock editing'}</span>
       </div>
       ${rows.join('')}`;
 
@@ -917,10 +978,16 @@ async function setupPlaylist(a){
         record.updatedAt = Date.now();
         status.textContent = 'Saving…';
         const hasAny = Object.keys(record.links).length > 0;
-        const ok = hasAny
+        const result = hasAny
           ? await storageSet('playlist:'+id, JSON.stringify(record))
           : await storageDelete('playlist:'+id);
-        status.textContent = ok ? 'Saved — synced across your devices' : 'Could not save — try again';
+        if(!result || !result.ok){
+          status.textContent = 'Could not save — try again';
+        }else if(result.synced){
+          status.textContent = 'Saved — synced across your devices';
+        }else{
+          status.textContent = 'Saved locally only — ' + (lastPantryError || 'unknown reason');
+        }
         renderPanel();
       });
     });
@@ -942,7 +1009,7 @@ async function setupPlaylist(a){
 }
 
 async function renderMyList(){
-  gridTitle.textContent = 'MY LIST';
+  gridTitle.textContent = 'My List';
   gridCount.textContent = '';
   heroSlot.innerHTML = '';
   grid.innerHTML = '<div class="state">LOADING YOUR SAVED PLAYLISTS…</div>';
@@ -981,7 +1048,10 @@ async function renderMyList(){
         const pass = await customPrompt('Enter password to remove this playlist:', '', true);
         if(pass === null) return;
         if(!(await checkPlaylistPassword(pass))){ await customAlert('Wrong password'); return; }
-        await storageDelete('playlist:'+id);
+        const result = await storageDelete('playlist:'+id);
+        if(result && result.ok && !result.synced){
+          await customAlert('Removed on this device only (offline) — will not sync to other devices.');
+        }
         renderMyList();
       });
     });
@@ -999,7 +1069,7 @@ function listCardHTML(a){
   return `
     <div class="card" data-id="${a.id}">
       <span class="watch-badge">${count}/10 EP</span>
-      <button class="remove-btn" data-id="${a.id}" title="Remove">✕</button>
+      <button class="remove-btn" data-id="${a.id}" title="Remove"></button>
       ${imgTag}
       <div class="info">
         <div class="title">${esc(a.title)}</div>
@@ -1144,7 +1214,7 @@ function setupVoiceControls(text){
         if(!res.ok) throw new Error('HTTP '+res.status);
         const data = await res.json();
         hi = (data[0]||[]).map(chunk=>chunk[0]).join('');
-        hi = hi.replace(/\s+([।,.!?])/g, '$1').replace(/\s{2,}/g, ' ').trim();
+        hi = hi.replace(/\s+([,.!?])/g, '$1').replace(/\s{2,}/g, ' ').trim();
         hindiCache = hi;
       }
       // Full Devanagari Hindi read by a native Hindi voice — natural, anime-dubbing-style narration
@@ -1168,3 +1238,4 @@ loadTrending();
 </script>
 </body>
 </html>
+
