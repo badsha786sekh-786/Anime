@@ -222,6 +222,11 @@
   .watch-btn.link-btn{border-color:rgba(255,180,84,0.55); box-shadow:0 0 0 1px rgba(255,180,84,0.12), 0 0 14px rgba(255,180,84,0.30);}
   .watch-btn.link-btn:hover{border-color:var(--amber); color:var(--amber); box-shadow:0 0 0 1px rgba(255,180,84,0.25), 0 0 20px rgba(255,180,84,0.55);}
   .watch-status{font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--muted);}
+  .voice-status{
+    display:block; width:100%; margin-top:8px;
+    font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--muted);
+    white-space:pre-line; line-height:1.7;
+  }
   .playlist-panel{
     margin-top:12px; border:1px solid var(--line); border-radius:var(--radius);
     background:var(--surface-2); overflow:hidden;
@@ -445,10 +450,6 @@ const navListBtn = document.getElementById('navListBtn');
 
 function esc(s){ return (s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
-// Custom in-page dialog, replacing window.prompt/alert.
-// Many WebViews (apps that embed a web page without a full browser UI) don't
-// implement window.prompt/alert at all, so they silently do nothing when called.
-// This dialog is built from plain DOM elements and always works.
 function customDialog({title, defaultValue=null, password=false, alertOnly=false}){
   return new Promise(resolve=>{
     const bg = document.getElementById('promptBg');
@@ -494,20 +495,10 @@ function customAlert(message){
   return customDialog({ title: message, alertOnly: true });
 }
 
-// Persistent storage for saved watch links — routed through a Cloudflare Worker
-// proxy (see pantry-worker.js) instead of calling getpantry.cloud directly.
-// This keeps the real Pantry basket ID off the client entirely: the Worker holds
-// it as a server-side secret, so nobody reading this page's source can see or
-// reuse it. The Worker forwards GET/POST to Pantry and returns the same JSON shape.
-// Falls back to localStorage (this device only) if the network/Worker is unreachable.
-//
-// SETUP: deploy pantry-worker.js to Cloudflare Workers (see comments in that file),
-// then paste the deployed URL below.
 const PANTRY_WORKER_URL = 'https://pantry-proxy.badsha90sekh.workers.dev';
 const PANTRY_BASE = PANTRY_WORKER_URL;
 
 function pantryKey(key){
-  // Pantry JSON object keys can't contain ':' safely across all clients — sanitize.
   return key.replace(/:/g, '__');
 }
 
@@ -523,24 +514,41 @@ async function pantryFetch(url, options){
 
 let lastPantryError = '';
 
-async function pantryGetAll(){
-  // Skip the network attempt entirely when the device is known to be offline,
-  // so we don't generate a failed-fetch entry in the console for nothing.
+let pantryCache = null; // { data, ts }
+const PANTRY_CACHE_TTL = 15000;
+
+async function pantryGetAll(forceFresh){
   if(typeof navigator !== 'undefined' && navigator.onLine === false){
     lastPantryError = 'device reports offline';
-    return null;
+    return pantryCache ? pantryCache.data : null;
   }
-  try{
-    const res = await pantryFetch(PANTRY_BASE, { method: 'GET' });
-    if(res.status === 400 || res.status === 404) return {}; // basket doesn't exist yet
-    if(!res.ok){
-      lastPantryError = 'HTTP ' + res.status;
-      throw new Error(lastPantryError);
+  if(!forceFresh && pantryCache && (Date.now() - pantryCache.ts) < PANTRY_CACHE_TTL){
+    return pantryCache.data;
+  }
+  for(let attempt=0; attempt<=3; attempt++){
+    try{
+      const res = await pantryFetch(PANTRY_BASE, { method: 'GET' });
+      if(res.status === 400 || res.status === 404){
+        pantryCache = { data: {}, ts: Date.now() };
+        return {};
+      }
+      if(res.status === 429){
+        lastPantryError = 'HTTP 429 (rate limited)';
+        if(attempt < 3){ await new Promise(r=>setTimeout(r, 900 * (attempt+1))); continue; }
+        return pantryCache ? pantryCache.data : null;
+      }
+      if(!res.ok){
+        lastPantryError = 'HTTP ' + res.status;
+        throw new Error(lastPantryError);
+      }
+      const json = await res.json();
+      pantryCache = { data: json, ts: Date.now() };
+      return json;
+    }catch(e){
+      lastPantryError = e && e.message ? e.message : String(e);
+      if(attempt < 3){ await new Promise(r=>setTimeout(r, 900 * (attempt+1))); continue; }
+      return pantryCache ? pantryCache.data : null;
     }
-    return await res.json();
-  }catch(e){
-    lastPantryError = e && e.message ? e.message : String(e);
-    return null; // signals "couldn't reach Pantry" so callers can fall back
   }
 }
 
@@ -550,67 +558,78 @@ async function storageGet(key){
   if(all !== null){
     return (pk in all) ? JSON.stringify(all[pk]) : null;
   }
-  return null; // Pantry unreachable — no local cache to fall back to anymore
+  return null;
 }
-async function storageSet(key, value){
+
+async function storageSet(key, value, password){
   const pk = pantryKey(key);
   try{
-    // Read-merge-write: fetch existing data first, merge the new key in,
-    // then write the WHOLE object back — so we never depend on the
-    // Worker/Pantry doing the merge for us. (If POST only replaced the
-    // basket with whatever was sent, each new save would silently wipe
-    // out every other previously-saved playlist.)
-    const all = await pantryGetAll();
+    const all = await pantryGetAll(true);
     const merged = (all !== null) ? { ...all } : {};
     merged[pk] = JSON.parse(value);
+    merged.__password = password;
 
     const res = await pantryFetch(PANTRY_BASE, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(merged)
     });
-    if(res.ok) return { ok:true, synced:true };
+    if(res.status === 401){
+      lastPantryError = 'Wrong password';
+      return { ok:false, synced:false, status:401 };
+    }
+    if(res.ok){
+      delete merged.__password;
+      pantryCache = { data: merged, ts: Date.now() };
+      return { ok:true, synced:true };
+    }
     lastPantryError = 'HTTP ' + res.status;
   }catch(e){ lastPantryError = e && e.message ? e.message : String(e); }
   return { ok:false, synced:false };
 }
-async function storageDelete(key){
+async function storageDelete(key, password){
   const pk = pantryKey(key);
   try{
-    const all = await pantryGetAll();
+    const all = await pantryGetAll(true);
     if(all !== null && (pk in all)){
-      delete all[pk];
+      const copy = { ...all };
+      delete copy[pk];
+      copy.__password = password;
       const res = await pantryFetch(PANTRY_BASE, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(all)
+        body: JSON.stringify(copy)
       });
+      if(res.status === 401){
+        lastPantryError = 'Wrong password';
+        return { ok:false, synced:false, status:401 };
+      }
       if(!res.ok){ lastPantryError = 'HTTP ' + res.status; return { ok:false, synced:false }; }
+      delete copy.__password;
+      pantryCache = { data: copy, ts: Date.now() };
       return { ok:true, synced:true };
     }else if(all !== null){
-      return { ok:true, synced:true }; // key never existed remotely — nothing to do
+      return { ok:true, synced:true };
     }
   }catch(e){ lastPantryError = e && e.message ? e.message : String(e); }
-  return { ok:false, synced:false }; // Pantry unreachable — nothing local to fall back to
+  return { ok:false, synced:false };
 }
 async function storageListKeys(prefix){
   const pp = pantryKey(prefix);
   const all = await pantryGetAll();
-  if(all === null) return [];
+  if(all === null) return null;
   return Object.keys(all).filter(k=>k.startsWith(pp)).map(k=>k.replace(/__/g, ':'));
 }
 
 const FORMAT_LABEL = {TV:'TV', TV_SHORT:'TV Short', MOVIE:'Movie', SPECIAL:'Special', OVA:'OVA', ONA:'ONA', MUSIC:'Music'};
 const STATUS_LABEL = {FINISHED:'Finished', RELEASING:'Airing', NOT_YET_RELEASED:'Upcoming', CANCELLED:'Cancelled', HIATUS:'Hiatus'};
 
-// Normalize an AniList Media object into the shape the UI expects.
-// Fix #2: return null for entries with no usable title AND no cover image, so
-// callers can filter them out instead of rendering an empty metadata-only card.
 function normalize(m){
   if(!m) return null;
   const title = m.title?.english || m.title?.romaji || m.title?.native || '';
   const cover = m.coverImage?.large || '';
   if(!title && !cover) return null;
+  const airedSoFar = m.nextAiringEpisode?.episode ? (m.nextAiringEpisode.episode - 1) : null;
   return {
     mal_id: m.id,
     title: title || 'Untitled',
@@ -618,6 +637,7 @@ function normalize(m){
     score: (m.averageScore != null) ? (m.averageScore/10).toFixed(1) : null,
     type: FORMAT_LABEL[m.format] || m.format || '—',
     episodes: m.episodes || null,
+    episodesAired: airedSoFar,
     status: STATUS_LABEL[m.status] || m.status || '',
     genres: (m.genres||[]).map(g=>({name:g})),
     synopsis: (m.description||'').replace(/<br\s*\/?>/gi,' ').replace(/<[^>]+>/g,''),
@@ -625,6 +645,12 @@ function normalize(m){
     aired: { string: formatDate(m.startDate) },
     studios: (m.studios?.nodes||[]).map(s=>({name:s.name}))
   };
+}
+function episodeLabel(a, upper){
+  const unit = upper ? 'EP' : 'ep';
+  if(a.episodes) return a.episodes + ' ' + unit;
+  if(a.episodesAired && a.episodesAired > 0) return a.episodesAired + '+ ' + unit;
+  return upper ? '—' : '?';
 }
 function formatDate(d){
   if(!d || !d.year) return '—';
@@ -634,8 +660,6 @@ function formatDate(d){
   return parts.reverse().join('-');
 }
 
-// Fix #3: hero now carries a rank badge (rank 1) so the visible sequence
-// in NOW TRENDING reads 01 (hero) → 02, 03, 04... in the grid, with no gaps.
 function renderHero(a){
   if(!a){ heroSlot.innerHTML = ''; return; }
   const img = a.images?.jpg?.large_image_url || a.images?.jpg?.image_url || '';
@@ -651,7 +675,7 @@ function renderHero(a){
         <div class="hero-meta">
           <span>SCORE ${a.score ?? '—'}</span>
           <span>${esc(a.type||'—')}</span>
-          <span>${a.episodes ? a.episodes+' EP' : '—'}</span>
+          <span>${episodeLabel(a, true)}</span>
           <span>${esc(a.status||'')}</span>
         </div>
         <div class="hero-syn">${esc((a.synopsis||'No synopsis available.').slice(0,220))}${a.synopsis && a.synopsis.length>220 ? '…' : ''}</div>
@@ -663,8 +687,6 @@ function renderHero(a){
   heroSlot.querySelector('.hero-cta').addEventListener('click', ()=>openModal(a.mal_id));
 }
 
-// Fix #3: `rankOffset` lets the grid continue the numbering sequence started
-// by the hero card, instead of always counting from 01 for whatever's left.
 function cardHTML(a, index, rankOffset){
   const img = a.images?.jpg?.image_url || '';
   const label = index != null ? String(index + 1 + (rankOffset||0)).padStart(2,'0') : (a.type||'').slice(0,2).toUpperCase();
@@ -678,7 +700,7 @@ function cardHTML(a, index, rankOffset){
       ${imgTag}
       <div class="info">
         <div class="title">${esc(a.title)}</div>
-        <div class="sub">${esc(a.type||'—')} · ${a.episodes ? a.episodes+' ep' : '?'}</div>
+        <div class="sub">${esc(a.type||'—')} · ${episodeLabel(a, false)}</div>
       </div>
     </div>`;
 }
@@ -690,7 +712,6 @@ function renderGrid(list, indexed, rankOffset){
   });
 }
 
-// POST a GraphQL query to AniList, retrying on 429/5xx with backoff
 async function gql(query, variables, attempt=0){
   const res = await fetch(API, {
     method: 'POST',
@@ -721,6 +742,7 @@ const MEDIA_FIELDS = `
   genres
   description(asHtml: false)
   isAdult
+  nextAiringEpisode { episode }
 `;
 
 const TRENDING_QUERY = `
@@ -746,13 +768,15 @@ const DETAIL_QUERY = `
     }
   }`;
 
+let viewToken = 0;
+
 async function loadTrending(){
+  const myToken = ++viewToken;
   gridTitle.textContent = 'Now Trending';
   grid.innerHTML = '<div class="state">TUNING IN…</div>';
   try{
     const data = await gql(TRENDING_QUERY, { perPage: 19 });
-    // Fix #2: normalize() may return null for sparse entries — filter those out
-    // before they ever reach the grid, instead of rendering empty placeholder cards.
+    if(myToken !== viewToken) return;
     const list = (data.Page.media || []).map(normalize).filter(Boolean);
     if(list.length === 0){
       grid.innerHTML = '<div class="state">NO SIGNAL — the guide returned nothing. Try reloading.</div>';
@@ -761,19 +785,62 @@ async function loadTrending(){
     }
     gridCount.textContent = list.length + ' SIGNALS';
     renderHero(list[0]);
-    // Fix #3: pass rankOffset=1 so the grid picks up numbering at 02, continuing
-    // from the hero's rank 1 instead of restarting at 01.
     renderGrid(list.slice(1), true, 1);
   }catch(e){
+    if(myToken !== viewToken) return;
     grid.innerHTML = `<div class="state">SIGNAL LOST — ${e.status === 429 ? 'too many requests, wait a moment and reload.' : 'could not reach the guide (' + e.message + ').'}</div>`;
   }
 }
 
 let searchTimer;
+let searchLayerPushed = false;
+let modalLayerPushed = false;
+let videoLayerPushed = false;
+let ignoreNextPopstate = false;
+
+function pushHistoryLayer(name){
+  history.pushState({ boss: name }, '');
+}
+function popHistoryLayer(){
+  if(history.state && history.state.boss){
+    ignoreNextPopstate = true;
+    history.back();
+  }
+}
+
+window.addEventListener('popstate', ()=>{
+  if(ignoreNextPopstate){ ignoreNextPopstate = false; return; }
+  const videoOpen = document.getElementById('videoBg').classList.contains('open');
+  const modalOpen = modalBg.classList.contains('open');
+  const searchActive = searchInput.value.trim().length > 0;
+  if(videoOpen){
+    closeVideoPlayer(true);
+  }else if(modalOpen){
+    closeModal(true);
+  }else if(searchActive){
+    searchInput.value = '';
+    searchLayerPushed = false;
+    setActiveNav('trending');
+    loadTrending();
+  }
+});
+
+searchInput.addEventListener('keydown', (e)=>{
+  if(e.key === 'Enter'){
+    e.preventDefault();
+    searchInput.blur();
+  }
+});
 searchInput.addEventListener('input', (e)=>{
   clearTimeout(searchTimer);
   const q = e.target.value.trim();
-  if(!q){ loadTrending(); return; }
+  if(!q){
+    if(searchLayerPushed){ popHistoryLayer(); searchLayerPushed = false; }
+    setActiveNav('trending');
+    loadTrending();
+    return;
+  }
+  if(!searchLayerPushed){ pushHistoryLayer('search'); searchLayerPushed = true; }
   searchTimer = setTimeout(()=>doSearch(q), 450);
 });
 
@@ -782,24 +849,30 @@ function setActiveNav(which){
   navListBtn.classList.toggle('active', which === 'list');
 }
 navTrendingBtn.addEventListener('click', ()=>{
+  clearTimeout(searchTimer);
   setActiveNav('trending');
+  if(searchLayerPushed){ popHistoryLayer(); searchLayerPushed = false; }
   searchInput.value = '';
   loadTrending();
 });
 navListBtn.addEventListener('click', ()=>{
+  clearTimeout(searchTimer);
   setActiveNav('list');
+  if(searchLayerPushed){ popHistoryLayer(); searchLayerPushed = false; }
   searchInput.value = '';
   renderMyList();
 });
 
 
 async function doSearch(q){
+  const myToken = ++viewToken;
   setActiveNav('trending');
   gridTitle.textContent = `Results for "${q}"`;
   grid.innerHTML = '<div class="state">SCANNING FREQUENCIES…</div>';
   heroSlot.innerHTML = '';
   try{
     const data = await gql(SEARCH_QUERY, { search: q, perPage: 18 });
+    if(myToken !== viewToken) return;
     const list = (data.Page.media || []).map(normalize).filter(Boolean);
     gridCount.textContent = list.length + ' FOUND';
     if(list.length === 0){
@@ -808,12 +881,14 @@ async function doSearch(q){
     }
     renderGrid(list, false);
   }catch(e){
+    if(myToken !== viewToken) return;
     grid.innerHTML = `<div class="state">SIGNAL LOST — ${e.status === 429 ? 'too many requests, wait a moment and try again.' : 'search failed (' + e.message + ').'}</div>`;
   }
 }
 
 async function openModal(id){
   modalBg.classList.add('open');
+  if(!modalLayerPushed){ pushHistoryLayer('modal'); modalLayerPushed = true; }
   document.body.style.overflow = 'hidden';
   modalContent.innerHTML = '<div class="state" style="padding:60px 0;">LOADING PROGRAM DATA…</div>';
   try{
@@ -834,7 +909,7 @@ async function openModal(id){
           <div class="modal-meta">
             <span>SCORE ${a.score ?? '—'}</span>
             <span>${esc(a.type||'—')}</span>
-            <span>${a.episodes ? a.episodes+' EP' : '—'}</span>
+            <span>${episodeLabel(a, true)}</span>
             <span>${esc(a.status||'')}</span>
             <span>${esc(a.rating||'')}</span>
           </div>
@@ -864,7 +939,7 @@ async function openModal(id){
         <h3>Aired</h3>
         <p>${esc(a.aired?.string || '—')} &nbsp;·&nbsp; Studio: ${esc((a.studios||[]).map(s=>s.name).join(', ') || '—')}</p>
       </div>`;
-    document.getElementById('closeBtn').addEventListener('click', closeModal);
+    document.getElementById('closeBtn').addEventListener('click', ()=>closeModal());
     setupVoiceControls(a.synopsis || '');
     setupPlaylist(a);
     loadQuote(a.title);
@@ -873,9 +948,6 @@ async function openModal(id){
   }
 }
 
-// AnimeChan quote lookup — tries a title-matched quote first, falls back to a
-// random quote across all anime, and hides the block entirely if both fail
-// (no API key required, so failures are usually rate limits or a title with no quotes).
 async function loadQuote(title){
   const block = document.getElementById('quoteBlock');
   const textEl = document.getElementById('quoteText');
@@ -897,7 +969,6 @@ async function loadQuote(title){
     }
     if(!res.ok) throw new Error('HTTP ' + res.status);
     const json = await res.json();
-    // Correct base domain is api.animechan.io — responses are wrapped as { status, data: {...} }
     const item = json?.data || json;
     if(!item || !item.content) throw new Error('empty');
     return item;
@@ -923,29 +994,7 @@ async function loadQuote(title){
   }
 }
 
-// Playlist handling — each anime stores up to 10 episode links as one record,
-// persisted via storageSet/Get, which syncs through Pantry across all your devices
-// (falls back to local-only if offline).
-// The raw password is never stored in the source — only its SHA-256 hash.
-// This stops someone from reading the password directly via "View Source" or
-// DevTools; they'd have to brute-force/reverse the hash instead. Note: this
-// raises the bar but is not real security — the check still runs entirely in
-// the browser, so a determined person could still find a match by trying
-// passwords and comparing hashes. Genuine protection needs a server-side check
-// (e.g. through the Cloudflare Worker already used for TTS).
-const PLAYLIST_PASSWORD_HASH = 'be0858b7c0792dec453ee56bd5f99c753052eeb4c168d15e396523cebcb42414';
-async function checkPlaylistPassword(pass){
-  const bytes = new TextEncoder().encode(pass || '');
-  const digest = await crypto.subtle.digest('SHA-256', bytes);
-  const hex = Array.from(new Uint8Array(digest)).map(b=>b.toString(16).padStart(2,'0')).join('');
-  return hex === PLAYLIST_PASSWORD_HASH;
-}
-
 // ---- In-page video player ----------------------------------------------
-// Detects the kind of link a user saved (YouTube, Vimeo, direct video file,
-// or "something else") and plays it inside the page instead of opening a
-// new tab. Anything it can't confidently embed just falls back to a
-// "open in new tab" link inside the same player box, so nothing is broken.
 function detectEmbed(url){
   try{
     const u = new URL(url);
@@ -992,13 +1041,17 @@ function detectEmbed(url){
   }
 }
 
-function closeVideoPlayer(){
+function closeVideoPlayer(fromPopstate){
   const bg = document.getElementById('videoBg');
   const wrap = document.getElementById('videoFrameWrap');
   bg.classList.remove('open');
-  wrap.innerHTML = ''; // stops playback by dropping the iframe/video element
+  wrap.innerHTML = '';
+  if(videoLayerPushed){
+    if(!fromPopstate) popHistoryLayer();
+    videoLayerPushed = false;
+  }
 }
-document.getElementById('videoCloseBtn').addEventListener('click', closeVideoPlayer);
+document.getElementById('videoCloseBtn').addEventListener('click', ()=>closeVideoPlayer());
 document.getElementById('videoBg').addEventListener('click', (e)=>{
   if(e.target.id === 'videoBg') closeVideoPlayer();
 });
@@ -1013,13 +1066,14 @@ function playInPage(url, label){
   titleEl.textContent = label || 'Now Playing';
   const embed = detectEmbed(url);
   if(embed && embed.kind === 'iframe'){
-    wrap.innerHTML = `<iframe src="${embed.src}" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
+    wrap.innerHTML = `<iframe src="${esc(embed.src)}" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
   }else if(embed && embed.kind === 'video'){
-    wrap.innerHTML = `<video src="${embed.src}" controls autoplay playsinline></video>`;
+    wrap.innerHTML = `<video src="${esc(embed.src)}" controls autoplay playsinline></video>`;
   }else{
-    wrap.innerHTML = `<div class="video-fallback">Ye link seedhe is page mein play nahi ho sakta.<br><a href="${url}" target="_blank" rel="noopener">Naye tab mein kholein ▸</a></div>`;
+    wrap.innerHTML = `<div class="video-fallback">Ye link seedhe is page mein play nahi ho sakta.<br><a href="${esc(url)}" target="_blank" rel="noopener">Naye tab mein kholein ▸</a></div>`;
   }
   bg.classList.add('open');
+  if(!videoLayerPushed){ pushHistoryLayer('video'); videoLayerPushed = true; }
 }
 // --------------------------------------------------------------------------
 
@@ -1029,13 +1083,13 @@ async function setupPlaylist(a){
   const panel = document.getElementById('playlistPanel');
   const status = document.getElementById('watchStatus');
   let record = null;
-  let editUnlocked = false;
+  let unlockedPassword = null;
   let panelOpen = false;
 
   function emptyRecord(){
     return {
       id, title: a.title, img: a.images?.jpg?.image_url || '',
-      type: a.type, episodes: a.episodes, links: {}, updatedAt: Date.now()
+      type: a.type, episodes: a.episodes, episodesAired: a.episodesAired, links: {}, updatedAt: Date.now()
     };
   }
 
@@ -1056,7 +1110,7 @@ async function setupPlaylist(a){
     panel.innerHTML = `
       <div class="playlist-panel-head">
         <span>1–10 episode links</span>
-        <span>${editUnlocked ? 'Edit mode — tap ✎ to set a link' : 'Tap ✎ once to unlock editing'}</span>
+        <span>${unlockedPassword ? 'Edit mode — tap ✎ to set a link' : 'Tap ✎ once to unlock editing'}</span>
       </div>
       ${rows.join('')}`;
 
@@ -1076,11 +1130,10 @@ async function setupPlaylist(a){
     });
     panel.querySelectorAll('.playlist-edit').forEach(btn=>{
       btn.addEventListener('click', async ()=>{
-        if(!editUnlocked){
+        if(!unlockedPassword){
           const pass = await customPrompt('Enter password to edit this playlist:', '', true);
           if(pass === null) return;
-          if(!(await checkPlaylistPassword(pass))){ status.textContent = 'Wrong password'; return; }
-          editUnlocked = true;
+          unlockedPassword = pass;
         }
         const ep = btn.dataset.ep;
         if(!record) record = emptyRecord();
@@ -1098,10 +1151,15 @@ async function setupPlaylist(a){
         status.textContent = 'Saving…';
         const hasAny = Object.keys(record.links).length > 0;
         const result = hasAny
-          ? await storageSet('playlist:'+id, JSON.stringify(record))
-          : await storageDelete('playlist:'+id);
+          ? await storageSet('playlist:'+id, JSON.stringify(record), unlockedPassword)
+          : await storageDelete('playlist:'+id, unlockedPassword);
         if(!result || !result.ok){
-          status.textContent = 'Could not save (' + (lastPantryError || 'network issue') + ') — try again';
+          if(result && result.status === 401){
+            status.textContent = 'Wrong password — try again';
+            unlockedPassword = null;
+          }else{
+            status.textContent = 'Could not save (' + (lastPantryError || 'network issue') + ') — try again';
+          }
         }else{
           status.textContent = 'Saved — synced across your devices';
         }
@@ -1126,23 +1184,24 @@ async function setupPlaylist(a){
 }
 
 async function renderMyList(){
+  const myToken = ++viewToken;
   gridTitle.textContent = 'My List';
   gridCount.textContent = '';
   heroSlot.innerHTML = '';
   grid.innerHTML = '<div class="state">LOADING YOUR SAVED PLAYLISTS…</div>';
   try{
-    const keys = await storageListKeys('playlist:');
-    if(!keys.length){
-      grid.innerHTML = '<div class="state">Your list is empty. Open any title and tap PLAYLIST to save episode links here.</div>';
+    const all = await pantryGetAll();
+    if(myToken !== viewToken) return;
+    if(all === null){
+      grid.innerHTML = `<div class="state">Could not reach the sync server (${esc(lastPantryError || 'unknown error')}). Check your connection and reopen My List.</div>`;
       return;
     }
     const items = [];
-    for(const k of keys){
-      const raw = await storageGet(k);
-      if(!raw) continue;
+    for(const pk of Object.keys(all)){
+      if(!pk.startsWith('playlist__')) continue;
       try{
-        const rec = JSON.parse(raw);
-        if(rec.links && Object.keys(rec.links).length > 0) items.push(rec);
+        const rec = all[pk];
+        if(rec && rec.links && Object.keys(rec.links).length > 0) items.push(rec);
       }catch(e){ /* skip bad entry */ }
     }
     items.sort((x,y)=> (y.updatedAt||0) - (x.updatedAt||0));
@@ -1164,10 +1223,13 @@ async function renderMyList(){
         const id = btn.dataset.id;
         const pass = await customPrompt('Enter password to remove this playlist:', '', true);
         if(pass === null) return;
-        if(!(await checkPlaylistPassword(pass))){ await customAlert('Wrong password'); return; }
-        const result = await storageDelete('playlist:'+id);
+        const result = await storageDelete('playlist:'+id, pass);
         if(!result || !result.ok){
-          await customAlert('Could not remove (' + (lastPantryError || 'network issue') + ') — check your connection and try again.');
+          if(result && result.status === 401){
+            await customAlert('Wrong password');
+          }else{
+            await customAlert('Could not remove (' + (lastPantryError || 'network issue') + ') — check your connection and try again.');
+          }
           return;
         }
         renderMyList();
@@ -1191,15 +1253,19 @@ function listCardHTML(a){
       ${imgTag}
       <div class="info">
         <div class="title">${esc(a.title)}</div>
-        <div class="sub">${esc(a.type||'—')} · ${a.episodes ? a.episodes+' ep' : '?'}</div>
+        <div class="sub">${esc(a.type||'—')} · ${episodeLabel(a, false)}</div>
       </div>
     </div>`;
 }
 
-function closeModal(){
+function closeModal(fromPopstate){
   modalBg.classList.remove('open');
   document.body.style.overflow = '';
   if('speechSynthesis' in window) window.speechSynthesis.cancel();
+  if(modalLayerPushed){
+    if(!fromPopstate) popHistoryLayer();
+    modalLayerPushed = false;
+  }
 }
 modalBg.addEventListener('click', (e)=>{ if(e.target === modalBg) closeModal(); });
 document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeModal(); });
@@ -1208,13 +1274,24 @@ document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeModal();
 
 // Text-to-speech via Audexum API, called through a Cloudflare Worker proxy so the
 // real API key stays on the server and never ships inside this HTML file.
-// Set this to your deployed Worker's URL (see audexum-worker.js setup instructions).
-// Falls back to the browser's built-in speechSynthesis if the proxy is unreachable
-// or WORKER_URL is left blank.
 const WORKER_URL = 'https://anime.badsha90sekh.workers.dev'; // deployed Audexum proxy Worker
+
+// Groq Worker translates the synopsis directly into natural Roman Hinglish.
+const GROQ_WORKER_URL = 'https://groq-proxy.badsha90sekh.workers.dev';
+
 let hindiCache = '';
 let currentAudio = null;
 
+const AUDEXUM_VOICE = 'Aria';
+
+// FIX (2026-08-28): Audexum ke "v3/Aria" backend ke credits kam ho gaye the
+// (screenshot: "Almost out" — sirf top-up credits bache, monthly free
+// quota poora use ho chuka), isliye har baar 402 (credits_exhausted) aa raha
+// tha aur seedha device ki (browser) awaaz par gir jaata tha — chahe English
+// ho ya Hindi. Ab yaha ek sasta "supertonic" backend fallback wapas jodha gaya
+// hai: agar Aria/v3 fail ho (chahe 402 ho ya koi bhi error), pehle supertonic
+// try hoga (kam credits leta hai), aur sirf woh bhi fail ho to phir device ki
+// awaaz (browserSpeak) use hogi.
 async function audexumSpeak(text, lang, voice, instruct){
   if(!WORKER_URL) throw new Error('worker_not_configured');
   const stopBtn = document.getElementById('stopBtn');
@@ -1236,31 +1313,51 @@ async function audexumSpeak(text, lang, voice, instruct){
     return res.blob();
   }
 
-  const basePayload = { text: text.slice(0, 4900), lang: lang, format: 'mp3' };
+  const basePayload = {
+    text: String(text || '').slice(0, 4900),
+    lang: lang || 'en',
+    format: 'mp3'
+  };
+
+  const v3Payload = {
+    ...basePayload,
+    backend: 'v3',
+    voice: AUDEXUM_VOICE,
+    ...(instruct ? { instruct } : {})
+  };
+
   let blob;
-  if(instruct){
-    // Try the expressive V3 Ultra tier first for a more natural, dubbing-style delivery.
+  try{
+    blob = await tryCall(v3Payload);
+  }catch(primaryErr){
+    // Aria/v3 fail — credits khatam (402) ho ya koi aur wajah se, dono case
+    // mein cheaper supertonic backend try karo before giving up.
     try{
-      blob = await tryCall({ ...basePayload, backend: 'v3', voice: 'Atlas', instruct });
-    }catch(e){
-      // 402 = feature needs a paid plan — fall back to the cheaper V2 Studio tier
-      if(e.status !== 402) throw e;
       blob = await tryCall({ ...basePayload, backend: 'supertonic', voice: voice || 'F1' });
+    }catch(fallbackErr){
+      // Dono backend fail — asli (pehla) error hi throw karo taaki upar wala
+      // status code (jaise 402) sahi se dikhaya ja sake.
+      throw primaryErr;
     }
-  }else{
-    blob = await tryCall({ ...basePayload, backend: 'supertonic', voice: voice || 'F1' });
   }
 
   const url = URL.createObjectURL(blob);
   const audio = new Audio(url);
   currentAudio = audio;
   audio.onplay = ()=> { if(stopBtn) stopBtn.style.display = 'inline-flex'; };
-  audio.onended = ()=> { if(stopBtn) stopBtn.style.display = 'none'; URL.revokeObjectURL(url); };
-  audio.onerror = ()=> { if(stopBtn) stopBtn.style.display = 'none'; };
+  audio.onended = ()=> {
+    if(stopBtn) stopBtn.style.display = 'none';
+    if(currentAudio === audio) currentAudio = null;
+    URL.revokeObjectURL(url);
+  };
+  audio.onerror = ()=> {
+    if(stopBtn) stopBtn.style.display = 'none';
+    if(currentAudio === audio) currentAudio = null;
+    URL.revokeObjectURL(url);
+  };
   await audio.play();
 }
 
-// Browser fallback (used only if Audexum call fails)
 function browserSpeak(t, lang){
   if(!('speechSynthesis' in window)) return;
   const stopBtn = document.getElementById('stopBtn');
@@ -1276,23 +1373,164 @@ function browserSpeak(t, lang){
   window.speechSynthesis.speak(utter);
 }
 
-// Unified entry point: try Audexum first, fall back to the browser's voice on any failure.
-// Returns true if Audexum succeeded, false if it fell back (so the caller knows whether
-// to clear the status message or leave the fallback explanation visible).
-async function speak(t, lang, audexumLang, statusEl, instruct){
+async function withRetry(fn, maxAttempts, onAttempt){
+  let lastErr = null;
+  for(let attempt=1; attempt<=maxAttempts; attempt++){
+    if(onAttempt) onAttempt(attempt, maxAttempts);
+    try{
+      return await fn();
+    }catch(e){
+      lastErr = e;
+      if(attempt < maxAttempts){
+        await new Promise(r=>setTimeout(r, 800 * attempt));
+      }
+    }
+  }
+  throw lastErr;
+}
+
+const DEVANAGARI_VOWELS = {
+  'अ':'a', 'आ':'a', 'इ':'i', 'ई':'i', 'उ':'u', 'ऊ':'u', 'ऋ':'ri',
+  'ए':'e', 'ऐ':'ai', 'ओ':'o', 'औ':'au'
+};
+const DEVANAGARI_CONSONANTS = {
+  'क':'k', 'ख':'kh', 'ग':'g', 'घ':'gh', 'ङ':'ng',
+  'च':'ch', 'छ':'chh', 'ज':'j', 'झ':'jh', 'ञ':'ny',
+  'ट':'t', 'ठ':'th', 'ड':'d', 'ढ':'dh', 'ण':'n',
+  'त':'t', 'थ':'th', 'द':'d', 'ध':'dh', 'न':'n',
+  'प':'p', 'फ':'ph', 'ब':'b', 'भ':'bh', 'म':'m',
+  'य':'y', 'र':'r', 'ल':'l', 'व':'v', 'श':'sh', 'ष':'sh',
+  'स':'s', 'ह':'h', 'ळ':'l'
+};
+const DEVANAGARI_MATRAS = {
+  'ा':'a', 'ि':'i', 'ी':'i', 'ु':'u', 'ू':'u', 'ृ':'ri',
+  'े':'e', 'ै':'ai', 'ो':'o', 'ौ':'au'
+};
+const DEVANAGARI_NUKTA_CONSONANTS = {
+  'क':'q', 'ख':'kh', 'ग':'gh', 'ज':'z', 'फ':'f',
+  'ड':'r', 'ढ':'rh'
+};
+
+function devanagariToRoman(text){
+  let out = '';
+  const chars = Array.from(text || '');
+  for(let i=0; i<chars.length; i++){
+    const ch = chars[i];
+    if(DEVANAGARI_VOWELS[ch]){
+      out += DEVANAGARI_VOWELS[ch];
+    }else if(DEVANAGARI_CONSONANTS[ch]){
+      let consonant = DEVANAGARI_CONSONANTS[ch];
+      if(chars[i+1] === '़'){
+        consonant = DEVANAGARI_NUKTA_CONSONANTS[ch] || consonant;
+        i++;
+      }
+      out += consonant;
+      const next = chars[i+1];
+      if(DEVANAGARI_MATRAS[next]){
+        out += DEVANAGARI_MATRAS[next];
+        i++;
+      }else if(next === '्'){
+        i++;
+      }else{
+        if(next && !/[\s.,!?;:।]/.test(next)) out += 'a';
+      }
+    }else if(DEVANAGARI_MATRAS[ch]){
+      out += DEVANAGARI_MATRAS[ch];
+    }else if(ch === 'ं' || ch === 'ँ'){
+      out += 'n';
+    }else if(ch === 'ः'){
+      out += 'h';
+    }else if(ch === '़'){
+      // Nukta is already approximated by the base consonant mapping.
+    }else if(ch === '।'){
+      out += '.';
+    }else{
+      out += ch;
+    }
+  }
+  return out.replace(/\s{2,}/g, ' ').trim();
+}
+
+function ensureRomanHinglish(text){
+  return /[\u0900-\u097F]/.test(text || '') ? devanagariToRoman(text) : text;
+}
+
+async function translateToHinglishWithRetry(sourceText, logFn, maxAttempts){
+  try{
+    const result = await withRetry(async ()=>{
+      const res = await fetch(GROQ_WORKER_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          text: sourceText,
+          target: 'hinglish',
+          instruction: 'Translate into natural conversational anime-style Hinglish using Roman/Latin script only. Never use Devanagari characters. Use Hindi sentence structure with natural English words such as hyperactive, attack, village, rampage, sacrifice, seal, accept, and respect. Do not produce formal or word-for-word Hindi. Return only the translation.'
+        })
+      });
+      if(!res.ok){
+        let detail = '';
+        try{ detail = await res.text(); }catch(err){}
+        const e = new Error(detail ? detail.slice(0,120) : ('HTTP ' + res.status));
+        e.status = res.status;
+        throw e;
+      }
+      const data = await res.json();
+      if(!data.text) throw new Error('empty response from Groq Hinglish translator');
+      return ensureRomanHinglish(data.text);
+    }, maxAttempts, (attempt, max)=>{
+      if(logFn) logFn(attempt === 1 ? 'Groq AI Hinglish mein translate kar raha hai…' : `Groq AI try ${attempt}/${max}…`);
+    });
+    if(logFn) logFn('Groq AI: kaam kar gaya — Hinglish translation ready.');
+    return result;
+  }catch(e){
+    if(logFn) logFn('Groq AI: kaam nahi kar raha (' + (e.message||'error') + ') — original text use ho raha hai.');
+    return sourceText;
+  }
+}
+
+async function speakWithRetry(text, lang, audexumLang, logFn, instruct, maxAttempts){
+  try{
+    await withRetry(async ()=>{
+      try{
+        await audexumSpeak(text, audexumLang, null, instruct);
+      }catch(e){
+        if(e.status === 402){
+          const stopErr = new Error('credits_exhausted');
+          stopErr.status = 402;
+          stopErr.stop = true;
+          throw stopErr;
+        }
+        throw e;
+      }
+    }, maxAttempts, (attempt, max)=>{
+      if(logFn) logFn(`Voice taiyar ho raha hai${attempt > 1 ? ' (try ' + attempt + '/' + max + ')' : ''}…`);
+    });
+    return true;
+  }catch(e){
+    if(e && e.status === 402){
+      if(logFn) logFn('Voice credits khatam — device ki awaaz use ho rahi hai.');
+    }else if(logFn){
+      logFn('Voice service se jawab nahi mila — device ki awaaz use ho rahi hai.');
+    }
+    browserSpeak(text, lang);
+    return false;
+  }
+}
+
+async function speak(t, lang, audexumLang, logFn, instruct){
   try{
     await audexumSpeak(t, audexumLang || 'en', null, instruct);
     return true;
   }catch(e){
-    if(statusEl){
+    if(logFn){
       if(e.message === 'worker_not_configured'){
-        statusEl.textContent = 'Device ki awaaz use ho rahi hai (Worker set nahi hai).';
+        logFn('Device ki awaaz use ho rahi hai (Worker set nahi hai).');
       }else if(e.status === 402){
-        statusEl.textContent = 'Voice credits khatam — device ki awaaz use ho rahi hai.';
+        logFn('Voice credits khatam — device ki awaaz use ho rahi hai.');
       }else if(e.status){
-        statusEl.textContent = `Voice error (${e.status}: ${e.message}) — device ki awaaz use ho rahi hai.`;
+        logFn(`Voice error (${e.status}: ${e.message}) — device ki awaaz use ho rahi hai.`);
       }else{
-        statusEl.textContent = `Voice service unreachable (${e.message||'network'}) — device ki awaaz use ho rahi hai.`;
+        logFn(`Voice service unreachable (${e.message||'network'}) — device ki awaaz use ho rahi hai.`);
       }
     }
     browserSpeak(t, lang);
@@ -1307,39 +1545,46 @@ function setupVoiceControls(text){
   const status = document.getElementById('voiceStatus');
   hindiCache = '';
 
+  let voiceLog = [];
+  function logStatus(msg){
+    voiceLog.push(msg);
+    status.textContent = voiceLog.join('\n');
+  }
+  function resetLog(){
+    voiceLog = [];
+    status.textContent = '';
+  }
+
   enBtn.addEventListener('click', async ()=>{
-    status.textContent = 'Generating…';
+    resetLog();
+    logStatus('Generating…');
     enBtn.disabled = true;
     try{
-      const ok = await speak(text, 'en-US', 'en', status);
-      if(ok) status.textContent = '';
+      const ok = await speak(text, 'en-US', 'en', logStatus);
+      if(ok) logStatus('Ho gaya.');
     }catch(e){
-      status.textContent = 'Could not play audio.';
+      logStatus('Could not play audio.');
     }finally{
       enBtn.disabled = false;
     }
   });
 
   hiBtn.addEventListener('click', async ()=>{
-    status.textContent = 'Voiceover taiyar ho raha hai…';
+    resetLog();
+    logStatus('Groq se Hinglish translation ho raha hai…');
     hiBtn.disabled = true;
     try{
       let hi = hindiCache;
       if(!hi){
-        // Strip trailing source citations like "(Source: MAL Rewrite)" before narrating
         const cleanText = text.replace(/\(\s*Source:[^)]*\)\s*$/i, '').trim();
-        const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=hi&dt=t&q=${encodeURIComponent(cleanText)}`);
-        if(!res.ok) throw new Error('HTTP '+res.status);
-        const data = await res.json();
-        hi = (data[0]||[]).map(chunk=>chunk[0]).join('');
-        hi = hi.replace(/\s+([।,.!?])/g, '$1').replace(/\s{2,}/g, ' ').trim();
+        hi = await translateToHinglishWithRetry(cleanText, logStatus, 2);
         hindiCache = hi;
       }
-      // Full Devanagari Hindi read by a native Hindi voice — natural, anime-dubbing-style narration
-      const ok = await speak(hindiCache, 'hi-IN', 'hi', status, 'energetic, expressive anime dubbing style, warm and lively');
-      if(ok) status.textContent = '';
+
+      const ok = await speakWithRetry(hindiCache, 'hi-IN', 'hi', logStatus, 'energetic, expressive anime dubbing style, warm and lively', 2);
+      if(ok) logStatus('Voice: ho gaya.');
     }catch(e){
-      status.textContent = 'Voiceover uplabdh nahi — dobara koshish karein.';
+      logStatus('Voiceover uplabdh nahi (' + (e.message||'error') + ') — dobara koshish karein.');
     }finally{
       hiBtn.disabled = false;
     }
