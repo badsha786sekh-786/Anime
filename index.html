@@ -561,7 +561,7 @@ async function storageGet(key){
   return null;
 }
 
-async function storageSet(key, value, password){
+async function storageSet(key, value, password, _retried){
   const pk = pantryKey(key);
   try{
     const all = await pantryGetAll(true);
@@ -581,13 +581,25 @@ async function storageSet(key, value, password){
     if(res.ok){
       delete merged.__password;
       pantryCache = { data: merged, ts: Date.now() };
+      // Ek doosre device ne is beech mein kuchh aur bhi likh diya ho sakta
+      // hai (Pantry mein atomic writes nahi hain) — turant fresh read karke
+      // confirm karte hain ki hamara likha hua data waisa hi ban raha hai.
+      // Agar match nahi hota (kisi aur ne overlap kiya), ek baar retry karte
+      // hain taaki silent data-loss ka chance kam ho.
+      if(!_retried){
+        const verify = await pantryGetAll(true);
+        const ours = verify ? JSON.stringify(verify[pk]) : null;
+        if(ours !== value){
+          return await storageSet(key, value, password, true);
+        }
+      }
       return { ok:true, synced:true };
     }
     lastPantryError = 'HTTP ' + res.status;
   }catch(e){ lastPantryError = e && e.message ? e.message : String(e); }
   return { ok:false, synced:false };
 }
-async function storageDelete(key, password){
+async function storageDelete(key, password, _retried){
   const pk = pantryKey(key);
   try{
     const all = await pantryGetAll(true);
@@ -607,6 +619,14 @@ async function storageDelete(key, password){
       if(!res.ok){ lastPantryError = 'HTTP ' + res.status; return { ok:false, synced:false }; }
       delete copy.__password;
       pantryCache = { data: copy, ts: Date.now() };
+      // Same verify-and-retry safeguard as storageSet, for concurrent
+      // multi-device edits.
+      if(!_retried){
+        const verify = await pantryGetAll(true);
+        if(verify && (pk in verify)){
+          return await storageDelete(key, password, true);
+        }
+      }
       return { ok:true, synced:true };
     }else if(all !== null){
       return { ok:true, synced:true };
@@ -664,13 +684,17 @@ function renderHero(a){
   if(!a){ heroSlot.innerHTML = ''; return; }
   const img = a.images?.jpg?.large_image_url || a.images?.jpg?.image_url || '';
   const genres = (a.genres||[]).slice(0,4).map(g=>`<span class="tag">${esc(g.name)}</span>`).join('');
+  const isAiring = a.status === 'Airing';
+  const statusBadge = isAiring
+    ? `<span class="onair"><span class="d"></span>Now airing</span>`
+    : `<span class="onair" style="color:var(--muted); border-color:var(--line);">${esc(a.status || 'Status unknown')}</span>`;
   heroSlot.innerHTML = `
     <div class="hero">
       <div class="hero-art" style="background-image:url('${img}'); background-color:var(--surface-2);">
         <span class="hero-rank">01</span>
       </div>
       <div class="hero-body">
-        <span class="onair"><span class="d"></span>Now airing</span>
+        ${statusBadge}
         <div class="hero-title">${esc(a.title)}</div>
         <div class="hero-meta">
           <span>SCORE ${a.score ?? '—'}</span>
@@ -733,6 +757,7 @@ async function gql(query, variables, attempt=0){
 
 const MEDIA_FIELDS = `
   id
+  type
   title { romaji english native }
   coverImage { large extraLarge }
   averageScore
@@ -756,6 +781,21 @@ const SEARCH_QUERY = `
   query ($search: String, $perPage: Int) {
     Page(page: 1, perPage: $perPage) {
       media(search: $search, type: ANIME, sort: SEARCH_MATCH) { ${MEDIA_FIELDS} }
+    }
+  }`;
+
+// Fallback jab title-search kuch na de — character ke naam se search karke
+// unke jude anime nikalta hai (jaise "Satoru Gojo" -> Jujutsu Kaisen).
+const CHARACTER_SEARCH_QUERY = `
+  query ($search: String) {
+    Page(page: 1, perPage: 5) {
+      characters(search: $search) {
+        id
+        name { full native }
+        media(perPage: 6, sort: POPULARITY_DESC) {
+          nodes { ${MEDIA_FIELDS} }
+        }
+      }
     }
   }`;
 
@@ -874,12 +914,49 @@ async function doSearch(q){
     const data = await gql(SEARCH_QUERY, { search: q, perPage: 18 });
     if(myToken !== viewToken) return;
     const list = (data.Page.media || []).map(normalize).filter(Boolean);
-    gridCount.textContent = list.length + ' FOUND';
-    if(list.length === 0){
-      grid.innerHTML = '<div class="state">NO SIGNAL FOUND. Try a different title.</div>';
+    if(list.length > 0){
+      gridCount.textContent = list.length + ' FOUND';
+      renderGrid(list, false);
       return;
     }
-    renderGrid(list, false);
+    // Title se kuch nahi mila — ab character ke naam se try karte hain
+    // (jaise "Satoru Gojo" search karne par "Jujutsu Kaisen" dikhe).
+    gridTitle.textContent = `Checking characters for "${q}"…`;
+    let charData;
+    let charError = null;
+    try{
+      charData = await gql(CHARACTER_SEARCH_QUERY, { search: q });
+    }catch(e){
+      charData = null;
+      charError = e;
+    }
+    if(myToken !== viewToken) return;
+    const characters = (charData?.Page?.characters || []);
+    const seen = new Set();
+    const fromCharacters = [];
+    characters.forEach(ch=>{
+      (ch.media?.nodes || []).forEach(m=>{
+        if(m && m.type === 'ANIME' && !seen.has(m.id)){
+          seen.add(m.id);
+          const norm = normalize(m);
+          if(norm) fromCharacters.push(norm);
+        }
+      });
+    });
+    if(fromCharacters.length > 0){
+      const matchedNames = characters.map(c=>c.name?.full).filter(Boolean).slice(0,2).join(', ');
+      gridTitle.textContent = `Anime featuring "${matchedNames || q}"`;
+      gridCount.textContent = fromCharacters.length + ' FOUND';
+      renderGrid(fromCharacters, false);
+      return;
+    }
+    gridTitle.textContent = `Results for "${q}"`;
+    gridCount.textContent = '0 FOUND';
+    if(charError){
+      grid.innerHTML = `<div class="state">NO SIGNAL FOUND. (Character check bhi fail hua: ${esc(charError.message || 'unknown error')})</div>`;
+    }else{
+      grid.innerHTML = '<div class="state">NO SIGNAL FOUND. Try a different title or character name.</div>';
+    }
   }catch(e){
     if(myToken !== viewToken) return;
     grid.innerHTML = `<div class="state">SIGNAL LOST — ${e.status === 429 ? 'too many requests, wait a moment and try again.' : 'search failed (' + e.message + ').'}</div>`;
@@ -1013,7 +1090,8 @@ function detectEmbed(url){
       vid = (vid||'').split('&')[0].split('?')[0];
       if(!vid) return null;
       const start = u.searchParams.get('t') || u.searchParams.get('start') || '';
-      const startParam = start ? ('&start=' + parseInt(start,10) || '') : '';
+      const parsedStart = parseInt(start, 10);
+      const startParam = (start && !isNaN(parsedStart)) ? ('&start=' + parsedStart) : '';
       return { kind:'iframe', src:`https://www.youtube.com/embed/${vid}?autoplay=1&rel=0${startParam}` };
     }
     if(host === 'vimeo.com' || host === 'player.vimeo.com'){
@@ -1272,9 +1350,14 @@ document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeModal();
 
 
 
-// Text-to-speech via Audexum API, called through a Cloudflare Worker proxy so the
-// real API key stays on the server and never ships inside this HTML file.
-const WORKER_URL = 'https://anime.badsha90sekh.workers.dev'; // deployed Audexum proxy Worker
+// Text-to-speech via EasyVoice API, called through a Cloudflare Worker proxy
+// so the real API key stays on the server and never ships inside this HTML
+// file. Free EasyVoice keys only include English + Arabic voices (no native
+// Hindi voice) — the "Hindi" button below reads the Roman-script Hinglish
+// text with an English voice, which still sounds fine since the text itself
+// is already in Latin letters.
+const WORKER_URL = 'https://anime.badsha90sekh.workers.dev'; // deployed EasyVoice proxy Worker
+const EASYVOICE_VOICE = 'af_aoede'; // one of the 12 free-tier voices
 
 // Groq Worker translates the synopsis directly into natural Roman Hinglish.
 const GROQ_WORKER_URL = 'https://groq-proxy.badsha90sekh.workers.dev';
@@ -1282,65 +1365,29 @@ const GROQ_WORKER_URL = 'https://groq-proxy.badsha90sekh.workers.dev';
 let hindiCache = '';
 let currentAudio = null;
 
-const AUDEXUM_VOICE = 'Aria';
-
-// FIX (2026-08-28): Audexum ke "v3/Aria" backend ke credits kam ho gaye the
-// (screenshot: "Almost out" — sirf top-up credits bache, monthly free
-// quota poora use ho chuka), isliye har baar 402 (credits_exhausted) aa raha
-// tha aur seedha device ki (browser) awaaz par gir jaata tha — chahe English
-// ho ya Hindi. Ab yaha ek sasta "supertonic" backend fallback wapas jodha gaya
-// hai: agar Aria/v3 fail ho (chahe 402 ho ya koi bhi error), pehle supertonic
-// try hoga (kam credits leta hai), aur sirf woh bhi fail ho to phir device ki
-// awaaz (browserSpeak) use hogi.
-async function audexumSpeak(text, lang, voice, instruct){
+async function easyVoiceSpeak(text, lang, voice){
   if(!WORKER_URL) throw new Error('worker_not_configured');
   const stopBtn = document.getElementById('stopBtn');
   if(currentAudio){ currentAudio.pause(); currentAudio = null; }
 
-  async function tryCall(payload){
-    const res = await fetch(WORKER_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-    if(!res.ok){
-      let detail = '';
-      try{ detail = await res.text(); }catch(e){}
-      const err = new Error(detail ? detail.slice(0,120) : ('HTTP ' + res.status));
-      err.status = res.status;
-      throw err;
-    }
-    return res.blob();
+  const res = await fetch(WORKER_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      text: String(text || '').slice(0, 4900),
+      lang: lang || 'en',
+      voice: voice || EASYVOICE_VOICE,
+      format: 'mp3'
+    })
+  });
+  if(!res.ok){
+    let detail = '';
+    try{ detail = await res.text(); }catch(e){}
+    const err = new Error(detail ? detail.slice(0,120) : ('HTTP ' + res.status));
+    err.status = res.status;
+    throw err;
   }
-
-  const basePayload = {
-    text: String(text || '').slice(0, 4900),
-    lang: lang || 'en',
-    format: 'mp3'
-  };
-
-  const v3Payload = {
-    ...basePayload,
-    backend: 'v3',
-    voice: AUDEXUM_VOICE,
-    ...(instruct ? { instruct } : {})
-  };
-
-  let blob;
-  try{
-    blob = await tryCall(v3Payload);
-  }catch(primaryErr){
-    // Aria/v3 fail — credits khatam (402) ho ya koi aur wajah se, dono case
-    // mein cheaper supertonic backend try karo before giving up.
-    try{
-      blob = await tryCall({ ...basePayload, backend: 'supertonic', voice: voice || 'F1' });
-    }catch(fallbackErr){
-      // Dono backend fail — asli (pehla) error hi throw karo taaki upar wala
-      // status code (jaise 402) sahi se dikhaya ja sake.
-      throw primaryErr;
-    }
-  }
-
+  const blob = await res.blob();
   const url = URL.createObjectURL(blob);
   const audio = new Audio(url);
   currentAudio = audio;
@@ -1359,7 +1406,7 @@ async function audexumSpeak(text, lang, voice, instruct){
 }
 
 function browserSpeak(t, lang){
-  if(!('speechSynthesis' in window)) return;
+  if(!('speechSynthesis' in window)) return false;
   const stopBtn = document.getElementById('stopBtn');
   window.speechSynthesis.cancel();
   const utter = new SpeechSynthesisUtterance(t);
@@ -1371,6 +1418,7 @@ function browserSpeak(t, lang){
   utter.onend = ()=> { if(stopBtn) stopBtn.style.display = 'none'; };
   utter.onerror = ()=> { if(stopBtn) stopBtn.style.display = 'none'; };
   window.speechSynthesis.speak(utter);
+  return true;
 }
 
 async function withRetry(fn, maxAttempts, onAttempt){
@@ -1488,53 +1536,42 @@ async function translateToHinglishWithRetry(sourceText, logFn, maxAttempts){
   }
 }
 
-async function speakWithRetry(text, lang, audexumLang, logFn, instruct, maxAttempts){
+async function speakWithRetry(text, lang, evLang, logFn){
+  logFn && logFn('Voice taiyar ho raha hai…');
   try{
-    await withRetry(async ()=>{
-      try{
-        await audexumSpeak(text, audexumLang, null, instruct);
-      }catch(e){
-        if(e.status === 402){
-          const stopErr = new Error('credits_exhausted');
-          stopErr.status = 402;
-          stopErr.stop = true;
-          throw stopErr;
-        }
-        throw e;
-      }
-    }, maxAttempts, (attempt, max)=>{
-      if(logFn) logFn(`Voice taiyar ho raha hai${attempt > 1 ? ' (try ' + attempt + '/' + max + ')' : ''}…`);
-    });
+    await easyVoiceSpeak(text, evLang, EASYVOICE_VOICE);
     return true;
   }catch(e){
-    if(e && e.status === 402){
-      if(logFn) logFn('Voice credits khatam — device ki awaaz use ho rahi hai.');
-    }else if(logFn){
-      logFn('Voice service se jawab nahi mila — device ki awaaz use ho rahi hai.');
+    if(e.status === 429){
+      logFn && logFn('Aaj ki free limit khatam ho gayi — device ki awaaz use ho rahi hai.');
+    }else if(e.status === 403){
+      logFn && logFn('Ye voice free plan mein uplabdh nahi — device ki awaaz use ho rahi hai.');
+    }else{
+      logFn && logFn('Voice service se jawab nahi mila — device ki awaaz use ho rahi hai.');
     }
-    browserSpeak(text, lang);
-    return false;
+    const ok = browserSpeak(text, lang);
+    if(!ok && logFn) logFn('Is device/browser mein built-in awaaz bhi uplabdh nahi hai.');
+    return ok;
   }
 }
 
-async function speak(t, lang, audexumLang, logFn, instruct){
+async function speak(t, lang, evLang, logFn){
   try{
-    await audexumSpeak(t, audexumLang || 'en', null, instruct);
+    await easyVoiceSpeak(t, evLang, EASYVOICE_VOICE);
     return true;
   }catch(e){
-    if(logFn){
-      if(e.message === 'worker_not_configured'){
-        logFn('Device ki awaaz use ho rahi hai (Worker set nahi hai).');
-      }else if(e.status === 402){
-        logFn('Voice credits khatam — device ki awaaz use ho rahi hai.');
-      }else if(e.status){
-        logFn(`Voice error (${e.status}: ${e.message}) — device ki awaaz use ho rahi hai.`);
-      }else{
-        logFn(`Voice service unreachable (${e.message||'network'}) — device ki awaaz use ho rahi hai.`);
-      }
+    if(e.message === 'worker_not_configured'){
+      logFn && logFn('Device ki awaaz use ho rahi hai (Worker set nahi hai).');
+    }else if(e.status === 429){
+      logFn && logFn('Aaj ki free limit khatam ho gayi — device ki awaaz use ho rahi hai.');
+    }else if(e.status){
+      logFn && logFn(`Voice error (${e.status}) — device ki awaaz use ho rahi hai.`);
+    }else{
+      logFn && logFn(`Voice service unreachable — device ki awaaz use ho rahi hai.`);
     }
-    browserSpeak(t, lang);
-    return false;
+    const ok = browserSpeak(t, lang || 'en-US');
+    if(!ok && logFn) logFn('Is device/browser mein built-in awaaz bhi uplabdh nahi hai.');
+    return ok;
   }
 }
 
@@ -1581,7 +1618,7 @@ function setupVoiceControls(text){
         hindiCache = hi;
       }
 
-      const ok = await speakWithRetry(hindiCache, 'hi-IN', 'hi', logStatus, 'energetic, expressive anime dubbing style, warm and lively', 2);
+      const ok = await speakWithRetry(hindiCache, 'hi-IN', 'hi', logStatus);
       if(ok) logStatus('Voice: ho gaya.');
     }catch(e){
       logStatus('Voiceover uplabdh nahi (' + (e.message||'error') + ') — dobara koshish karein.');
