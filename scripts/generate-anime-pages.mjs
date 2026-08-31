@@ -85,16 +85,42 @@ async function fetchAllAnime() {
   return all;
 }
 
+// Har page ke liye thoda "apna" unique text banata hai (AniList ke raw
+// description ke alawa) — isse Google ko duplicate-content nahi lagta,
+// kyunki ye text sirf is site par hai aur data ke hisaab se generate hota hai.
+function buildEditorNote(m, title, genres, studio, year, score) {
+  const genreList = genres.length ? genres.slice(0, 3).join(', ') : 'multiple genres';
+  const scoreLine = m.averageScore != null
+    ? (m.averageScore >= 75
+        ? `holds a strong community score of ${score}/10`
+        : m.averageScore >= 50
+          ? `sits at a solid ${score}/10 with viewers`
+          : `has a score of ${score}/10 on AniList`)
+    : 'has not yet accumulated enough ratings for a community score';
+  const statusLine = {
+    FINISHED: 'The series has completed its run',
+    RELEASING: 'New episodes are currently airing',
+    NOT_YET_RELEASED: 'The series has not yet premiered',
+    CANCELLED: 'The series was cancelled before completion',
+    HIATUS: 'The series is currently on hiatus',
+  }[m.status] || 'Current airing status is being tracked';
+
+  return `On BOSS Anime Club, ${esc(title)} is filed under ${esc(genreList)} and ${scoreLine}. `
+    + `${statusLine}, and it was produced by ${esc(studio)}${year !== '—' ? ` starting in ${esc(String(year))}` : ''}. `
+    + `Save this page to your BOSS Anime Club playlist to track episodes and get English or Hindi narration for the synopsis.`;
+}
+
 function pageHTML(m) {
   const title = m.title?.english || m.title?.romaji || m.title?.native || 'Untitled';
   const img = m.coverImage?.extraLarge || m.coverImage?.large || '';
   const synopsis = (m.description || '').replace(/<br\s*\/?>/gi, ' ').replace(/<[^>]+>/g, '').slice(0, 300);
-  const genres = (m.genres || []).join(', ');
+  const genres = m.genres || [];
   const studio = (m.studios?.nodes || []).map((s) => s.name).join(', ') || 'Unknown';
   const year = m.startDate?.year || '—';
   const score = m.averageScore != null ? (m.averageScore / 10).toFixed(1) : '—';
   const episodes = m.episodes || '—';
   const url = `${SITE_URL}/anime/${slugify(title)}-${m.id}.html`;
+  const editorNote = buildEditorNote(m, title, genres, studio, year, score);
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -102,7 +128,7 @@ function pageHTML(m) {
     name: title,
     image: img,
     description: synopsis,
-    genre: m.genres || [],
+    genre: genres,
     datePublished: m.startDate?.year ? String(m.startDate.year) : undefined,
     numberOfEpisodes: m.episodes || undefined,
   };
@@ -121,6 +147,9 @@ function pageHTML(m) {
 <meta property="og:type" content="video.tv_show">
 <meta property="og:url" content="${url}">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${esc(title)} — BOSS Anime Club">
+<meta name="twitter:description" content="${esc(synopsis.slice(0, 200))}">
+<meta name="twitter:image" content="${esc(img)}">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 <style>
   body{background:#0E1116;color:#F4F1EA;font-family:sans-serif;max-width:720px;margin:0 auto;padding:24px 16px 60px;line-height:1.6;}
@@ -128,6 +157,7 @@ function pageHTML(m) {
   img{max-width:220px;border-radius:4px;display:block;margin-bottom:16px;}
   .tag{display:inline-block;font-size:12px;border:1px solid #2A3140;border-radius:2px;padding:2px 8px;margin:2px 4px 2px 0;color:#8B93A7;}
   .meta{font-size:14px;color:#8B93A7;margin-bottom:16px;}
+  .editor-note{border-left:2px solid #FFB454;padding:10px 14px;margin:20px 0;background:#171B24;font-size:14px;color:#F4F1EA;}
   .backlink{margin-top:32px;display:block;}
 </style>
 </head>
@@ -135,8 +165,9 @@ function pageHTML(m) {
 <h1>${esc(title)}</h1>
 <img src="${esc(img)}" alt="${esc(title)} cover" loading="lazy">
 <div class="meta">Score: ${esc(score)}/10 &nbsp;·&nbsp; Episodes: ${esc(episodes)} &nbsp;·&nbsp; Year: ${esc(year)} &nbsp;·&nbsp; Studio: ${esc(studio)}</div>
-<div>${(m.genres || []).map((g) => `<span class="tag">${esc(g)}</span>`).join('')}</div>
+<div>${genres.map((g) => `<span class="tag">${esc(g)}</span>`).join('')}</div>
 <p>${esc(synopsis) || 'No synopsis available.'}</p>
+<div class="editor-note">${editorNote}</div>
 <a class="backlink" href="${SITE_URL}/">▸ Open in the BOSS Anime Club app to search, save playlists, and listen to narration</a>
 <a class="backlink" href="${SITE_URL}/anime/index.html">▸ Browse all anime</a>
 </body>
@@ -176,17 +207,18 @@ ${rows}
 }
 
 function sitemapXML(list) {
+  const today = new Date().toISOString().slice(0, 10); // e.g. "2026-08-31"
   const urls = list
     .map((m) => {
       const title = m.title?.english || m.title?.romaji || 'Untitled';
       const slug = slugify(title);
-      return `  <url><loc>${SITE_URL}/anime/${slug}-${m.id}.html</loc></url>`;
+      return `  <url><loc>${SITE_URL}/anime/${slug}-${m.id}.html</loc><lastmod>${today}</lastmod></url>`;
     })
     .join('\n');
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>${SITE_URL}/</loc><priority>1.0</priority></url>
-  <url><loc>${SITE_URL}/anime/index.html</loc><priority>0.8</priority></url>
+  <url><loc>${SITE_URL}/</loc><priority>1.0</priority><lastmod>${today}</lastmod></url>
+  <url><loc>${SITE_URL}/anime/index.html</loc><priority>0.8</priority><lastmod>${today}</lastmod></url>
 ${urls}
 </urlset>`;
 }
