@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Eminence in Shadow â€” Watch Guide, Info &amp; Episodes | BOSS Anime Club</title>
-<meta name="description" content="The Eminence in Shadow (2022) â€” Some people just aren’t suited to playing the part of the flashy, in-your-face hero or the dastardly, mustache-twirling villain with larger-than-life ">
+<title>The Eminence in Shadow &mdash; Watch Guide, Info &amp; Episodes | BOSS Anime Club</title>
+<meta name="description" content="The Eminence in Shadow (2022) &mdash; Some people just aren’t suited to playing the part of the flashy, in-your-face hero or the dastardly, mustache-twirling villain with larger-than-life ">
 <link rel="canonical" href="https://anime.is-cool.dev/anime/the-eminence-in-shadow-130298.html">
-<meta property="og:title" content="The Eminence in Shadow â€” BOSS Anime Club">
+<meta property="og:title" content="The Eminence in Shadow &mdash; BOSS Anime Club">
 <meta property="og:description" content="Some people just aren’t suited to playing the part of the flashy, in-your-face hero or the dastardly, mustache-twirling villain with larger-than-life panache. Instead, they operate in the shadows and ">
 <meta property="og:image" content="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx130298-YMdcKHytpWNH.jpg">
 <meta property="og:type" content="video.tv_show">
 <meta property="og:url" content="https://anime.is-cool.dev/anime/the-eminence-in-shadow-130298.html">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="The Eminence in Shadow â€” BOSS Anime Club">
+<meta name="twitter:title" content="The Eminence in Shadow &mdash; BOSS Anime Club">
 <meta name="twitter:description" content="Some people just aren’t suited to playing the part of the flashy, in-your-face hero or the dastardly, mustache-twirling villain with larger-than-life panache. Instead, they operate in the shadows and ">
 <meta name="twitter:image" content="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx130298-YMdcKHytpWNH.jpg">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"TVSeries","name":"The Eminence in Shadow","image":"https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx130298-YMdcKHytpWNH.jpg","description":"Some people just aren’t suited to playing the part of the flashy, in-your-face hero or the dastardly, mustache-twirling villain with larger-than-life panache. Instead, they operate in the shadows and pull the strings of society through wit and cleverness. That’s the role Cid wants to play when he’s ","genre":["Action","Comedy","Fantasy"],"datePublished":"2022","numberOfEpisodes":20}</script>
@@ -37,22 +37,24 @@
 <body>
 <h1>The Eminence in Shadow</h1>
 <img src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx130298-YMdcKHytpWNH.jpg" alt="The Eminence in Shadow cover" loading="lazy">
-<div class="meta">Score: 8.1/10 &nbsp;Â·&nbsp; Episodes: 20 &nbsp;Â·&nbsp; Year: 2022 &nbsp;Â·&nbsp; Studio: Nexus</div>
+<div class="meta">Score: 8.1/10 &nbsp;&middot;&nbsp; Episodes: 20 &nbsp;&middot;&nbsp; Year: 2022 &nbsp;&middot;&nbsp; Studio: Nexus</div>
 <div><span class="tag">Action</span><span class="tag">Comedy</span><span class="tag">Fantasy</span></div>
 <p>Some people just aren’t suited to playing the part of the flashy, in-your-face hero or the dastardly, mustache-twirling villain with larger-than-life panache. Instead, they operate in the shadows and pull the strings of society through wit and cleverness. That’s the role Cid wants to play when he’s </p>
 <div class="editor-note">On BOSS Anime Club, The Eminence in Shadow is filed under Action, Comedy, Fantasy and holds a strong community score of 8.1/10. The series has completed its run, and it was produced by Nexus starting in 2022. Save this page to your BOSS Anime Club playlist to track episodes and get English or Hindi narration for the synopsis.</div>
 
-<button class="listen-btn" id="listenBtn" type="button">ðŸ”Š Listen (device voice)</button>
+<button class="listen-btn" id="listenBtn" type="button">&#128266; Listen (device voice)</button>
 <span class="listen-status" id="listenStatus"></span>
 
-<a class="backlink" href="https://anime.is-cool.dev/">â–¸ Open in the BOSS Anime Club app to search, save playlists, and listen to narration</a>
-<a class="backlink" href="https://anime.is-cool.dev/anime/index.html">â–¸ Browse all anime</a>
+<a class="backlink" href="https://anime.is-cool.dev/">&#9656; Open in the BOSS Anime Club app to search, save playlists, and listen to narration</a>
+<a class="backlink" href="https://anime.is-cool.dev/anime/index.html">&#9656; Browse all anime</a>
 
 <script>
 (function(){
   var btn = document.getElementById('listenBtn');
   var status = document.getElementById('listenStatus');
   var text = "Some people just aren’t suited to playing the part of the flashy, in-your-face hero or the dastardly, mustache-twirling villain with larger-than-life panache. Instead, they operate in the shadows and pull the strings of society through wit and cleverness. That’s the role Cid wants to play when he’s  On BOSS Anime Club, The Eminence in Shadow is filed under Action, Comedy, Fantasy and holds a strong community score of 8.1/10. The series has completed its run, and it was produced by Nexus starting in 2022. Save this page to your BOSS Anime Club playlist to track episodes and get English or Hindi narration for the synopsis.";
+  var LABEL_LISTEN = '\uD83D\uDD0A Listen (device voice)';
+  var LABEL_STOP = '\u23F9 Stop';
   if(!('speechSynthesis' in window)){
     btn.disabled = true;
     status.textContent = 'Not supported on this browser/device.';
@@ -63,16 +65,16 @@
     if(speaking){
       window.speechSynthesis.cancel();
       speaking = false;
-      btn.textContent = 'ðŸ”Š Listen (device voice)';
+      btn.textContent = LABEL_LISTEN;
       status.textContent = '';
       return;
     }
     window.speechSynthesis.cancel();
     var utter = new SpeechSynthesisUtterance(text);
     utter.lang = 'en-US';
-    utter.onstart = function(){ speaking = true; btn.textContent = 'â¹ Stop'; status.textContent = 'Playingâ€¦'; };
-    utter.onend = function(){ speaking = false; btn.textContent = 'ðŸ”Š Listen (device voice)'; status.textContent = ''; };
-    utter.onerror = function(){ speaking = false; btn.textContent = 'ðŸ”Š Listen (device voice)'; status.textContent = 'Could not play audio.'; };
+    utter.onstart = function(){ speaking = true; btn.textContent = LABEL_STOP; status.textContent = 'Playing...'; };
+    utter.onend = function(){ speaking = false; btn.textContent = LABEL_LISTEN; status.textContent = ''; };
+    utter.onerror = function(){ speaking = false; btn.textContent = LABEL_LISTEN; status.textContent = 'Could not play audio.'; };
     window.speechSynthesis.speak(utter);
   });
 })();

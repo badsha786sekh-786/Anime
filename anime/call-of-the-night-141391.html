@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Call of the Night â€” Watch Guide, Info &amp; Episodes | BOSS Anime Club</title>
-<meta name="description" content="Call of the Night (2022) â€” Wracked by insomnia and wanderlust, Kou Yamori is driven onto the moonlit streets every night in an aimless search for something he can’t seem to name">
+<title>Call of the Night &mdash; Watch Guide, Info &amp; Episodes | BOSS Anime Club</title>
+<meta name="description" content="Call of the Night (2022) &mdash; Wracked by insomnia and wanderlust, Kou Yamori is driven onto the moonlit streets every night in an aimless search for something he can’t seem to name">
 <link rel="canonical" href="https://anime.is-cool.dev/anime/call-of-the-night-141391.html">
-<meta property="og:title" content="Call of the Night â€” BOSS Anime Club">
+<meta property="og:title" content="Call of the Night &mdash; BOSS Anime Club">
 <meta property="og:description" content="Wracked by insomnia and wanderlust, Kou Yamori is driven onto the moonlit streets every night in an aimless search for something he can’t seem to name. His nightly ritual is marked by purposeless intr">
 <meta property="og:image" content="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx141391-M3ZgUKTPENUk.jpg">
 <meta property="og:type" content="video.tv_show">
 <meta property="og:url" content="https://anime.is-cool.dev/anime/call-of-the-night-141391.html">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Call of the Night â€” BOSS Anime Club">
+<meta name="twitter:title" content="Call of the Night &mdash; BOSS Anime Club">
 <meta name="twitter:description" content="Wracked by insomnia and wanderlust, Kou Yamori is driven onto the moonlit streets every night in an aimless search for something he can’t seem to name. His nightly ritual is marked by purposeless intr">
 <meta name="twitter:image" content="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx141391-M3ZgUKTPENUk.jpg">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"TVSeries","name":"Call of the Night","image":"https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx141391-M3ZgUKTPENUk.jpg","description":"Wracked by insomnia and wanderlust, Kou Yamori is driven onto the moonlit streets every night in an aimless search for something he can’t seem to name. His nightly ritual is marked by purposeless introspection — until he meets Nazuna, who might just be a vampire! Kou’s new companion could offer him ","genre":["Comedy","Psychological","Romance","Slice of Life","Supernatural"],"datePublished":"2022","numberOfEpisodes":13}</script>
@@ -37,22 +37,24 @@
 <body>
 <h1>Call of the Night</h1>
 <img src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx141391-M3ZgUKTPENUk.jpg" alt="Call of the Night cover" loading="lazy">
-<div class="meta">Score: 7.9/10 &nbsp;Â·&nbsp; Episodes: 13 &nbsp;Â·&nbsp; Year: 2022 &nbsp;Â·&nbsp; Studio: LIDENFILMS</div>
+<div class="meta">Score: 7.9/10 &nbsp;&middot;&nbsp; Episodes: 13 &nbsp;&middot;&nbsp; Year: 2022 &nbsp;&middot;&nbsp; Studio: LIDENFILMS</div>
 <div><span class="tag">Comedy</span><span class="tag">Psychological</span><span class="tag">Romance</span><span class="tag">Slice of Life</span><span class="tag">Supernatural</span></div>
 <p>Wracked by insomnia and wanderlust, Kou Yamori is driven onto the moonlit streets every night in an aimless search for something he can’t seem to name. His nightly ritual is marked by purposeless introspection — until he meets Nazuna, who might just be a vampire! Kou’s new companion could offer him </p>
 <div class="editor-note">On BOSS Anime Club, Call of the Night is filed under Comedy, Psychological, Romance and holds a strong community score of 7.9/10. The series has completed its run, and it was produced by LIDENFILMS starting in 2022. Save this page to your BOSS Anime Club playlist to track episodes and get English or Hindi narration for the synopsis.</div>
 
-<button class="listen-btn" id="listenBtn" type="button">ðŸ”Š Listen (device voice)</button>
+<button class="listen-btn" id="listenBtn" type="button">&#128266; Listen (device voice)</button>
 <span class="listen-status" id="listenStatus"></span>
 
-<a class="backlink" href="https://anime.is-cool.dev/">â–¸ Open in the BOSS Anime Club app to search, save playlists, and listen to narration</a>
-<a class="backlink" href="https://anime.is-cool.dev/anime/index.html">â–¸ Browse all anime</a>
+<a class="backlink" href="https://anime.is-cool.dev/">&#9656; Open in the BOSS Anime Club app to search, save playlists, and listen to narration</a>
+<a class="backlink" href="https://anime.is-cool.dev/anime/index.html">&#9656; Browse all anime</a>
 
 <script>
 (function(){
   var btn = document.getElementById('listenBtn');
   var status = document.getElementById('listenStatus');
   var text = "Wracked by insomnia and wanderlust, Kou Yamori is driven onto the moonlit streets every night in an aimless search for something he can’t seem to name. His nightly ritual is marked by purposeless introspection — until he meets Nazuna, who might just be a vampire! Kou’s new companion could offer him  On BOSS Anime Club, Call of the Night is filed under Comedy, Psychological, Romance and holds a strong community score of 7.9/10. The series has completed its run, and it was produced by LIDENFILMS starting in 2022. Save this page to your BOSS Anime Club playlist to track episodes and get English or Hindi narration for the synopsis.";
+  var LABEL_LISTEN = '\uD83D\uDD0A Listen (device voice)';
+  var LABEL_STOP = '\u23F9 Stop';
   if(!('speechSynthesis' in window)){
     btn.disabled = true;
     status.textContent = 'Not supported on this browser/device.';
@@ -63,16 +65,16 @@
     if(speaking){
       window.speechSynthesis.cancel();
       speaking = false;
-      btn.textContent = 'ðŸ”Š Listen (device voice)';
+      btn.textContent = LABEL_LISTEN;
       status.textContent = '';
       return;
     }
     window.speechSynthesis.cancel();
     var utter = new SpeechSynthesisUtterance(text);
     utter.lang = 'en-US';
-    utter.onstart = function(){ speaking = true; btn.textContent = 'â¹ Stop'; status.textContent = 'Playingâ€¦'; };
-    utter.onend = function(){ speaking = false; btn.textContent = 'ðŸ”Š Listen (device voice)'; status.textContent = ''; };
-    utter.onerror = function(){ speaking = false; btn.textContent = 'ðŸ”Š Listen (device voice)'; status.textContent = 'Could not play audio.'; };
+    utter.onstart = function(){ speaking = true; btn.textContent = LABEL_STOP; status.textContent = 'Playing...'; };
+    utter.onend = function(){ speaking = false; btn.textContent = LABEL_LISTEN; status.textContent = ''; };
+    utter.onerror = function(){ speaking = false; btn.textContent = LABEL_LISTEN; status.textContent = 'Could not play audio.'; };
     window.speechSynthesis.speak(utter);
   });
 })();

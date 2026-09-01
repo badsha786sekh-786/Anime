@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Violet Evergarden â€” Watch Guide, Info &amp; Episodes | BOSS Anime Club</title>
-<meta name="description" content="Violet Evergarden (2018) â€” A certain point in time, in the continent of Telesis. The great war which divided the continent into North and South has ended after four years, and t">
+<title>Violet Evergarden &mdash; Watch Guide, Info &amp; Episodes | BOSS Anime Club</title>
+<meta name="description" content="Violet Evergarden (2018) &mdash; A certain point in time, in the continent of Telesis. The great war which divided the continent into North and South has ended after four years, and t">
 <link rel="canonical" href="https://anime.is-cool.dev/anime/violet-evergarden-21827.html">
-<meta property="og:title" content="Violet Evergarden â€” BOSS Anime Club">
+<meta property="og:title" content="Violet Evergarden &mdash; BOSS Anime Club">
 <meta property="og:description" content="A certain point in time, in the continent of Telesis. The great war which divided the continent into North and South has ended after four years, and the people are welcoming a new generation. Violet E">
 <meta property="og:image" content="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx21827-ubzq619ZA2E9.png">
 <meta property="og:type" content="video.tv_show">
 <meta property="og:url" content="https://anime.is-cool.dev/anime/violet-evergarden-21827.html">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Violet Evergarden â€” BOSS Anime Club">
+<meta name="twitter:title" content="Violet Evergarden &mdash; BOSS Anime Club">
 <meta name="twitter:description" content="A certain point in time, in the continent of Telesis. The great war which divided the continent into North and South has ended after four years, and the people are welcoming a new generation. Violet E">
 <meta name="twitter:image" content="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx21827-ubzq619ZA2E9.png">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"TVSeries","name":"Violet Evergarden","image":"https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx21827-ubzq619ZA2E9.png","description":"A certain point in time, in the continent of Telesis. The great war which divided the continent into North and South has ended after four years, and the people are welcoming a new generation. Violet Evergarden, a young girl formerly known as “the weapon”, has left the battlefield to start a new life","genre":["Drama","Fantasy","Slice of Life"],"datePublished":"2018","numberOfEpisodes":13}</script>
@@ -37,22 +37,24 @@
 <body>
 <h1>Violet Evergarden</h1>
 <img src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx21827-ubzq619ZA2E9.png" alt="Violet Evergarden cover" loading="lazy">
-<div class="meta">Score: 8.5/10 &nbsp;Â·&nbsp; Episodes: 13 &nbsp;Â·&nbsp; Year: 2018 &nbsp;Â·&nbsp; Studio: Kyoto Animation</div>
+<div class="meta">Score: 8.5/10 &nbsp;&middot;&nbsp; Episodes: 13 &nbsp;&middot;&nbsp; Year: 2018 &nbsp;&middot;&nbsp; Studio: Kyoto Animation</div>
 <div><span class="tag">Drama</span><span class="tag">Fantasy</span><span class="tag">Slice of Life</span></div>
 <p>A certain point in time, in the continent of Telesis. The great war which divided the continent into North and South has ended after four years, and the people are welcoming a new generation. Violet Evergarden, a young girl formerly known as “the weapon”, has left the battlefield to start a new life</p>
 <div class="editor-note">On BOSS Anime Club, Violet Evergarden is filed under Drama, Fantasy, Slice of Life and holds a strong community score of 8.5/10. The series has completed its run, and it was produced by Kyoto Animation starting in 2018. Save this page to your BOSS Anime Club playlist to track episodes and get English or Hindi narration for the synopsis.</div>
 
-<button class="listen-btn" id="listenBtn" type="button">ðŸ”Š Listen (device voice)</button>
+<button class="listen-btn" id="listenBtn" type="button">&#128266; Listen (device voice)</button>
 <span class="listen-status" id="listenStatus"></span>
 
-<a class="backlink" href="https://anime.is-cool.dev/">â–¸ Open in the BOSS Anime Club app to search, save playlists, and listen to narration</a>
-<a class="backlink" href="https://anime.is-cool.dev/anime/index.html">â–¸ Browse all anime</a>
+<a class="backlink" href="https://anime.is-cool.dev/">&#9656; Open in the BOSS Anime Club app to search, save playlists, and listen to narration</a>
+<a class="backlink" href="https://anime.is-cool.dev/anime/index.html">&#9656; Browse all anime</a>
 
 <script>
 (function(){
   var btn = document.getElementById('listenBtn');
   var status = document.getElementById('listenStatus');
   var text = "A certain point in time, in the continent of Telesis. The great war which divided the continent into North and South has ended after four years, and the people are welcoming a new generation. Violet Evergarden, a young girl formerly known as “the weapon”, has left the battlefield to start a new life On BOSS Anime Club, Violet Evergarden is filed under Drama, Fantasy, Slice of Life and holds a strong community score of 8.5/10. The series has completed its run, and it was produced by Kyoto Animation starting in 2018. Save this page to your BOSS Anime Club playlist to track episodes and get English or Hindi narration for the synopsis.";
+  var LABEL_LISTEN = '\uD83D\uDD0A Listen (device voice)';
+  var LABEL_STOP = '\u23F9 Stop';
   if(!('speechSynthesis' in window)){
     btn.disabled = true;
     status.textContent = 'Not supported on this browser/device.';
@@ -63,16 +65,16 @@
     if(speaking){
       window.speechSynthesis.cancel();
       speaking = false;
-      btn.textContent = 'ðŸ”Š Listen (device voice)';
+      btn.textContent = LABEL_LISTEN;
       status.textContent = '';
       return;
     }
     window.speechSynthesis.cancel();
     var utter = new SpeechSynthesisUtterance(text);
     utter.lang = 'en-US';
-    utter.onstart = function(){ speaking = true; btn.textContent = 'â¹ Stop'; status.textContent = 'Playingâ€¦'; };
-    utter.onend = function(){ speaking = false; btn.textContent = 'ðŸ”Š Listen (device voice)'; status.textContent = ''; };
-    utter.onerror = function(){ speaking = false; btn.textContent = 'ðŸ”Š Listen (device voice)'; status.textContent = 'Could not play audio.'; };
+    utter.onstart = function(){ speaking = true; btn.textContent = LABEL_STOP; status.textContent = 'Playing...'; };
+    utter.onend = function(){ speaking = false; btn.textContent = LABEL_LISTEN; status.textContent = ''; };
+    utter.onerror = function(){ speaking = false; btn.textContent = LABEL_LISTEN; status.textContent = 'Could not play audio.'; };
     window.speechSynthesis.speak(utter);
   });
 })();

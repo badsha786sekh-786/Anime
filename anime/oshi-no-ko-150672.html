@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OSHI NO KO â€” Watch Guide, Info &amp; Episodes | BOSS Anime Club</title>
-<meta name="description" content="OSHI NO KO (2023) â€” When a pregnant young starlet appears in Gorou Amemiya’s countryside medical clinic, the doctor takes it upon himself to safely (and secretly) deliver">
+<title>OSHI NO KO &mdash; Watch Guide, Info &amp; Episodes | BOSS Anime Club</title>
+<meta name="description" content="OSHI NO KO (2023) &mdash; When a pregnant young starlet appears in Gorou Amemiya’s countryside medical clinic, the doctor takes it upon himself to safely (and secretly) deliver">
 <link rel="canonical" href="https://anime.is-cool.dev/anime/oshi-no-ko-150672.html">
-<meta property="og:title" content="OSHI NO KO â€” BOSS Anime Club">
+<meta property="og:title" content="OSHI NO KO &mdash; BOSS Anime Club">
 <meta property="og:description" content="When a pregnant young starlet appears in Gorou Amemiya’s countryside medical clinic, the doctor takes it upon himself to safely (and secretly) deliver Ai Hoshino’s child so she can make a scandal-free">
 <meta property="og:image" content="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx150672-WqmmwZ4nMzAy.png">
 <meta property="og:type" content="video.tv_show">
 <meta property="og:url" content="https://anime.is-cool.dev/anime/oshi-no-ko-150672.html">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="OSHI NO KO â€” BOSS Anime Club">
+<meta name="twitter:title" content="OSHI NO KO &mdash; BOSS Anime Club">
 <meta name="twitter:description" content="When a pregnant young starlet appears in Gorou Amemiya’s countryside medical clinic, the doctor takes it upon himself to safely (and secretly) deliver Ai Hoshino’s child so she can make a scandal-free">
 <meta name="twitter:image" content="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx150672-WqmmwZ4nMzAy.png">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"TVSeries","name":"OSHI NO KO","image":"https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx150672-WqmmwZ4nMzAy.png","description":"When a pregnant young starlet appears in Gorou Amemiya’s countryside medical clinic, the doctor takes it upon himself to safely (and secretly) deliver Ai Hoshino’s child so she can make a scandal-free return to the stage. But no good deed goes unpunished, and on the eve of her delivery, he finds him","genre":["Drama","Mystery","Psychological","Supernatural"],"datePublished":"2023","numberOfEpisodes":11}</script>
@@ -37,22 +37,24 @@
 <body>
 <h1>OSHI NO KO</h1>
 <img src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx150672-WqmmwZ4nMzAy.png" alt="OSHI NO KO cover" loading="lazy">
-<div class="meta">Score: 8.4/10 &nbsp;Â·&nbsp; Episodes: 11 &nbsp;Â·&nbsp; Year: 2023 &nbsp;Â·&nbsp; Studio: Doga Kobo</div>
+<div class="meta">Score: 8.4/10 &nbsp;&middot;&nbsp; Episodes: 11 &nbsp;&middot;&nbsp; Year: 2023 &nbsp;&middot;&nbsp; Studio: Doga Kobo</div>
 <div><span class="tag">Drama</span><span class="tag">Mystery</span><span class="tag">Psychological</span><span class="tag">Supernatural</span></div>
 <p>When a pregnant young starlet appears in Gorou Amemiya’s countryside medical clinic, the doctor takes it upon himself to safely (and secretly) deliver Ai Hoshino’s child so she can make a scandal-free return to the stage. But no good deed goes unpunished, and on the eve of her delivery, he finds him</p>
 <div class="editor-note">On BOSS Anime Club, OSHI NO KO is filed under Drama, Mystery, Psychological and holds a strong community score of 8.4/10. The series has completed its run, and it was produced by Doga Kobo starting in 2023. Save this page to your BOSS Anime Club playlist to track episodes and get English or Hindi narration for the synopsis.</div>
 
-<button class="listen-btn" id="listenBtn" type="button">ðŸ”Š Listen (device voice)</button>
+<button class="listen-btn" id="listenBtn" type="button">&#128266; Listen (device voice)</button>
 <span class="listen-status" id="listenStatus"></span>
 
-<a class="backlink" href="https://anime.is-cool.dev/">â–¸ Open in the BOSS Anime Club app to search, save playlists, and listen to narration</a>
-<a class="backlink" href="https://anime.is-cool.dev/anime/index.html">â–¸ Browse all anime</a>
+<a class="backlink" href="https://anime.is-cool.dev/">&#9656; Open in the BOSS Anime Club app to search, save playlists, and listen to narration</a>
+<a class="backlink" href="https://anime.is-cool.dev/anime/index.html">&#9656; Browse all anime</a>
 
 <script>
 (function(){
   var btn = document.getElementById('listenBtn');
   var status = document.getElementById('listenStatus');
   var text = "When a pregnant young starlet appears in Gorou Amemiya’s countryside medical clinic, the doctor takes it upon himself to safely (and secretly) deliver Ai Hoshino’s child so she can make a scandal-free return to the stage. But no good deed goes unpunished, and on the eve of her delivery, he finds him On BOSS Anime Club, OSHI NO KO is filed under Drama, Mystery, Psychological and holds a strong community score of 8.4/10. The series has completed its run, and it was produced by Doga Kobo starting in 2023. Save this page to your BOSS Anime Club playlist to track episodes and get English or Hindi narration for the synopsis.";
+  var LABEL_LISTEN = '\uD83D\uDD0A Listen (device voice)';
+  var LABEL_STOP = '\u23F9 Stop';
   if(!('speechSynthesis' in window)){
     btn.disabled = true;
     status.textContent = 'Not supported on this browser/device.';
@@ -63,16 +65,16 @@
     if(speaking){
       window.speechSynthesis.cancel();
       speaking = false;
-      btn.textContent = 'ðŸ”Š Listen (device voice)';
+      btn.textContent = LABEL_LISTEN;
       status.textContent = '';
       return;
     }
     window.speechSynthesis.cancel();
     var utter = new SpeechSynthesisUtterance(text);
     utter.lang = 'en-US';
-    utter.onstart = function(){ speaking = true; btn.textContent = 'â¹ Stop'; status.textContent = 'Playingâ€¦'; };
-    utter.onend = function(){ speaking = false; btn.textContent = 'ðŸ”Š Listen (device voice)'; status.textContent = ''; };
-    utter.onerror = function(){ speaking = false; btn.textContent = 'ðŸ”Š Listen (device voice)'; status.textContent = 'Could not play audio.'; };
+    utter.onstart = function(){ speaking = true; btn.textContent = LABEL_STOP; status.textContent = 'Playing...'; };
+    utter.onend = function(){ speaking = false; btn.textContent = LABEL_LISTEN; status.textContent = ''; };
+    utter.onerror = function(){ speaking = false; btn.textContent = LABEL_LISTEN; status.textContent = 'Could not play audio.'; };
     window.speechSynthesis.speak(utter);
   });
 })();

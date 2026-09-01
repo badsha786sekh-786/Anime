@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Promised Neverland Season 2 â€” Watch Guide, Info &amp; Episodes | BOSS Anime Club</title>
-<meta name="description" content="The Promised Neverland Season 2 (2021) â€” The second season of Yakusoku no Neverland. 
+<title>The Promised Neverland Season 2 &mdash; Watch Guide, Info &amp; Episodes | BOSS Anime Club</title>
+<meta name="description" content="The Promised Neverland Season 2 (2021) &mdash; The second season of Yakusoku no Neverland. 
  
 Fifteen children escape Grace Field House, a false paradise, hoping for a chance at freedom. Instead, t">
 <link rel="canonical" href="https://anime.is-cool.dev/anime/the-promised-neverland-season-2-108725.html">
-<meta property="og:title" content="The Promised Neverland Season 2 â€” BOSS Anime Club">
+<meta property="og:title" content="The Promised Neverland Season 2 &mdash; BOSS Anime Club">
 <meta property="og:description" content="The second season of Yakusoku no Neverland. 
  
 Fifteen children escape Grace Field House, a false paradise, hoping for a chance at freedom. Instead, they encounter plants and animals they have never b">
@@ -16,7 +16,7 @@ Fifteen children escape Grace Field House, a false paradise, hoping for a chance
 <meta property="og:type" content="video.tv_show">
 <meta property="og:url" content="https://anime.is-cool.dev/anime/the-promised-neverland-season-2-108725.html">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="The Promised Neverland Season 2 â€” BOSS Anime Club">
+<meta name="twitter:title" content="The Promised Neverland Season 2 &mdash; BOSS Anime Club">
 <meta name="twitter:description" content="The second season of Yakusoku no Neverland. 
  
 Fifteen children escape Grace Field House, a false paradise, hoping for a chance at freedom. Instead, they encounter plants and animals they have never b">
@@ -43,24 +43,26 @@ Fifteen children escape Grace Field House, a false paradise, hoping for a chance
 <body>
 <h1>The Promised Neverland Season 2</h1>
 <img src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx108725-ZKivuyr4Jtc9.jpg" alt="The Promised Neverland Season 2 cover" loading="lazy">
-<div class="meta">Score: 5.2/10 &nbsp;Â·&nbsp; Episodes: 11 &nbsp;Â·&nbsp; Year: 2021 &nbsp;Â·&nbsp; Studio: CloverWorks</div>
+<div class="meta">Score: 5.2/10 &nbsp;&middot;&nbsp; Episodes: 11 &nbsp;&middot;&nbsp; Year: 2021 &nbsp;&middot;&nbsp; Studio: CloverWorks</div>
 <div><span class="tag">Action</span><span class="tag">Adventure</span><span class="tag">Drama</span><span class="tag">Fantasy</span><span class="tag">Horror</span><span class="tag">Psychological</span><span class="tag">Thriller</span></div>
 <p>The second season of Yakusoku no Neverland. 
  
 Fifteen children escape Grace Field House, a false paradise, hoping for a chance at freedom. Instead, they encounter plants and animals they have never before seen, and are chased by demons. The outside world is so beautiful, and yet is almost too cruel</p>
 <div class="editor-note">On BOSS Anime Club, The Promised Neverland Season 2 is filed under Action, Adventure, Drama and sits at a solid 5.2/10 with viewers. The series has completed its run, and it was produced by CloverWorks starting in 2021. Save this page to your BOSS Anime Club playlist to track episodes and get English or Hindi narration for the synopsis.</div>
 
-<button class="listen-btn" id="listenBtn" type="button">ðŸ”Š Listen (device voice)</button>
+<button class="listen-btn" id="listenBtn" type="button">&#128266; Listen (device voice)</button>
 <span class="listen-status" id="listenStatus"></span>
 
-<a class="backlink" href="https://anime.is-cool.dev/">â–¸ Open in the BOSS Anime Club app to search, save playlists, and listen to narration</a>
-<a class="backlink" href="https://anime.is-cool.dev/anime/index.html">â–¸ Browse all anime</a>
+<a class="backlink" href="https://anime.is-cool.dev/">&#9656; Open in the BOSS Anime Club app to search, save playlists, and listen to narration</a>
+<a class="backlink" href="https://anime.is-cool.dev/anime/index.html">&#9656; Browse all anime</a>
 
 <script>
 (function(){
   var btn = document.getElementById('listenBtn');
   var status = document.getElementById('listenStatus');
   var text = "The second season of Yakusoku no Neverland. \n \nFifteen children escape Grace Field House, a false paradise, hoping for a chance at freedom. Instead, they encounter plants and animals they have never before seen, and are chased by demons. The outside world is so beautiful, and yet is almost too cruel On BOSS Anime Club, The Promised Neverland Season 2 is filed under Action, Adventure, Drama and sits at a solid 5.2/10 with viewers. The series has completed its run, and it was produced by CloverWorks starting in 2021. Save this page to your BOSS Anime Club playlist to track episodes and get English or Hindi narration for the synopsis.";
+  var LABEL_LISTEN = '\uD83D\uDD0A Listen (device voice)';
+  var LABEL_STOP = '\u23F9 Stop';
   if(!('speechSynthesis' in window)){
     btn.disabled = true;
     status.textContent = 'Not supported on this browser/device.';
@@ -71,16 +73,16 @@ Fifteen children escape Grace Field House, a false paradise, hoping for a chance
     if(speaking){
       window.speechSynthesis.cancel();
       speaking = false;
-      btn.textContent = 'ðŸ”Š Listen (device voice)';
+      btn.textContent = LABEL_LISTEN;
       status.textContent = '';
       return;
     }
     window.speechSynthesis.cancel();
     var utter = new SpeechSynthesisUtterance(text);
     utter.lang = 'en-US';
-    utter.onstart = function(){ speaking = true; btn.textContent = 'â¹ Stop'; status.textContent = 'Playingâ€¦'; };
-    utter.onend = function(){ speaking = false; btn.textContent = 'ðŸ”Š Listen (device voice)'; status.textContent = ''; };
-    utter.onerror = function(){ speaking = false; btn.textContent = 'ðŸ”Š Listen (device voice)'; status.textContent = 'Could not play audio.'; };
+    utter.onstart = function(){ speaking = true; btn.textContent = LABEL_STOP; status.textContent = 'Playing...'; };
+    utter.onend = function(){ speaking = false; btn.textContent = LABEL_LISTEN; status.textContent = ''; };
+    utter.onerror = function(){ speaking = false; btn.textContent = LABEL_LISTEN; status.textContent = 'Could not play audio.'; };
     window.speechSynthesis.speak(utter);
   });
 })();

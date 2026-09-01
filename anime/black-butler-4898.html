@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Black Butler â€” Watch Guide, Info &amp; Episodes | BOSS Anime Club</title>
-<meta name="description" content="Black Butler (2008) â€” In Victorian-era Europe, a young boy loses everything he once held near and dear to a vicious plot. In his moment of death, he strikes a deal with a d">
+<title>Black Butler &mdash; Watch Guide, Info &amp; Episodes | BOSS Anime Club</title>
+<meta name="description" content="Black Butler (2008) &mdash; In Victorian-era Europe, a young boy loses everything he once held near and dear to a vicious plot. In his moment of death, he strikes a deal with a d">
 <link rel="canonical" href="https://anime.is-cool.dev/anime/black-butler-4898.html">
-<meta property="og:title" content="Black Butler â€” BOSS Anime Club">
+<meta property="og:title" content="Black Butler &mdash; BOSS Anime Club">
 <meta property="og:description" content="In Victorian-era Europe, a young boy loses everything he once held near and dear to a vicious plot. In his moment of death, he strikes a deal with a demon: his soul, in exchange for revenge. Ciel Phan">
 <meta property="og:image" content="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/nx4898-mW4gabZvwmLC.jpg">
 <meta property="og:type" content="video.tv_show">
 <meta property="og:url" content="https://anime.is-cool.dev/anime/black-butler-4898.html">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Black Butler â€” BOSS Anime Club">
+<meta name="twitter:title" content="Black Butler &mdash; BOSS Anime Club">
 <meta name="twitter:description" content="In Victorian-era Europe, a young boy loses everything he once held near and dear to a vicious plot. In his moment of death, he strikes a deal with a demon: his soul, in exchange for revenge. Ciel Phan">
 <meta name="twitter:image" content="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/nx4898-mW4gabZvwmLC.jpg">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"TVSeries","name":"Black Butler","image":"https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/nx4898-mW4gabZvwmLC.jpg","description":"In Victorian-era Europe, a young boy loses everything he once held near and dear to a vicious plot. In his moment of death, he strikes a deal with a demon: his soul, in exchange for revenge. Ciel Phantomhive is now the head of the Phantomhive corporation, handling all business affairs as well as the","genre":["Action","Comedy","Fantasy","Mystery","Supernatural"],"datePublished":"2008","numberOfEpisodes":24}</script>
@@ -37,22 +37,24 @@
 <body>
 <h1>Black Butler</h1>
 <img src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/nx4898-mW4gabZvwmLC.jpg" alt="Black Butler cover" loading="lazy">
-<div class="meta">Score: 7.3/10 &nbsp;Â·&nbsp; Episodes: 24 &nbsp;Â·&nbsp; Year: 2008 &nbsp;Â·&nbsp; Studio: A-1 Pictures</div>
+<div class="meta">Score: 7.3/10 &nbsp;&middot;&nbsp; Episodes: 24 &nbsp;&middot;&nbsp; Year: 2008 &nbsp;&middot;&nbsp; Studio: A-1 Pictures</div>
 <div><span class="tag">Action</span><span class="tag">Comedy</span><span class="tag">Fantasy</span><span class="tag">Mystery</span><span class="tag">Supernatural</span></div>
 <p>In Victorian-era Europe, a young boy loses everything he once held near and dear to a vicious plot. In his moment of death, he strikes a deal with a demon: his soul, in exchange for revenge. Ciel Phantomhive is now the head of the Phantomhive corporation, handling all business affairs as well as the</p>
 <div class="editor-note">On BOSS Anime Club, Black Butler is filed under Action, Comedy, Fantasy and sits at a solid 7.3/10 with viewers. The series has completed its run, and it was produced by A-1 Pictures starting in 2008. Save this page to your BOSS Anime Club playlist to track episodes and get English or Hindi narration for the synopsis.</div>
 
-<button class="listen-btn" id="listenBtn" type="button">ðŸ”Š Listen (device voice)</button>
+<button class="listen-btn" id="listenBtn" type="button">&#128266; Listen (device voice)</button>
 <span class="listen-status" id="listenStatus"></span>
 
-<a class="backlink" href="https://anime.is-cool.dev/">â–¸ Open in the BOSS Anime Club app to search, save playlists, and listen to narration</a>
-<a class="backlink" href="https://anime.is-cool.dev/anime/index.html">â–¸ Browse all anime</a>
+<a class="backlink" href="https://anime.is-cool.dev/">&#9656; Open in the BOSS Anime Club app to search, save playlists, and listen to narration</a>
+<a class="backlink" href="https://anime.is-cool.dev/anime/index.html">&#9656; Browse all anime</a>
 
 <script>
 (function(){
   var btn = document.getElementById('listenBtn');
   var status = document.getElementById('listenStatus');
   var text = "In Victorian-era Europe, a young boy loses everything he once held near and dear to a vicious plot. In his moment of death, he strikes a deal with a demon: his soul, in exchange for revenge. Ciel Phantomhive is now the head of the Phantomhive corporation, handling all business affairs as well as the On BOSS Anime Club, Black Butler is filed under Action, Comedy, Fantasy and sits at a solid 7.3/10 with viewers. The series has completed its run, and it was produced by A-1 Pictures starting in 2008. Save this page to your BOSS Anime Club playlist to track episodes and get English or Hindi narration for the synopsis.";
+  var LABEL_LISTEN = '\uD83D\uDD0A Listen (device voice)';
+  var LABEL_STOP = '\u23F9 Stop';
   if(!('speechSynthesis' in window)){
     btn.disabled = true;
     status.textContent = 'Not supported on this browser/device.';
@@ -63,16 +65,16 @@
     if(speaking){
       window.speechSynthesis.cancel();
       speaking = false;
-      btn.textContent = 'ðŸ”Š Listen (device voice)';
+      btn.textContent = LABEL_LISTEN;
       status.textContent = '';
       return;
     }
     window.speechSynthesis.cancel();
     var utter = new SpeechSynthesisUtterance(text);
     utter.lang = 'en-US';
-    utter.onstart = function(){ speaking = true; btn.textContent = 'â¹ Stop'; status.textContent = 'Playingâ€¦'; };
-    utter.onend = function(){ speaking = false; btn.textContent = 'ðŸ”Š Listen (device voice)'; status.textContent = ''; };
-    utter.onerror = function(){ speaking = false; btn.textContent = 'ðŸ”Š Listen (device voice)'; status.textContent = 'Could not play audio.'; };
+    utter.onstart = function(){ speaking = true; btn.textContent = LABEL_STOP; status.textContent = 'Playing...'; };
+    utter.onend = function(){ speaking = false; btn.textContent = LABEL_LISTEN; status.textContent = ''; };
+    utter.onerror = function(){ speaking = false; btn.textContent = LABEL_LISTEN; status.textContent = 'Could not play audio.'; };
     window.speechSynthesis.speak(utter);
   });
 })();

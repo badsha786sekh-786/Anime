@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HAIKYU!! 2nd Season â€” Watch Guide, Info &amp; Episodes | BOSS Anime Club</title>
-<meta name="description" content="HAIKYU!! 2nd Season (2015) â€” Following their participation at the Inter-High, the Karasuno High School volleyball team attempts to refocus their efforts, aiming to conquer the Spr">
+<title>HAIKYU!! 2nd Season &mdash; Watch Guide, Info &amp; Episodes | BOSS Anime Club</title>
+<meta name="description" content="HAIKYU!! 2nd Season (2015) &mdash; Following their participation at the Inter-High, the Karasuno High School volleyball team attempts to refocus their efforts, aiming to conquer the Spr">
 <link rel="canonical" href="https://anime.is-cool.dev/anime/haikyu-2nd-season-20992.html">
-<meta property="og:title" content="HAIKYU!! 2nd Season â€” BOSS Anime Club">
+<meta property="og:title" content="HAIKYU!! 2nd Season &mdash; BOSS Anime Club">
 <meta property="og:description" content="Following their participation at the Inter-High, the Karasuno High School volleyball team attempts to refocus their efforts, aiming to conquer the Spring tournament instead.
   
 When they receive an in">
@@ -14,7 +14,7 @@ When they receive an in">
 <meta property="og:type" content="video.tv_show">
 <meta property="og:url" content="https://anime.is-cool.dev/anime/haikyu-2nd-season-20992.html">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="HAIKYU!! 2nd Season â€” BOSS Anime Club">
+<meta name="twitter:title" content="HAIKYU!! 2nd Season &mdash; BOSS Anime Club">
 <meta name="twitter:description" content="Following their participation at the Inter-High, the Karasuno High School volleyball team attempts to refocus their efforts, aiming to conquer the Spring tournament instead.
   
 When they receive an in">
@@ -41,24 +41,26 @@ When they receive an in">
 <body>
 <h1>HAIKYU!! 2nd Season</h1>
 <img src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx20992-aHgNbcalVEqk.png" alt="HAIKYU!! 2nd Season cover" loading="lazy">
-<div class="meta">Score: 8.6/10 &nbsp;Â·&nbsp; Episodes: 25 &nbsp;Â·&nbsp; Year: 2015 &nbsp;Â·&nbsp; Studio: Production I.G</div>
+<div class="meta">Score: 8.6/10 &nbsp;&middot;&nbsp; Episodes: 25 &nbsp;&middot;&nbsp; Year: 2015 &nbsp;&middot;&nbsp; Studio: Production I.G</div>
 <div><span class="tag">Comedy</span><span class="tag">Drama</span><span class="tag">Sports</span></div>
 <p>Following their participation at the Inter-High, the Karasuno High School volleyball team attempts to refocus their efforts, aiming to conquer the Spring tournament instead.
   
 When they receive an invitation from long-standing rival Nekoma High, Karasuno agrees to take part in a large training camp</p>
 <div class="editor-note">On BOSS Anime Club, HAIKYU!! 2nd Season is filed under Comedy, Drama, Sports and holds a strong community score of 8.6/10. The series has completed its run, and it was produced by Production I.G starting in 2015. Save this page to your BOSS Anime Club playlist to track episodes and get English or Hindi narration for the synopsis.</div>
 
-<button class="listen-btn" id="listenBtn" type="button">ðŸ”Š Listen (device voice)</button>
+<button class="listen-btn" id="listenBtn" type="button">&#128266; Listen (device voice)</button>
 <span class="listen-status" id="listenStatus"></span>
 
-<a class="backlink" href="https://anime.is-cool.dev/">â–¸ Open in the BOSS Anime Club app to search, save playlists, and listen to narration</a>
-<a class="backlink" href="https://anime.is-cool.dev/anime/index.html">â–¸ Browse all anime</a>
+<a class="backlink" href="https://anime.is-cool.dev/">&#9656; Open in the BOSS Anime Club app to search, save playlists, and listen to narration</a>
+<a class="backlink" href="https://anime.is-cool.dev/anime/index.html">&#9656; Browse all anime</a>
 
 <script>
 (function(){
   var btn = document.getElementById('listenBtn');
   var status = document.getElementById('listenStatus');
   var text = "Following their participation at the Inter-High, the Karasuno High School volleyball team attempts to refocus their efforts, aiming to conquer the Spring tournament instead.\n  \nWhen they receive an invitation from long-standing rival Nekoma High, Karasuno agrees to take part in a large training camp On BOSS Anime Club, HAIKYU!! 2nd Season is filed under Comedy, Drama, Sports and holds a strong community score of 8.6/10. The series has completed its run, and it was produced by Production I.G starting in 2015. Save this page to your BOSS Anime Club playlist to track episodes and get English or Hindi narration for the synopsis.";
+  var LABEL_LISTEN = '\uD83D\uDD0A Listen (device voice)';
+  var LABEL_STOP = '\u23F9 Stop';
   if(!('speechSynthesis' in window)){
     btn.disabled = true;
     status.textContent = 'Not supported on this browser/device.';
@@ -69,16 +71,16 @@ When they receive an invitation from long-standing rival Nekoma High, Karasuno a
     if(speaking){
       window.speechSynthesis.cancel();
       speaking = false;
-      btn.textContent = 'ðŸ”Š Listen (device voice)';
+      btn.textContent = LABEL_LISTEN;
       status.textContent = '';
       return;
     }
     window.speechSynthesis.cancel();
     var utter = new SpeechSynthesisUtterance(text);
     utter.lang = 'en-US';
-    utter.onstart = function(){ speaking = true; btn.textContent = 'â¹ Stop'; status.textContent = 'Playingâ€¦'; };
-    utter.onend = function(){ speaking = false; btn.textContent = 'ðŸ”Š Listen (device voice)'; status.textContent = ''; };
-    utter.onerror = function(){ speaking = false; btn.textContent = 'ðŸ”Š Listen (device voice)'; status.textContent = 'Could not play audio.'; };
+    utter.onstart = function(){ speaking = true; btn.textContent = LABEL_STOP; status.textContent = 'Playing...'; };
+    utter.onend = function(){ speaking = false; btn.textContent = LABEL_LISTEN; status.textContent = ''; };
+    utter.onerror = function(){ speaking = false; btn.textContent = LABEL_LISTEN; status.textContent = 'Could not play audio.'; };
     window.speechSynthesis.speak(utter);
   });
 })();

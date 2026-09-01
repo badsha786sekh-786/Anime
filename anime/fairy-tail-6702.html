@@ -3,17 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fairy Tail â€” Watch Guide, Info &amp; Episodes | BOSS Anime Club</title>
-<meta name="description" content="Fairy Tail (2009) â€” Across the Fiore kingdom, wizards join guilds and make their pay by filling magical needs—but one guild has a reputation as the roughest, rowdiest, mo">
+<title>Fairy Tail &mdash; Watch Guide, Info &amp; Episodes | BOSS Anime Club</title>
+<meta name="description" content="Fairy Tail (2009) &mdash; Across the Fiore kingdom, wizards join guilds and make their pay by filling magical needs—but one guild has a reputation as the roughest, rowdiest, mo">
 <link rel="canonical" href="https://anime.is-cool.dev/anime/fairy-tail-6702.html">
-<meta property="og:title" content="Fairy Tail â€” BOSS Anime Club">
+<meta property="og:title" content="Fairy Tail &mdash; BOSS Anime Club">
 <meta property="og:description" content="Across the Fiore kingdom, wizards join guilds and make their pay by filling magical needs—but one guild has a reputation as the roughest, rowdiest, most dangerous of all: Fairy Tail! 
 When four young ">
 <meta property="og:image" content="https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/b6702-KI4qgSMyI8Pm.png">
 <meta property="og:type" content="video.tv_show">
 <meta property="og:url" content="https://anime.is-cool.dev/anime/fairy-tail-6702.html">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Fairy Tail â€” BOSS Anime Club">
+<meta name="twitter:title" content="Fairy Tail &mdash; BOSS Anime Club">
 <meta name="twitter:description" content="Across the Fiore kingdom, wizards join guilds and make their pay by filling magical needs—but one guild has a reputation as the roughest, rowdiest, most dangerous of all: Fairy Tail! 
 When four young ">
 <meta name="twitter:image" content="https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/b6702-KI4qgSMyI8Pm.png">
@@ -39,23 +39,25 @@ When four young ">
 <body>
 <h1>Fairy Tail</h1>
 <img src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/b6702-KI4qgSMyI8Pm.png" alt="Fairy Tail cover" loading="lazy">
-<div class="meta">Score: 7.2/10 &nbsp;Â·&nbsp; Episodes: 175 &nbsp;Â·&nbsp; Year: 2009 &nbsp;Â·&nbsp; Studio: Satelight, A-1 Pictures</div>
+<div class="meta">Score: 7.2/10 &nbsp;&middot;&nbsp; Episodes: 175 &nbsp;&middot;&nbsp; Year: 2009 &nbsp;&middot;&nbsp; Studio: Satelight, A-1 Pictures</div>
 <div><span class="tag">Action</span><span class="tag">Adventure</span><span class="tag">Comedy</span><span class="tag">Fantasy</span></div>
 <p>Across the Fiore kingdom, wizards join guilds and make their pay by filling magical needs—but one guild has a reputation as the roughest, rowdiest, most dangerous of all: Fairy Tail! 
 When four young Fairy Tail members unite, their bond is forged by a power found in neither muscle nor magic and grow</p>
 <div class="editor-note">On BOSS Anime Club, Fairy Tail is filed under Action, Adventure, Comedy and sits at a solid 7.2/10 with viewers. The series has completed its run, and it was produced by Satelight, A-1 Pictures starting in 2009. Save this page to your BOSS Anime Club playlist to track episodes and get English or Hindi narration for the synopsis.</div>
 
-<button class="listen-btn" id="listenBtn" type="button">ðŸ”Š Listen (device voice)</button>
+<button class="listen-btn" id="listenBtn" type="button">&#128266; Listen (device voice)</button>
 <span class="listen-status" id="listenStatus"></span>
 
-<a class="backlink" href="https://anime.is-cool.dev/">â–¸ Open in the BOSS Anime Club app to search, save playlists, and listen to narration</a>
-<a class="backlink" href="https://anime.is-cool.dev/anime/index.html">â–¸ Browse all anime</a>
+<a class="backlink" href="https://anime.is-cool.dev/">&#9656; Open in the BOSS Anime Club app to search, save playlists, and listen to narration</a>
+<a class="backlink" href="https://anime.is-cool.dev/anime/index.html">&#9656; Browse all anime</a>
 
 <script>
 (function(){
   var btn = document.getElementById('listenBtn');
   var status = document.getElementById('listenStatus');
   var text = "Across the Fiore kingdom, wizards join guilds and make their pay by filling magical needs—but one guild has a reputation as the roughest, rowdiest, most dangerous of all: Fairy Tail! \nWhen four young Fairy Tail members unite, their bond is forged by a power found in neither muscle nor magic and grow On BOSS Anime Club, Fairy Tail is filed under Action, Adventure, Comedy and sits at a solid 7.2/10 with viewers. The series has completed its run, and it was produced by Satelight, A-1 Pictures starting in 2009. Save this page to your BOSS Anime Club playlist to track episodes and get English or Hindi narration for the synopsis.";
+  var LABEL_LISTEN = '\uD83D\uDD0A Listen (device voice)';
+  var LABEL_STOP = '\u23F9 Stop';
   if(!('speechSynthesis' in window)){
     btn.disabled = true;
     status.textContent = 'Not supported on this browser/device.';
@@ -66,16 +68,16 @@ When four young Fairy Tail members unite, their bond is forged by a power found 
     if(speaking){
       window.speechSynthesis.cancel();
       speaking = false;
-      btn.textContent = 'ðŸ”Š Listen (device voice)';
+      btn.textContent = LABEL_LISTEN;
       status.textContent = '';
       return;
     }
     window.speechSynthesis.cancel();
     var utter = new SpeechSynthesisUtterance(text);
     utter.lang = 'en-US';
-    utter.onstart = function(){ speaking = true; btn.textContent = 'â¹ Stop'; status.textContent = 'Playingâ€¦'; };
-    utter.onend = function(){ speaking = false; btn.textContent = 'ðŸ”Š Listen (device voice)'; status.textContent = ''; };
-    utter.onerror = function(){ speaking = false; btn.textContent = 'ðŸ”Š Listen (device voice)'; status.textContent = 'Could not play audio.'; };
+    utter.onstart = function(){ speaking = true; btn.textContent = LABEL_STOP; status.textContent = 'Playing...'; };
+    utter.onend = function(){ speaking = false; btn.textContent = LABEL_LISTEN; status.textContent = ''; };
+    utter.onerror = function(){ speaking = false; btn.textContent = LABEL_LISTEN; status.textContent = 'Could not play audio.'; };
     window.speechSynthesis.speak(utter);
   });
 })();

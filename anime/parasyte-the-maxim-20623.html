@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Parasyte -the maxim- â€” Watch Guide, Info &amp; Episodes | BOSS Anime Club</title>
-<meta name="description" content="Parasyte -the maxim- (2014) â€” They arrive in silence and darkness. They descend from the skies. They have a hunger for human flesh. They are everywhere. They are parasites, alien c">
+<title>Parasyte -the maxim- &mdash; Watch Guide, Info &amp; Episodes | BOSS Anime Club</title>
+<meta name="description" content="Parasyte -the maxim- (2014) &mdash; They arrive in silence and darkness. They descend from the skies. They have a hunger for human flesh. They are everywhere. They are parasites, alien c">
 <link rel="canonical" href="https://anime.is-cool.dev/anime/parasyte-the-maxim-20623.html">
-<meta property="og:title" content="Parasyte -the maxim- â€” BOSS Anime Club">
+<meta property="og:title" content="Parasyte -the maxim- &mdash; BOSS Anime Club">
 <meta property="og:description" content="They arrive in silence and darkness. They descend from the skies. They have a hunger for human flesh. They are everywhere. They are parasites, alien creatures who must invade–and take control of–a hum">
 <meta property="og:image" content="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx20623-dUARfggnNDOe.jpg">
 <meta property="og:type" content="video.tv_show">
 <meta property="og:url" content="https://anime.is-cool.dev/anime/parasyte-the-maxim-20623.html">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Parasyte -the maxim- â€” BOSS Anime Club">
+<meta name="twitter:title" content="Parasyte -the maxim- &mdash; BOSS Anime Club">
 <meta name="twitter:description" content="They arrive in silence and darkness. They descend from the skies. They have a hunger for human flesh. They are everywhere. They are parasites, alien creatures who must invade–and take control of–a hum">
 <meta name="twitter:image" content="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx20623-dUARfggnNDOe.jpg">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"TVSeries","name":"Parasyte -the maxim-","image":"https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx20623-dUARfggnNDOe.jpg","description":"They arrive in silence and darkness. They descend from the skies. They have a hunger for human flesh. They are everywhere. They are parasites, alien creatures who must invade–and take control of–a human host to survive. And once they have infected their victims, they can assume any deadly form they ","genre":["Action","Drama","Horror","Psychological","Sci-Fi"],"datePublished":"2014","numberOfEpisodes":24}</script>
@@ -37,22 +37,24 @@
 <body>
 <h1>Parasyte -the maxim-</h1>
 <img src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx20623-dUARfggnNDOe.jpg" alt="Parasyte -the maxim- cover" loading="lazy">
-<div class="meta">Score: 8.1/10 &nbsp;Â·&nbsp; Episodes: 24 &nbsp;Â·&nbsp; Year: 2014 &nbsp;Â·&nbsp; Studio: MADHOUSE</div>
+<div class="meta">Score: 8.1/10 &nbsp;&middot;&nbsp; Episodes: 24 &nbsp;&middot;&nbsp; Year: 2014 &nbsp;&middot;&nbsp; Studio: MADHOUSE</div>
 <div><span class="tag">Action</span><span class="tag">Drama</span><span class="tag">Horror</span><span class="tag">Psychological</span><span class="tag">Sci-Fi</span></div>
 <p>They arrive in silence and darkness. They descend from the skies. They have a hunger for human flesh. They are everywhere. They are parasites, alien creatures who must invade–and take control of–a human host to survive. And once they have infected their victims, they can assume any deadly form they </p>
 <div class="editor-note">On BOSS Anime Club, Parasyte -the maxim- is filed under Action, Drama, Horror and holds a strong community score of 8.1/10. The series has completed its run, and it was produced by MADHOUSE starting in 2014. Save this page to your BOSS Anime Club playlist to track episodes and get English or Hindi narration for the synopsis.</div>
 
-<button class="listen-btn" id="listenBtn" type="button">ðŸ”Š Listen (device voice)</button>
+<button class="listen-btn" id="listenBtn" type="button">&#128266; Listen (device voice)</button>
 <span class="listen-status" id="listenStatus"></span>
 
-<a class="backlink" href="https://anime.is-cool.dev/">â–¸ Open in the BOSS Anime Club app to search, save playlists, and listen to narration</a>
-<a class="backlink" href="https://anime.is-cool.dev/anime/index.html">â–¸ Browse all anime</a>
+<a class="backlink" href="https://anime.is-cool.dev/">&#9656; Open in the BOSS Anime Club app to search, save playlists, and listen to narration</a>
+<a class="backlink" href="https://anime.is-cool.dev/anime/index.html">&#9656; Browse all anime</a>
 
 <script>
 (function(){
   var btn = document.getElementById('listenBtn');
   var status = document.getElementById('listenStatus');
   var text = "They arrive in silence and darkness. They descend from the skies. They have a hunger for human flesh. They are everywhere. They are parasites, alien creatures who must invade–and take control of–a human host to survive. And once they have infected their victims, they can assume any deadly form they  On BOSS Anime Club, Parasyte -the maxim- is filed under Action, Drama, Horror and holds a strong community score of 8.1/10. The series has completed its run, and it was produced by MADHOUSE starting in 2014. Save this page to your BOSS Anime Club playlist to track episodes and get English or Hindi narration for the synopsis.";
+  var LABEL_LISTEN = '\uD83D\uDD0A Listen (device voice)';
+  var LABEL_STOP = '\u23F9 Stop';
   if(!('speechSynthesis' in window)){
     btn.disabled = true;
     status.textContent = 'Not supported on this browser/device.';
@@ -63,16 +65,16 @@
     if(speaking){
       window.speechSynthesis.cancel();
       speaking = false;
-      btn.textContent = 'ðŸ”Š Listen (device voice)';
+      btn.textContent = LABEL_LISTEN;
       status.textContent = '';
       return;
     }
     window.speechSynthesis.cancel();
     var utter = new SpeechSynthesisUtterance(text);
     utter.lang = 'en-US';
-    utter.onstart = function(){ speaking = true; btn.textContent = 'â¹ Stop'; status.textContent = 'Playingâ€¦'; };
-    utter.onend = function(){ speaking = false; btn.textContent = 'ðŸ”Š Listen (device voice)'; status.textContent = ''; };
-    utter.onerror = function(){ speaking = false; btn.textContent = 'ðŸ”Š Listen (device voice)'; status.textContent = 'Could not play audio.'; };
+    utter.onstart = function(){ speaking = true; btn.textContent = LABEL_STOP; status.textContent = 'Playing...'; };
+    utter.onend = function(){ speaking = false; btn.textContent = LABEL_LISTEN; status.textContent = ''; };
+    utter.onerror = function(){ speaking = false; btn.textContent = LABEL_LISTEN; status.textContent = 'Could not play audio.'; };
     window.speechSynthesis.speak(utter);
   });
 })();

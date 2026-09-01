@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>A Silent Voice â€” Watch Guide, Info &amp; Episodes | BOSS Anime Club</title>
-<meta name="description" content="A Silent Voice (2016) â€” After transferring into a new school, a deaf girl, Shouko Nishimiya, is bullied by the popular Shouya Ishida. As Shouya continues to bully Shouko, the">
+<title>A Silent Voice &mdash; Watch Guide, Info &amp; Episodes | BOSS Anime Club</title>
+<meta name="description" content="A Silent Voice (2016) &mdash; After transferring into a new school, a deaf girl, Shouko Nishimiya, is bullied by the popular Shouya Ishida. As Shouya continues to bully Shouko, the">
 <link rel="canonical" href="https://anime.is-cool.dev/anime/a-silent-voice-20954.html">
-<meta property="og:title" content="A Silent Voice â€” BOSS Anime Club">
+<meta property="og:title" content="A Silent Voice &mdash; BOSS Anime Club">
 <meta property="og:description" content="After transferring into a new school, a deaf girl, Shouko Nishimiya, is bullied by the popular Shouya Ishida. As Shouya continues to bully Shouko, the class turns its back on him. Shouko transfers and">
 <meta property="og:image" content="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx20954-sYRfE5jQRtSB.jpg">
 <meta property="og:type" content="video.tv_show">
 <meta property="og:url" content="https://anime.is-cool.dev/anime/a-silent-voice-20954.html">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="A Silent Voice â€” BOSS Anime Club">
+<meta name="twitter:title" content="A Silent Voice &mdash; BOSS Anime Club">
 <meta name="twitter:description" content="After transferring into a new school, a deaf girl, Shouko Nishimiya, is bullied by the popular Shouya Ishida. As Shouya continues to bully Shouko, the class turns its back on him. Shouko transfers and">
 <meta name="twitter:image" content="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx20954-sYRfE5jQRtSB.jpg">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"TVSeries","name":"A Silent Voice","image":"https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx20954-sYRfE5jQRtSB.jpg","description":"After transferring into a new school, a deaf girl, Shouko Nishimiya, is bullied by the popular Shouya Ishida. As Shouya continues to bully Shouko, the class turns its back on him. Shouko transfers and Shouya grows up as an outcast. Alone and depressed, the regretful Shouya finds Shouko to make amend","genre":["Drama","Romance","Slice of Life"],"datePublished":"2016","numberOfEpisodes":1}</script>
@@ -37,22 +37,24 @@
 <body>
 <h1>A Silent Voice</h1>
 <img src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx20954-sYRfE5jQRtSB.jpg" alt="A Silent Voice cover" loading="lazy">
-<div class="meta">Score: 8.8/10 &nbsp;Â·&nbsp; Episodes: 1 &nbsp;Â·&nbsp; Year: 2016 &nbsp;Â·&nbsp; Studio: Kyoto Animation</div>
+<div class="meta">Score: 8.8/10 &nbsp;&middot;&nbsp; Episodes: 1 &nbsp;&middot;&nbsp; Year: 2016 &nbsp;&middot;&nbsp; Studio: Kyoto Animation</div>
 <div><span class="tag">Drama</span><span class="tag">Romance</span><span class="tag">Slice of Life</span></div>
 <p>After transferring into a new school, a deaf girl, Shouko Nishimiya, is bullied by the popular Shouya Ishida. As Shouya continues to bully Shouko, the class turns its back on him. Shouko transfers and Shouya grows up as an outcast. Alone and depressed, the regretful Shouya finds Shouko to make amend</p>
 <div class="editor-note">On BOSS Anime Club, A Silent Voice is filed under Drama, Romance, Slice of Life and holds a strong community score of 8.8/10. The series has completed its run, and it was produced by Kyoto Animation starting in 2016. Save this page to your BOSS Anime Club playlist to track episodes and get English or Hindi narration for the synopsis.</div>
 
-<button class="listen-btn" id="listenBtn" type="button">ðŸ”Š Listen (device voice)</button>
+<button class="listen-btn" id="listenBtn" type="button">&#128266; Listen (device voice)</button>
 <span class="listen-status" id="listenStatus"></span>
 
-<a class="backlink" href="https://anime.is-cool.dev/">â–¸ Open in the BOSS Anime Club app to search, save playlists, and listen to narration</a>
-<a class="backlink" href="https://anime.is-cool.dev/anime/index.html">â–¸ Browse all anime</a>
+<a class="backlink" href="https://anime.is-cool.dev/">&#9656; Open in the BOSS Anime Club app to search, save playlists, and listen to narration</a>
+<a class="backlink" href="https://anime.is-cool.dev/anime/index.html">&#9656; Browse all anime</a>
 
 <script>
 (function(){
   var btn = document.getElementById('listenBtn');
   var status = document.getElementById('listenStatus');
   var text = "After transferring into a new school, a deaf girl, Shouko Nishimiya, is bullied by the popular Shouya Ishida. As Shouya continues to bully Shouko, the class turns its back on him. Shouko transfers and Shouya grows up as an outcast. Alone and depressed, the regretful Shouya finds Shouko to make amend On BOSS Anime Club, A Silent Voice is filed under Drama, Romance, Slice of Life and holds a strong community score of 8.8/10. The series has completed its run, and it was produced by Kyoto Animation starting in 2016. Save this page to your BOSS Anime Club playlist to track episodes and get English or Hindi narration for the synopsis.";
+  var LABEL_LISTEN = '\uD83D\uDD0A Listen (device voice)';
+  var LABEL_STOP = '\u23F9 Stop';
   if(!('speechSynthesis' in window)){
     btn.disabled = true;
     status.textContent = 'Not supported on this browser/device.';
@@ -63,16 +65,16 @@
     if(speaking){
       window.speechSynthesis.cancel();
       speaking = false;
-      btn.textContent = 'ðŸ”Š Listen (device voice)';
+      btn.textContent = LABEL_LISTEN;
       status.textContent = '';
       return;
     }
     window.speechSynthesis.cancel();
     var utter = new SpeechSynthesisUtterance(text);
     utter.lang = 'en-US';
-    utter.onstart = function(){ speaking = true; btn.textContent = 'â¹ Stop'; status.textContent = 'Playingâ€¦'; };
-    utter.onend = function(){ speaking = false; btn.textContent = 'ðŸ”Š Listen (device voice)'; status.textContent = ''; };
-    utter.onerror = function(){ speaking = false; btn.textContent = 'ðŸ”Š Listen (device voice)'; status.textContent = 'Could not play audio.'; };
+    utter.onstart = function(){ speaking = true; btn.textContent = LABEL_STOP; status.textContent = 'Playing...'; };
+    utter.onend = function(){ speaking = false; btn.textContent = LABEL_LISTEN; status.textContent = ''; };
+    utter.onerror = function(){ speaking = false; btn.textContent = LABEL_LISTEN; status.textContent = 'Could not play audio.'; };
     window.speechSynthesis.speak(utter);
   });
 })();

@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Attack on Titan â€” Watch Guide, Info &amp; Episodes | BOSS Anime Club</title>
-<meta name="description" content="Attack on Titan (2013) â€” Several hundred years ago, humans were nearly exterminated by titans. Titans are typically several stories tall, seem to have no intelligence, devour ">
+<title>Attack on Titan &mdash; Watch Guide, Info &amp; Episodes | BOSS Anime Club</title>
+<meta name="description" content="Attack on Titan (2013) &mdash; Several hundred years ago, humans were nearly exterminated by titans. Titans are typically several stories tall, seem to have no intelligence, devour ">
 <link rel="canonical" href="https://anime.is-cool.dev/anime/attack-on-titan-16498.html">
-<meta property="og:title" content="Attack on Titan â€” BOSS Anime Club">
+<meta property="og:title" content="Attack on Titan &mdash; BOSS Anime Club">
 <meta property="og:description" content="Several hundred years ago, humans were nearly exterminated by titans. Titans are typically several stories tall, seem to have no intelligence, devour human beings and, worst of all, seem to do it for ">
 <meta property="og:image" content="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx16498-buvcRTBx4NSm.jpg">
 <meta property="og:type" content="video.tv_show">
 <meta property="og:url" content="https://anime.is-cool.dev/anime/attack-on-titan-16498.html">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Attack on Titan â€” BOSS Anime Club">
+<meta name="twitter:title" content="Attack on Titan &mdash; BOSS Anime Club">
 <meta name="twitter:description" content="Several hundred years ago, humans were nearly exterminated by titans. Titans are typically several stories tall, seem to have no intelligence, devour human beings and, worst of all, seem to do it for ">
 <meta name="twitter:image" content="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx16498-buvcRTBx4NSm.jpg">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"TVSeries","name":"Attack on Titan","image":"https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx16498-buvcRTBx4NSm.jpg","description":"Several hundred years ago, humans were nearly exterminated by titans. Titans are typically several stories tall, seem to have no intelligence, devour human beings and, worst of all, seem to do it for the pleasure rather than as a food source. A small percentage of humanity survived by walling themse","genre":["Action","Drama","Fantasy","Mystery"],"datePublished":"2013","numberOfEpisodes":25}</script>
@@ -37,22 +37,24 @@
 <body>
 <h1>Attack on Titan</h1>
 <img src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx16498-buvcRTBx4NSm.jpg" alt="Attack on Titan cover" loading="lazy">
-<div class="meta">Score: 8.5/10 &nbsp;Â·&nbsp; Episodes: 25 &nbsp;Â·&nbsp; Year: 2013 &nbsp;Â·&nbsp; Studio: WIT STUDIO</div>
+<div class="meta">Score: 8.5/10 &nbsp;&middot;&nbsp; Episodes: 25 &nbsp;&middot;&nbsp; Year: 2013 &nbsp;&middot;&nbsp; Studio: WIT STUDIO</div>
 <div><span class="tag">Action</span><span class="tag">Drama</span><span class="tag">Fantasy</span><span class="tag">Mystery</span></div>
 <p>Several hundred years ago, humans were nearly exterminated by titans. Titans are typically several stories tall, seem to have no intelligence, devour human beings and, worst of all, seem to do it for the pleasure rather than as a food source. A small percentage of humanity survived by walling themse</p>
 <div class="editor-note">On BOSS Anime Club, Attack on Titan is filed under Action, Drama, Fantasy and holds a strong community score of 8.5/10. The series has completed its run, and it was produced by WIT STUDIO starting in 2013. Save this page to your BOSS Anime Club playlist to track episodes and get English or Hindi narration for the synopsis.</div>
 
-<button class="listen-btn" id="listenBtn" type="button">ðŸ”Š Listen (device voice)</button>
+<button class="listen-btn" id="listenBtn" type="button">&#128266; Listen (device voice)</button>
 <span class="listen-status" id="listenStatus"></span>
 
-<a class="backlink" href="https://anime.is-cool.dev/">â–¸ Open in the BOSS Anime Club app to search, save playlists, and listen to narration</a>
-<a class="backlink" href="https://anime.is-cool.dev/anime/index.html">â–¸ Browse all anime</a>
+<a class="backlink" href="https://anime.is-cool.dev/">&#9656; Open in the BOSS Anime Club app to search, save playlists, and listen to narration</a>
+<a class="backlink" href="https://anime.is-cool.dev/anime/index.html">&#9656; Browse all anime</a>
 
 <script>
 (function(){
   var btn = document.getElementById('listenBtn');
   var status = document.getElementById('listenStatus');
   var text = "Several hundred years ago, humans were nearly exterminated by titans. Titans are typically several stories tall, seem to have no intelligence, devour human beings and, worst of all, seem to do it for the pleasure rather than as a food source. A small percentage of humanity survived by walling themse On BOSS Anime Club, Attack on Titan is filed under Action, Drama, Fantasy and holds a strong community score of 8.5/10. The series has completed its run, and it was produced by WIT STUDIO starting in 2013. Save this page to your BOSS Anime Club playlist to track episodes and get English or Hindi narration for the synopsis.";
+  var LABEL_LISTEN = '\uD83D\uDD0A Listen (device voice)';
+  var LABEL_STOP = '\u23F9 Stop';
   if(!('speechSynthesis' in window)){
     btn.disabled = true;
     status.textContent = 'Not supported on this browser/device.';
@@ -63,16 +65,16 @@
     if(speaking){
       window.speechSynthesis.cancel();
       speaking = false;
-      btn.textContent = 'ðŸ”Š Listen (device voice)';
+      btn.textContent = LABEL_LISTEN;
       status.textContent = '';
       return;
     }
     window.speechSynthesis.cancel();
     var utter = new SpeechSynthesisUtterance(text);
     utter.lang = 'en-US';
-    utter.onstart = function(){ speaking = true; btn.textContent = 'â¹ Stop'; status.textContent = 'Playingâ€¦'; };
-    utter.onend = function(){ speaking = false; btn.textContent = 'ðŸ”Š Listen (device voice)'; status.textContent = ''; };
-    utter.onerror = function(){ speaking = false; btn.textContent = 'ðŸ”Š Listen (device voice)'; status.textContent = 'Could not play audio.'; };
+    utter.onstart = function(){ speaking = true; btn.textContent = LABEL_STOP; status.textContent = 'Playing...'; };
+    utter.onend = function(){ speaking = false; btn.textContent = LABEL_LISTEN; status.textContent = ''; };
+    utter.onerror = function(){ speaking = false; btn.textContent = LABEL_LISTEN; status.textContent = 'Could not play audio.'; };
     window.speechSynthesis.speak(utter);
   });
 })();

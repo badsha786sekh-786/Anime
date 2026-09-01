@@ -3,18 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gurren Lagann â€” Watch Guide, Info &amp; Episodes | BOSS Anime Club</title>
-<meta name="description" content="Gurren Lagann (2007) â€” In a far away future, mankind lives underground in huge caves, unknowing of a world above with a sky and stars.  
+<title>Gurren Lagann &mdash; Watch Guide, Info &amp; Episodes | BOSS Anime Club</title>
+<meta name="description" content="Gurren Lagann (2007) &mdash; In a far away future, mankind lives underground in huge caves, unknowing of a world above with a sky and stars.  
 In the small village of Jiha, Simon,">
 <link rel="canonical" href="https://anime.is-cool.dev/anime/gurren-lagann-2001.html">
-<meta property="og:title" content="Gurren Lagann â€” BOSS Anime Club">
+<meta property="og:title" content="Gurren Lagann &mdash; BOSS Anime Club">
 <meta property="og:description" content="In a far away future, mankind lives underground in huge caves, unknowing of a world above with a sky and stars.  
 In the small village of Jiha, Simon, a shy boy who works as a digger discovers a stran">
 <meta property="og:image" content="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx2001-XwRnjzGeFWRQ.png">
 <meta property="og:type" content="video.tv_show">
 <meta property="og:url" content="https://anime.is-cool.dev/anime/gurren-lagann-2001.html">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Gurren Lagann â€” BOSS Anime Club">
+<meta name="twitter:title" content="Gurren Lagann &mdash; BOSS Anime Club">
 <meta name="twitter:description" content="In a far away future, mankind lives underground in huge caves, unknowing of a world above with a sky and stars.  
 In the small village of Jiha, Simon, a shy boy who works as a digger discovers a stran">
 <meta name="twitter:image" content="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx2001-XwRnjzGeFWRQ.png">
@@ -40,23 +40,25 @@ In the small village of Jiha, Simon, a shy boy who works as a digger discovers a
 <body>
 <h1>Gurren Lagann</h1>
 <img src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx2001-XwRnjzGeFWRQ.png" alt="Gurren Lagann cover" loading="lazy">
-<div class="meta">Score: 8.5/10 &nbsp;Â·&nbsp; Episodes: 27 &nbsp;Â·&nbsp; Year: 2007 &nbsp;Â·&nbsp; Studio: Gainax</div>
+<div class="meta">Score: 8.5/10 &nbsp;&middot;&nbsp; Episodes: 27 &nbsp;&middot;&nbsp; Year: 2007 &nbsp;&middot;&nbsp; Studio: Gainax</div>
 <div><span class="tag">Action</span><span class="tag">Comedy</span><span class="tag">Drama</span><span class="tag">Mecha</span><span class="tag">Romance</span><span class="tag">Sci-Fi</span></div>
 <p>In a far away future, mankind lives underground in huge caves, unknowing of a world above with a sky and stars.  
 In the small village of Jiha, Simon, a shy boy who works as a digger discovers a strange glowing object during excavation. The enterprising Kamina, a young man with a pair of rakish sung</p>
 <div class="editor-note">On BOSS Anime Club, Gurren Lagann is filed under Action, Comedy, Drama and holds a strong community score of 8.5/10. The series has completed its run, and it was produced by Gainax starting in 2007. Save this page to your BOSS Anime Club playlist to track episodes and get English or Hindi narration for the synopsis.</div>
 
-<button class="listen-btn" id="listenBtn" type="button">ðŸ”Š Listen (device voice)</button>
+<button class="listen-btn" id="listenBtn" type="button">&#128266; Listen (device voice)</button>
 <span class="listen-status" id="listenStatus"></span>
 
-<a class="backlink" href="https://anime.is-cool.dev/">â–¸ Open in the BOSS Anime Club app to search, save playlists, and listen to narration</a>
-<a class="backlink" href="https://anime.is-cool.dev/anime/index.html">â–¸ Browse all anime</a>
+<a class="backlink" href="https://anime.is-cool.dev/">&#9656; Open in the BOSS Anime Club app to search, save playlists, and listen to narration</a>
+<a class="backlink" href="https://anime.is-cool.dev/anime/index.html">&#9656; Browse all anime</a>
 
 <script>
 (function(){
   var btn = document.getElementById('listenBtn');
   var status = document.getElementById('listenStatus');
   var text = "In a far away future, mankind lives underground in huge caves, unknowing of a world above with a sky and stars.  \nIn the small village of Jiha, Simon, a shy boy who works as a digger discovers a strange glowing object during excavation. The enterprising Kamina, a young man with a pair of rakish sung On BOSS Anime Club, Gurren Lagann is filed under Action, Comedy, Drama and holds a strong community score of 8.5/10. The series has completed its run, and it was produced by Gainax starting in 2007. Save this page to your BOSS Anime Club playlist to track episodes and get English or Hindi narration for the synopsis.";
+  var LABEL_LISTEN = '\uD83D\uDD0A Listen (device voice)';
+  var LABEL_STOP = '\u23F9 Stop';
   if(!('speechSynthesis' in window)){
     btn.disabled = true;
     status.textContent = 'Not supported on this browser/device.';
@@ -67,16 +69,16 @@ In the small village of Jiha, Simon, a shy boy who works as a digger discovers a
     if(speaking){
       window.speechSynthesis.cancel();
       speaking = false;
-      btn.textContent = 'ðŸ”Š Listen (device voice)';
+      btn.textContent = LABEL_LISTEN;
       status.textContent = '';
       return;
     }
     window.speechSynthesis.cancel();
     var utter = new SpeechSynthesisUtterance(text);
     utter.lang = 'en-US';
-    utter.onstart = function(){ speaking = true; btn.textContent = 'â¹ Stop'; status.textContent = 'Playingâ€¦'; };
-    utter.onend = function(){ speaking = false; btn.textContent = 'ðŸ”Š Listen (device voice)'; status.textContent = ''; };
-    utter.onerror = function(){ speaking = false; btn.textContent = 'ðŸ”Š Listen (device voice)'; status.textContent = 'Could not play audio.'; };
+    utter.onstart = function(){ speaking = true; btn.textContent = LABEL_STOP; status.textContent = 'Playing...'; };
+    utter.onend = function(){ speaking = false; btn.textContent = LABEL_LISTEN; status.textContent = ''; };
+    utter.onerror = function(){ speaking = false; btn.textContent = LABEL_LISTEN; status.textContent = 'Could not play audio.'; };
     window.speechSynthesis.speak(utter);
   });
 })();

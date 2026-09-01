@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fate/stay night: Unlimited Blade Works â€” Watch Guide, Info &amp; Episodes | BOSS Anime Club</title>
-<meta name="description" content="Fate/stay night: Unlimited Blade Works (2014) â€” Fuyuki City - a city surrounded by the sea and mountains becomes the setting for an ancient ritual. Seven masters are given control of heroic spirits ">
+<title>Fate/stay night: Unlimited Blade Works &mdash; Watch Guide, Info &amp; Episodes | BOSS Anime Club</title>
+<meta name="description" content="Fate/stay night: Unlimited Blade Works (2014) &mdash; Fuyuki City - a city surrounded by the sea and mountains becomes the setting for an ancient ritual. Seven masters are given control of heroic spirits ">
 <link rel="canonical" href="https://anime.is-cool.dev/anime/fate-stay-night-unlimited-blade-works-19603.html">
-<meta property="og:title" content="Fate/stay night: Unlimited Blade Works â€” BOSS Anime Club">
+<meta property="og:title" content="Fate/stay night: Unlimited Blade Works &mdash; BOSS Anime Club">
 <meta property="og:description" content="Fuyuki City - a city surrounded by the sea and mountains becomes the setting for an ancient ritual. Seven masters are given control of heroic spirits in order to realize the mythical Holy Grail, which">
 <meta property="og:image" content="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx19603-ycT0pyEgDVQu.jpg">
 <meta property="og:type" content="video.tv_show">
 <meta property="og:url" content="https://anime.is-cool.dev/anime/fate-stay-night-unlimited-blade-works-19603.html">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Fate/stay night: Unlimited Blade Works â€” BOSS Anime Club">
+<meta name="twitter:title" content="Fate/stay night: Unlimited Blade Works &mdash; BOSS Anime Club">
 <meta name="twitter:description" content="Fuyuki City - a city surrounded by the sea and mountains becomes the setting for an ancient ritual. Seven masters are given control of heroic spirits in order to realize the mythical Holy Grail, which">
 <meta name="twitter:image" content="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx19603-ycT0pyEgDVQu.jpg">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"TVSeries","name":"Fate/stay night: Unlimited Blade Works","image":"https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx19603-ycT0pyEgDVQu.jpg","description":"Fuyuki City - a city surrounded by the sea and mountains becomes the setting for an ancient ritual. Seven masters are given control of heroic spirits in order to realize the mythical Holy Grail, which is said to grant its owner any wish. These heroic spirits or servants represent legendary heroes of","genre":["Action","Fantasy","Supernatural"],"datePublished":"2014","numberOfEpisodes":13}</script>
@@ -37,22 +37,24 @@
 <body>
 <h1>Fate/stay night: Unlimited Blade Works</h1>
 <img src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx19603-ycT0pyEgDVQu.jpg" alt="Fate/stay night: Unlimited Blade Works cover" loading="lazy">
-<div class="meta">Score: 8.0/10 &nbsp;Â·&nbsp; Episodes: 13 &nbsp;Â·&nbsp; Year: 2014 &nbsp;Â·&nbsp; Studio: ufotable</div>
+<div class="meta">Score: 8.0/10 &nbsp;&middot;&nbsp; Episodes: 13 &nbsp;&middot;&nbsp; Year: 2014 &nbsp;&middot;&nbsp; Studio: ufotable</div>
 <div><span class="tag">Action</span><span class="tag">Fantasy</span><span class="tag">Supernatural</span></div>
 <p>Fuyuki City - a city surrounded by the sea and mountains becomes the setting for an ancient ritual. Seven masters are given control of heroic spirits in order to realize the mythical Holy Grail, which is said to grant its owner any wish. These heroic spirits or servants represent legendary heroes of</p>
 <div class="editor-note">On BOSS Anime Club, Fate/stay night: Unlimited Blade Works is filed under Action, Fantasy, Supernatural and holds a strong community score of 8.0/10. The series has completed its run, and it was produced by ufotable starting in 2014. Save this page to your BOSS Anime Club playlist to track episodes and get English or Hindi narration for the synopsis.</div>
 
-<button class="listen-btn" id="listenBtn" type="button">ðŸ”Š Listen (device voice)</button>
+<button class="listen-btn" id="listenBtn" type="button">&#128266; Listen (device voice)</button>
 <span class="listen-status" id="listenStatus"></span>
 
-<a class="backlink" href="https://anime.is-cool.dev/">â–¸ Open in the BOSS Anime Club app to search, save playlists, and listen to narration</a>
-<a class="backlink" href="https://anime.is-cool.dev/anime/index.html">â–¸ Browse all anime</a>
+<a class="backlink" href="https://anime.is-cool.dev/">&#9656; Open in the BOSS Anime Club app to search, save playlists, and listen to narration</a>
+<a class="backlink" href="https://anime.is-cool.dev/anime/index.html">&#9656; Browse all anime</a>
 
 <script>
 (function(){
   var btn = document.getElementById('listenBtn');
   var status = document.getElementById('listenStatus');
   var text = "Fuyuki City - a city surrounded by the sea and mountains becomes the setting for an ancient ritual. Seven masters are given control of heroic spirits in order to realize the mythical Holy Grail, which is said to grant its owner any wish. These heroic spirits or servants represent legendary heroes of On BOSS Anime Club, Fate/stay night: Unlimited Blade Works is filed under Action, Fantasy, Supernatural and holds a strong community score of 8.0/10. The series has completed its run, and it was produced by ufotable starting in 2014. Save this page to your BOSS Anime Club playlist to track episodes and get English or Hindi narration for the synopsis.";
+  var LABEL_LISTEN = '\uD83D\uDD0A Listen (device voice)';
+  var LABEL_STOP = '\u23F9 Stop';
   if(!('speechSynthesis' in window)){
     btn.disabled = true;
     status.textContent = 'Not supported on this browser/device.';
@@ -63,16 +65,16 @@
     if(speaking){
       window.speechSynthesis.cancel();
       speaking = false;
-      btn.textContent = 'ðŸ”Š Listen (device voice)';
+      btn.textContent = LABEL_LISTEN;
       status.textContent = '';
       return;
     }
     window.speechSynthesis.cancel();
     var utter = new SpeechSynthesisUtterance(text);
     utter.lang = 'en-US';
-    utter.onstart = function(){ speaking = true; btn.textContent = 'â¹ Stop'; status.textContent = 'Playingâ€¦'; };
-    utter.onend = function(){ speaking = false; btn.textContent = 'ðŸ”Š Listen (device voice)'; status.textContent = ''; };
-    utter.onerror = function(){ speaking = false; btn.textContent = 'ðŸ”Š Listen (device voice)'; status.textContent = 'Could not play audio.'; };
+    utter.onstart = function(){ speaking = true; btn.textContent = LABEL_STOP; status.textContent = 'Playing...'; };
+    utter.onend = function(){ speaking = false; btn.textContent = LABEL_LISTEN; status.textContent = ''; };
+    utter.onerror = function(){ speaking = false; btn.textContent = LABEL_LISTEN; status.textContent = 'Could not play audio.'; };
     window.speechSynthesis.speak(utter);
   });
 })();

@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Beyond the Boundary â€” Watch Guide, Info &amp; Episodes | BOSS Anime Club</title>
-<meta name="description" content="Beyond the Boundary (2013) â€” They should never have met. They shouldn&#39;t even exist. But when they come together, the entire world will change. The last surviving member of her cla">
+<title>Beyond the Boundary &mdash; Watch Guide, Info &amp; Episodes | BOSS Anime Club</title>
+<meta name="description" content="Beyond the Boundary (2013) &mdash; They should never have met. They shouldn&#39;t even exist. But when they come together, the entire world will change. The last surviving member of her cla">
 <link rel="canonical" href="https://anime.is-cool.dev/anime/beyond-the-boundary-18153.html">
-<meta property="og:title" content="Beyond the Boundary â€” BOSS Anime Club">
+<meta property="og:title" content="Beyond the Boundary &mdash; BOSS Anime Club">
 <meta property="og:description" content="They should never have met. They shouldn&#39;t even exist. But when they come together, the entire world will change. The last surviving member of her clan, Mirai Kuriyama is cursed with the terrifying ab">
 <meta property="og:image" content="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx18153-oDqA9zQzQPOq.png">
 <meta property="og:type" content="video.tv_show">
 <meta property="og:url" content="https://anime.is-cool.dev/anime/beyond-the-boundary-18153.html">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Beyond the Boundary â€” BOSS Anime Club">
+<meta name="twitter:title" content="Beyond the Boundary &mdash; BOSS Anime Club">
 <meta name="twitter:description" content="They should never have met. They shouldn&#39;t even exist. But when they come together, the entire world will change. The last surviving member of her clan, Mirai Kuriyama is cursed with the terrifying ab">
 <meta name="twitter:image" content="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx18153-oDqA9zQzQPOq.png">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"TVSeries","name":"Beyond the Boundary","image":"https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx18153-oDqA9zQzQPOq.png","description":"They should never have met. They shouldn't even exist. But when they come together, the entire world will change. The last surviving member of her clan, Mirai Kuriyama is cursed with the terrifying ability to control and manipulate blood, a power so heretical that she is shunned even by those with t","genre":["Action","Drama","Fantasy","Slice of Life","Supernatural"],"datePublished":"2013","numberOfEpisodes":12}</script>
@@ -37,22 +37,24 @@
 <body>
 <h1>Beyond the Boundary</h1>
 <img src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx18153-oDqA9zQzQPOq.png" alt="Beyond the Boundary cover" loading="lazy">
-<div class="meta">Score: 7.4/10 &nbsp;Â·&nbsp; Episodes: 12 &nbsp;Â·&nbsp; Year: 2013 &nbsp;Â·&nbsp; Studio: Kyoto Animation</div>
+<div class="meta">Score: 7.4/10 &nbsp;&middot;&nbsp; Episodes: 12 &nbsp;&middot;&nbsp; Year: 2013 &nbsp;&middot;&nbsp; Studio: Kyoto Animation</div>
 <div><span class="tag">Action</span><span class="tag">Drama</span><span class="tag">Fantasy</span><span class="tag">Slice of Life</span><span class="tag">Supernatural</span></div>
 <p>They should never have met. They shouldn&#39;t even exist. But when they come together, the entire world will change. The last surviving member of her clan, Mirai Kuriyama is cursed with the terrifying ability to control and manipulate blood, a power so heretical that she is shunned even by those with t</p>
 <div class="editor-note">On BOSS Anime Club, Beyond the Boundary is filed under Action, Drama, Fantasy and sits at a solid 7.4/10 with viewers. The series has completed its run, and it was produced by Kyoto Animation starting in 2013. Save this page to your BOSS Anime Club playlist to track episodes and get English or Hindi narration for the synopsis.</div>
 
-<button class="listen-btn" id="listenBtn" type="button">ðŸ”Š Listen (device voice)</button>
+<button class="listen-btn" id="listenBtn" type="button">&#128266; Listen (device voice)</button>
 <span class="listen-status" id="listenStatus"></span>
 
-<a class="backlink" href="https://anime.is-cool.dev/">â–¸ Open in the BOSS Anime Club app to search, save playlists, and listen to narration</a>
-<a class="backlink" href="https://anime.is-cool.dev/anime/index.html">â–¸ Browse all anime</a>
+<a class="backlink" href="https://anime.is-cool.dev/">&#9656; Open in the BOSS Anime Club app to search, save playlists, and listen to narration</a>
+<a class="backlink" href="https://anime.is-cool.dev/anime/index.html">&#9656; Browse all anime</a>
 
 <script>
 (function(){
   var btn = document.getElementById('listenBtn');
   var status = document.getElementById('listenStatus');
   var text = "They should never have met. They shouldn't even exist. But when they come together, the entire world will change. The last surviving member of her clan, Mirai Kuriyama is cursed with the terrifying ability to control and manipulate blood, a power so heretical that she is shunned even by those with t On BOSS Anime Club, Beyond the Boundary is filed under Action, Drama, Fantasy and sits at a solid 7.4/10 with viewers. The series has completed its run, and it was produced by Kyoto Animation starting in 2013. Save this page to your BOSS Anime Club playlist to track episodes and get English or Hindi narration for the synopsis.";
+  var LABEL_LISTEN = '\uD83D\uDD0A Listen (device voice)';
+  var LABEL_STOP = '\u23F9 Stop';
   if(!('speechSynthesis' in window)){
     btn.disabled = true;
     status.textContent = 'Not supported on this browser/device.';
@@ -63,16 +65,16 @@
     if(speaking){
       window.speechSynthesis.cancel();
       speaking = false;
-      btn.textContent = 'ðŸ”Š Listen (device voice)';
+      btn.textContent = LABEL_LISTEN;
       status.textContent = '';
       return;
     }
     window.speechSynthesis.cancel();
     var utter = new SpeechSynthesisUtterance(text);
     utter.lang = 'en-US';
-    utter.onstart = function(){ speaking = true; btn.textContent = 'â¹ Stop'; status.textContent = 'Playingâ€¦'; };
-    utter.onend = function(){ speaking = false; btn.textContent = 'ðŸ”Š Listen (device voice)'; status.textContent = ''; };
-    utter.onerror = function(){ speaking = false; btn.textContent = 'ðŸ”Š Listen (device voice)'; status.textContent = 'Could not play audio.'; };
+    utter.onstart = function(){ speaking = true; btn.textContent = LABEL_STOP; status.textContent = 'Playing...'; };
+    utter.onend = function(){ speaking = false; btn.textContent = LABEL_LISTEN; status.textContent = ''; };
+    utter.onerror = function(){ speaking = false; btn.textContent = LABEL_LISTEN; status.textContent = 'Could not play audio.'; };
     window.speechSynthesis.speak(utter);
   });
 })();

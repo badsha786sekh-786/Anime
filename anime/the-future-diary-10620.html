@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Future Diary â€” Watch Guide, Info &amp; Episodes | BOSS Anime Club</title>
-<meta name="description" content="The Future Diary (2011) â€” This psychological thriller, based on the manga written and illustrated by Sakae Esuno, is about Yuki, a loner who&#39;s not very good with people. He pre">
+<title>The Future Diary &mdash; Watch Guide, Info &amp; Episodes | BOSS Anime Club</title>
+<meta name="description" content="The Future Diary (2011) &mdash; This psychological thriller, based on the manga written and illustrated by Sakae Esuno, is about Yuki, a loner who&#39;s not very good with people. He pre">
 <link rel="canonical" href="https://anime.is-cool.dev/anime/the-future-diary-10620.html">
-<meta property="og:title" content="The Future Diary â€” BOSS Anime Club">
+<meta property="og:title" content="The Future Diary &mdash; BOSS Anime Club">
 <meta property="og:description" content="This psychological thriller, based on the manga written and illustrated by Sakae Esuno, is about Yuki, a loner who&#39;s not very good with people. He prefers to write a diary on his cell phone and talk t">
 <meta property="og:image" content="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx10620-dUZeNej0W4QN.png">
 <meta property="og:type" content="video.tv_show">
 <meta property="og:url" content="https://anime.is-cool.dev/anime/the-future-diary-10620.html">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="The Future Diary â€” BOSS Anime Club">
+<meta name="twitter:title" content="The Future Diary &mdash; BOSS Anime Club">
 <meta name="twitter:description" content="This psychological thriller, based on the manga written and illustrated by Sakae Esuno, is about Yuki, a loner who&#39;s not very good with people. He prefers to write a diary on his cell phone and talk t">
 <meta name="twitter:image" content="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx10620-dUZeNej0W4QN.png">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"TVSeries","name":"The Future Diary","image":"https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx10620-dUZeNej0W4QN.png","description":"This psychological thriller, based on the manga written and illustrated by Sakae Esuno, is about Yuki, a loner who's not very good with people. He prefers to write a diary on his cell phone and talk to his imaginary friend, Deus Ex Machina &ndash; The God of Time and Space. However, Yuki soon learns","genre":["Action","Horror","Mystery","Psychological","Supernatural","Thriller"],"datePublished":"2011","numberOfEpisodes":26}</script>
@@ -37,22 +37,24 @@
 <body>
 <h1>The Future Diary</h1>
 <img src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx10620-dUZeNej0W4QN.png" alt="The Future Diary cover" loading="lazy">
-<div class="meta">Score: 6.9/10 &nbsp;Â·&nbsp; Episodes: 26 &nbsp;Â·&nbsp; Year: 2011 &nbsp;Â·&nbsp; Studio: Asread</div>
+<div class="meta">Score: 6.9/10 &nbsp;&middot;&nbsp; Episodes: 26 &nbsp;&middot;&nbsp; Year: 2011 &nbsp;&middot;&nbsp; Studio: Asread</div>
 <div><span class="tag">Action</span><span class="tag">Horror</span><span class="tag">Mystery</span><span class="tag">Psychological</span><span class="tag">Supernatural</span><span class="tag">Thriller</span></div>
 <p>This psychological thriller, based on the manga written and illustrated by Sakae Esuno, is about Yuki, a loner who&#39;s not very good with people. He prefers to write a diary on his cell phone and talk to his imaginary friend, Deus Ex Machina &amp;ndash; The God of Time and Space. However, Yuki soon learns</p>
 <div class="editor-note">On BOSS Anime Club, The Future Diary is filed under Action, Horror, Mystery and sits at a solid 6.9/10 with viewers. The series has completed its run, and it was produced by Asread starting in 2011. Save this page to your BOSS Anime Club playlist to track episodes and get English or Hindi narration for the synopsis.</div>
 
-<button class="listen-btn" id="listenBtn" type="button">ðŸ”Š Listen (device voice)</button>
+<button class="listen-btn" id="listenBtn" type="button">&#128266; Listen (device voice)</button>
 <span class="listen-status" id="listenStatus"></span>
 
-<a class="backlink" href="https://anime.is-cool.dev/">â–¸ Open in the BOSS Anime Club app to search, save playlists, and listen to narration</a>
-<a class="backlink" href="https://anime.is-cool.dev/anime/index.html">â–¸ Browse all anime</a>
+<a class="backlink" href="https://anime.is-cool.dev/">&#9656; Open in the BOSS Anime Club app to search, save playlists, and listen to narration</a>
+<a class="backlink" href="https://anime.is-cool.dev/anime/index.html">&#9656; Browse all anime</a>
 
 <script>
 (function(){
   var btn = document.getElementById('listenBtn');
   var status = document.getElementById('listenStatus');
   var text = "This psychological thriller, based on the manga written and illustrated by Sakae Esuno, is about Yuki, a loner who's not very good with people. He prefers to write a diary on his cell phone and talk to his imaginary friend, Deus Ex Machina &ndash; The God of Time and Space. However, Yuki soon learns On BOSS Anime Club, The Future Diary is filed under Action, Horror, Mystery and sits at a solid 6.9/10 with viewers. The series has completed its run, and it was produced by Asread starting in 2011. Save this page to your BOSS Anime Club playlist to track episodes and get English or Hindi narration for the synopsis.";
+  var LABEL_LISTEN = '\uD83D\uDD0A Listen (device voice)';
+  var LABEL_STOP = '\u23F9 Stop';
   if(!('speechSynthesis' in window)){
     btn.disabled = true;
     status.textContent = 'Not supported on this browser/device.';
@@ -63,16 +65,16 @@
     if(speaking){
       window.speechSynthesis.cancel();
       speaking = false;
-      btn.textContent = 'ðŸ”Š Listen (device voice)';
+      btn.textContent = LABEL_LISTEN;
       status.textContent = '';
       return;
     }
     window.speechSynthesis.cancel();
     var utter = new SpeechSynthesisUtterance(text);
     utter.lang = 'en-US';
-    utter.onstart = function(){ speaking = true; btn.textContent = 'â¹ Stop'; status.textContent = 'Playingâ€¦'; };
-    utter.onend = function(){ speaking = false; btn.textContent = 'ðŸ”Š Listen (device voice)'; status.textContent = ''; };
-    utter.onerror = function(){ speaking = false; btn.textContent = 'ðŸ”Š Listen (device voice)'; status.textContent = 'Could not play audio.'; };
+    utter.onstart = function(){ speaking = true; btn.textContent = LABEL_STOP; status.textContent = 'Playing...'; };
+    utter.onend = function(){ speaking = false; btn.textContent = LABEL_LISTEN; status.textContent = ''; };
+    utter.onerror = function(){ speaking = false; btn.textContent = LABEL_LISTEN; status.textContent = 'Could not play audio.'; };
     window.speechSynthesis.speak(utter);
   });
 })();

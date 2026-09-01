@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sword Art Online II â€” Watch Guide, Info &amp; Episodes | BOSS Anime Club</title>
-<meta name="description" content="Sword Art Online II (2014) â€” One year after the SAO incident, Kirito is approached by Seijiro Kikuoka from Japan&#39;s Ministry of Internal Affairs and Communications Department &quot;VR D">
+<title>Sword Art Online II &mdash; Watch Guide, Info &amp; Episodes | BOSS Anime Club</title>
+<meta name="description" content="Sword Art Online II (2014) &mdash; One year after the SAO incident, Kirito is approached by Seijiro Kikuoka from Japan&#39;s Ministry of Internal Affairs and Communications Department &quot;VR D">
 <link rel="canonical" href="https://anime.is-cool.dev/anime/sword-art-online-ii-20594.html">
-<meta property="og:title" content="Sword Art Online II â€” BOSS Anime Club">
+<meta property="og:title" content="Sword Art Online II &mdash; BOSS Anime Club">
 <meta property="og:description" content="One year after the SAO incident, Kirito is approached by Seijiro Kikuoka from Japan&#39;s Ministry of Internal Affairs and Communications Department &quot;VR Division&quot; with a rather peculiar request.
 
 That w">
@@ -14,7 +14,7 @@ That w">
 <meta property="og:type" content="video.tv_show">
 <meta property="og:url" content="https://anime.is-cool.dev/anime/sword-art-online-ii-20594.html">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Sword Art Online II â€” BOSS Anime Club">
+<meta name="twitter:title" content="Sword Art Online II &mdash; BOSS Anime Club">
 <meta name="twitter:description" content="One year after the SAO incident, Kirito is approached by Seijiro Kikuoka from Japan&#39;s Ministry of Internal Affairs and Communications Department &quot;VR Division&quot; with a rather peculiar request.
 
 That w">
@@ -41,24 +41,26 @@ That w">
 <body>
 <h1>Sword Art Online II</h1>
 <img src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/nx20594-FhRgZ1H9Istt.jpg" alt="Sword Art Online II cover" loading="lazy">
-<div class="meta">Score: 6.6/10 &nbsp;Â·&nbsp; Episodes: 24 &nbsp;Â·&nbsp; Year: 2014 &nbsp;Â·&nbsp; Studio: A-1 Pictures</div>
+<div class="meta">Score: 6.6/10 &nbsp;&middot;&nbsp; Episodes: 24 &nbsp;&middot;&nbsp; Year: 2014 &nbsp;&middot;&nbsp; Studio: A-1 Pictures</div>
 <div><span class="tag">Action</span><span class="tag">Adventure</span><span class="tag">Fantasy</span><span class="tag">Sci-Fi</span></div>
 <p>One year after the SAO incident, Kirito is approached by Seijiro Kikuoka from Japan&#39;s Ministry of Internal Affairs and Communications Department &quot;VR Division&quot; with a rather peculiar request.
 
 That was an investigation on the &quot;Death Gun&quot; incident that occurred in the gun and steel filled VRMMO call</p>
 <div class="editor-note">On BOSS Anime Club, Sword Art Online II is filed under Action, Adventure, Fantasy and sits at a solid 6.6/10 with viewers. The series has completed its run, and it was produced by A-1 Pictures starting in 2014. Save this page to your BOSS Anime Club playlist to track episodes and get English or Hindi narration for the synopsis.</div>
 
-<button class="listen-btn" id="listenBtn" type="button">ðŸ”Š Listen (device voice)</button>
+<button class="listen-btn" id="listenBtn" type="button">&#128266; Listen (device voice)</button>
 <span class="listen-status" id="listenStatus"></span>
 
-<a class="backlink" href="https://anime.is-cool.dev/">â–¸ Open in the BOSS Anime Club app to search, save playlists, and listen to narration</a>
-<a class="backlink" href="https://anime.is-cool.dev/anime/index.html">â–¸ Browse all anime</a>
+<a class="backlink" href="https://anime.is-cool.dev/">&#9656; Open in the BOSS Anime Club app to search, save playlists, and listen to narration</a>
+<a class="backlink" href="https://anime.is-cool.dev/anime/index.html">&#9656; Browse all anime</a>
 
 <script>
 (function(){
   var btn = document.getElementById('listenBtn');
   var status = document.getElementById('listenStatus');
   var text = "One year after the SAO incident, Kirito is approached by Seijiro Kikuoka from Japan's Ministry of Internal Affairs and Communications Department \"VR Division\" with a rather peculiar request.\r\n\r\nThat was an investigation on the \"Death Gun\" incident that occurred in the gun and steel filled VRMMO call On BOSS Anime Club, Sword Art Online II is filed under Action, Adventure, Fantasy and sits at a solid 6.6/10 with viewers. The series has completed its run, and it was produced by A-1 Pictures starting in 2014. Save this page to your BOSS Anime Club playlist to track episodes and get English or Hindi narration for the synopsis.";
+  var LABEL_LISTEN = '\uD83D\uDD0A Listen (device voice)';
+  var LABEL_STOP = '\u23F9 Stop';
   if(!('speechSynthesis' in window)){
     btn.disabled = true;
     status.textContent = 'Not supported on this browser/device.';
@@ -69,16 +71,16 @@ That was an investigation on the &quot;Death Gun&quot; incident that occurred in
     if(speaking){
       window.speechSynthesis.cancel();
       speaking = false;
-      btn.textContent = 'ðŸ”Š Listen (device voice)';
+      btn.textContent = LABEL_LISTEN;
       status.textContent = '';
       return;
     }
     window.speechSynthesis.cancel();
     var utter = new SpeechSynthesisUtterance(text);
     utter.lang = 'en-US';
-    utter.onstart = function(){ speaking = true; btn.textContent = 'â¹ Stop'; status.textContent = 'Playingâ€¦'; };
-    utter.onend = function(){ speaking = false; btn.textContent = 'ðŸ”Š Listen (device voice)'; status.textContent = ''; };
-    utter.onerror = function(){ speaking = false; btn.textContent = 'ðŸ”Š Listen (device voice)'; status.textContent = 'Could not play audio.'; };
+    utter.onstart = function(){ speaking = true; btn.textContent = LABEL_STOP; status.textContent = 'Playing...'; };
+    utter.onend = function(){ speaking = false; btn.textContent = LABEL_LISTEN; status.textContent = ''; };
+    utter.onerror = function(){ speaking = false; btn.textContent = LABEL_LISTEN; status.textContent = 'Could not play audio.'; };
     window.speechSynthesis.speak(utter);
   });
 })();

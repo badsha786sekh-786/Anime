@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HAIKYU!! â€” Watch Guide, Info &amp; Episodes | BOSS Anime Club</title>
-<meta name="description" content="HAIKYU!! (2014) â€” Inspired after watching a volleyball ace nicknamed &quot;Little Giant&quot; in action, small-statured Shouyou Hinata revives the volleyball club at his middle s">
+<title>HAIKYU!! &mdash; Watch Guide, Info &amp; Episodes | BOSS Anime Club</title>
+<meta name="description" content="HAIKYU!! (2014) &mdash; Inspired after watching a volleyball ace nicknamed &quot;Little Giant&quot; in action, small-statured Shouyou Hinata revives the volleyball club at his middle s">
 <link rel="canonical" href="https://anime.is-cool.dev/anime/haikyu-20464.html">
-<meta property="og:title" content="HAIKYU!! â€” BOSS Anime Club">
+<meta property="og:title" content="HAIKYU!! &mdash; BOSS Anime Club">
 <meta property="og:description" content="Inspired after watching a volleyball ace nicknamed &quot;Little Giant&quot; in action, small-statured Shouyou Hinata revives the volleyball club at his middle school. The newly-formed team even makes it to a to">
 <meta property="og:image" content="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx20464-ooZUyBe4ptp9.png">
 <meta property="og:type" content="video.tv_show">
 <meta property="og:url" content="https://anime.is-cool.dev/anime/haikyu-20464.html">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="HAIKYU!! â€” BOSS Anime Club">
+<meta name="twitter:title" content="HAIKYU!! &mdash; BOSS Anime Club">
 <meta name="twitter:description" content="Inspired after watching a volleyball ace nicknamed &quot;Little Giant&quot; in action, small-statured Shouyou Hinata revives the volleyball club at his middle school. The newly-formed team even makes it to a to">
 <meta name="twitter:image" content="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx20464-ooZUyBe4ptp9.png">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"TVSeries","name":"HAIKYU!!","image":"https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx20464-ooZUyBe4ptp9.png","description":"Inspired after watching a volleyball ace nicknamed \"Little Giant\" in action, small-statured Shouyou Hinata revives the volleyball club at his middle school. The newly-formed team even makes it to a tournament; however, their first match turns out to be their last when they are brutally squashed by t","genre":["Comedy","Drama","Sports"],"datePublished":"2014","numberOfEpisodes":25}</script>
@@ -37,22 +37,24 @@
 <body>
 <h1>HAIKYU!!</h1>
 <img src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx20464-ooZUyBe4ptp9.png" alt="HAIKYU!! cover" loading="lazy">
-<div class="meta">Score: 8.4/10 &nbsp;Â·&nbsp; Episodes: 25 &nbsp;Â·&nbsp; Year: 2014 &nbsp;Â·&nbsp; Studio: Production I.G</div>
+<div class="meta">Score: 8.4/10 &nbsp;&middot;&nbsp; Episodes: 25 &nbsp;&middot;&nbsp; Year: 2014 &nbsp;&middot;&nbsp; Studio: Production I.G</div>
 <div><span class="tag">Comedy</span><span class="tag">Drama</span><span class="tag">Sports</span></div>
 <p>Inspired after watching a volleyball ace nicknamed &quot;Little Giant&quot; in action, small-statured Shouyou Hinata revives the volleyball club at his middle school. The newly-formed team even makes it to a tournament; however, their first match turns out to be their last when they are brutally squashed by t</p>
 <div class="editor-note">On BOSS Anime Club, HAIKYU!! is filed under Comedy, Drama, Sports and holds a strong community score of 8.4/10. The series has completed its run, and it was produced by Production I.G starting in 2014. Save this page to your BOSS Anime Club playlist to track episodes and get English or Hindi narration for the synopsis.</div>
 
-<button class="listen-btn" id="listenBtn" type="button">ðŸ”Š Listen (device voice)</button>
+<button class="listen-btn" id="listenBtn" type="button">&#128266; Listen (device voice)</button>
 <span class="listen-status" id="listenStatus"></span>
 
-<a class="backlink" href="https://anime.is-cool.dev/">â–¸ Open in the BOSS Anime Club app to search, save playlists, and listen to narration</a>
-<a class="backlink" href="https://anime.is-cool.dev/anime/index.html">â–¸ Browse all anime</a>
+<a class="backlink" href="https://anime.is-cool.dev/">&#9656; Open in the BOSS Anime Club app to search, save playlists, and listen to narration</a>
+<a class="backlink" href="https://anime.is-cool.dev/anime/index.html">&#9656; Browse all anime</a>
 
 <script>
 (function(){
   var btn = document.getElementById('listenBtn');
   var status = document.getElementById('listenStatus');
   var text = "Inspired after watching a volleyball ace nicknamed \"Little Giant\" in action, small-statured Shouyou Hinata revives the volleyball club at his middle school. The newly-formed team even makes it to a tournament; however, their first match turns out to be their last when they are brutally squashed by t On BOSS Anime Club, HAIKYU!! is filed under Comedy, Drama, Sports and holds a strong community score of 8.4/10. The series has completed its run, and it was produced by Production I.G starting in 2014. Save this page to your BOSS Anime Club playlist to track episodes and get English or Hindi narration for the synopsis.";
+  var LABEL_LISTEN = '\uD83D\uDD0A Listen (device voice)';
+  var LABEL_STOP = '\u23F9 Stop';
   if(!('speechSynthesis' in window)){
     btn.disabled = true;
     status.textContent = 'Not supported on this browser/device.';
@@ -63,16 +65,16 @@
     if(speaking){
       window.speechSynthesis.cancel();
       speaking = false;
-      btn.textContent = 'ðŸ”Š Listen (device voice)';
+      btn.textContent = LABEL_LISTEN;
       status.textContent = '';
       return;
     }
     window.speechSynthesis.cancel();
     var utter = new SpeechSynthesisUtterance(text);
     utter.lang = 'en-US';
-    utter.onstart = function(){ speaking = true; btn.textContent = 'â¹ Stop'; status.textContent = 'Playingâ€¦'; };
-    utter.onend = function(){ speaking = false; btn.textContent = 'ðŸ”Š Listen (device voice)'; status.textContent = ''; };
-    utter.onerror = function(){ speaking = false; btn.textContent = 'ðŸ”Š Listen (device voice)'; status.textContent = 'Could not play audio.'; };
+    utter.onstart = function(){ speaking = true; btn.textContent = LABEL_STOP; status.textContent = 'Playing...'; };
+    utter.onend = function(){ speaking = false; btn.textContent = LABEL_LISTEN; status.textContent = ''; };
+    utter.onerror = function(){ speaking = false; btn.textContent = LABEL_LISTEN; status.textContent = 'Could not play audio.'; };
     window.speechSynthesis.speak(utter);
   });
 })();

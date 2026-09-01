@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Spirited Away â€” Watch Guide, Info &amp; Episodes | BOSS Anime Club</title>
-<meta name="description" content="Spirited Away (2001) â€” On the way to their new home, 10-year-old Chihiro Ogino&#39;s family stumbles upon a deserted theme park. Intrigued, the family investigates the park, tho">
+<title>Spirited Away &mdash; Watch Guide, Info &amp; Episodes | BOSS Anime Club</title>
+<meta name="description" content="Spirited Away (2001) &mdash; On the way to their new home, 10-year-old Chihiro Ogino&#39;s family stumbles upon a deserted theme park. Intrigued, the family investigates the park, tho">
 <link rel="canonical" href="https://anime.is-cool.dev/anime/spirited-away-199.html">
-<meta property="og:title" content="Spirited Away â€” BOSS Anime Club">
+<meta property="og:title" content="Spirited Away &mdash; BOSS Anime Club">
 <meta property="og:description" content="On the way to their new home, 10-year-old Chihiro Ogino&#39;s family stumbles upon a deserted theme park. Intrigued, the family investigates the park, though unbeknownst to them, it is secretly inhabited ">
 <meta property="og:image" content="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx199-sWefXJvXkDOb.jpg">
 <meta property="og:type" content="video.tv_show">
 <meta property="og:url" content="https://anime.is-cool.dev/anime/spirited-away-199.html">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Spirited Away â€” BOSS Anime Club">
+<meta name="twitter:title" content="Spirited Away &mdash; BOSS Anime Club">
 <meta name="twitter:description" content="On the way to their new home, 10-year-old Chihiro Ogino&#39;s family stumbles upon a deserted theme park. Intrigued, the family investigates the park, though unbeknownst to them, it is secretly inhabited ">
 <meta name="twitter:image" content="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx199-sWefXJvXkDOb.jpg">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"TVSeries","name":"Spirited Away","image":"https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx199-sWefXJvXkDOb.jpg","description":"On the way to their new home, 10-year-old Chihiro Ogino's family stumbles upon a deserted theme park. Intrigued, the family investigates the park, though unbeknownst to them, it is secretly inhabited by spirits who sleep by day and appear at night. When Chihiro's mother and father eat food from a re","genre":["Adventure","Drama","Fantasy","Supernatural"],"datePublished":"2001","numberOfEpisodes":1}</script>
@@ -37,22 +37,24 @@
 <body>
 <h1>Spirited Away</h1>
 <img src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx199-sWefXJvXkDOb.jpg" alt="Spirited Away cover" loading="lazy">
-<div class="meta">Score: 8.6/10 &nbsp;Â·&nbsp; Episodes: 1 &nbsp;Â·&nbsp; Year: 2001 &nbsp;Â·&nbsp; Studio: Studio Ghibli</div>
+<div class="meta">Score: 8.6/10 &nbsp;&middot;&nbsp; Episodes: 1 &nbsp;&middot;&nbsp; Year: 2001 &nbsp;&middot;&nbsp; Studio: Studio Ghibli</div>
 <div><span class="tag">Adventure</span><span class="tag">Drama</span><span class="tag">Fantasy</span><span class="tag">Supernatural</span></div>
 <p>On the way to their new home, 10-year-old Chihiro Ogino&#39;s family stumbles upon a deserted theme park. Intrigued, the family investigates the park, though unbeknownst to them, it is secretly inhabited by spirits who sleep by day and appear at night. When Chihiro&#39;s mother and father eat food from a re</p>
 <div class="editor-note">On BOSS Anime Club, Spirited Away is filed under Adventure, Drama, Fantasy and holds a strong community score of 8.6/10. The series has completed its run, and it was produced by Studio Ghibli starting in 2001. Save this page to your BOSS Anime Club playlist to track episodes and get English or Hindi narration for the synopsis.</div>
 
-<button class="listen-btn" id="listenBtn" type="button">ðŸ”Š Listen (device voice)</button>
+<button class="listen-btn" id="listenBtn" type="button">&#128266; Listen (device voice)</button>
 <span class="listen-status" id="listenStatus"></span>
 
-<a class="backlink" href="https://anime.is-cool.dev/">â–¸ Open in the BOSS Anime Club app to search, save playlists, and listen to narration</a>
-<a class="backlink" href="https://anime.is-cool.dev/anime/index.html">â–¸ Browse all anime</a>
+<a class="backlink" href="https://anime.is-cool.dev/">&#9656; Open in the BOSS Anime Club app to search, save playlists, and listen to narration</a>
+<a class="backlink" href="https://anime.is-cool.dev/anime/index.html">&#9656; Browse all anime</a>
 
 <script>
 (function(){
   var btn = document.getElementById('listenBtn');
   var status = document.getElementById('listenStatus');
   var text = "On the way to their new home, 10-year-old Chihiro Ogino's family stumbles upon a deserted theme park. Intrigued, the family investigates the park, though unbeknownst to them, it is secretly inhabited by spirits who sleep by day and appear at night. When Chihiro's mother and father eat food from a re On BOSS Anime Club, Spirited Away is filed under Adventure, Drama, Fantasy and holds a strong community score of 8.6/10. The series has completed its run, and it was produced by Studio Ghibli starting in 2001. Save this page to your BOSS Anime Club playlist to track episodes and get English or Hindi narration for the synopsis.";
+  var LABEL_LISTEN = '\uD83D\uDD0A Listen (device voice)';
+  var LABEL_STOP = '\u23F9 Stop';
   if(!('speechSynthesis' in window)){
     btn.disabled = true;
     status.textContent = 'Not supported on this browser/device.';
@@ -63,16 +65,16 @@
     if(speaking){
       window.speechSynthesis.cancel();
       speaking = false;
-      btn.textContent = 'ðŸ”Š Listen (device voice)';
+      btn.textContent = LABEL_LISTEN;
       status.textContent = '';
       return;
     }
     window.speechSynthesis.cancel();
     var utter = new SpeechSynthesisUtterance(text);
     utter.lang = 'en-US';
-    utter.onstart = function(){ speaking = true; btn.textContent = 'â¹ Stop'; status.textContent = 'Playingâ€¦'; };
-    utter.onend = function(){ speaking = false; btn.textContent = 'ðŸ”Š Listen (device voice)'; status.textContent = ''; };
-    utter.onerror = function(){ speaking = false; btn.textContent = 'ðŸ”Š Listen (device voice)'; status.textContent = 'Could not play audio.'; };
+    utter.onstart = function(){ speaking = true; btn.textContent = LABEL_STOP; status.textContent = 'Playing...'; };
+    utter.onend = function(){ speaking = false; btn.textContent = LABEL_LISTEN; status.textContent = ''; };
+    utter.onerror = function(){ speaking = false; btn.textContent = LABEL_LISTEN; status.textContent = 'Could not play audio.'; };
     window.speechSynthesis.speak(utter);
   });
 })();

@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Weathering With You â€” Watch Guide, Info &amp; Episodes | BOSS Anime Club</title>
-<meta name="description" content="Weathering With You (2019) â€” High school student Hodaka leaves his home on an isolated island and moves to Tokyo, but he immediately becomes broke. He lives his days in isolation,">
+<title>Weathering With You &mdash; Watch Guide, Info &amp; Episodes | BOSS Anime Club</title>
+<meta name="description" content="Weathering With You (2019) &mdash; High school student Hodaka leaves his home on an isolated island and moves to Tokyo, but he immediately becomes broke. He lives his days in isolation,">
 <link rel="canonical" href="https://anime.is-cool.dev/anime/weathering-with-you-106286.html">
-<meta property="og:title" content="Weathering With You â€” BOSS Anime Club">
+<meta property="og:title" content="Weathering With You &mdash; BOSS Anime Club">
 <meta property="og:description" content="High school student Hodaka leaves his home on an isolated island and moves to Tokyo, but he immediately becomes broke. He lives his days in isolation, but finally finds a job as a writer for a shady o">
 <meta property="og:image" content="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx106286-5COcpd0J9VbL.png">
 <meta property="og:type" content="video.tv_show">
 <meta property="og:url" content="https://anime.is-cool.dev/anime/weathering-with-you-106286.html">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Weathering With You â€” BOSS Anime Club">
+<meta name="twitter:title" content="Weathering With You &mdash; BOSS Anime Club">
 <meta name="twitter:description" content="High school student Hodaka leaves his home on an isolated island and moves to Tokyo, but he immediately becomes broke. He lives his days in isolation, but finally finds a job as a writer for a shady o">
 <meta name="twitter:image" content="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx106286-5COcpd0J9VbL.png">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"TVSeries","name":"Weathering With You","image":"https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx106286-5COcpd0J9VbL.png","description":"High school student Hodaka leaves his home on an isolated island and moves to Tokyo, but he immediately becomes broke. He lives his days in isolation, but finally finds a job as a writer for a shady occult magazine. After he starts his job, the weather has been rainy day after day. In a corner of th","genre":["Drama","Romance","Slice of Life","Supernatural"],"datePublished":"2019","numberOfEpisodes":1}</script>
@@ -37,22 +37,24 @@
 <body>
 <h1>Weathering With You</h1>
 <img src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx106286-5COcpd0J9VbL.png" alt="Weathering With You cover" loading="lazy">
-<div class="meta">Score: 8.1/10 &nbsp;Â·&nbsp; Episodes: 1 &nbsp;Â·&nbsp; Year: 2019 &nbsp;Â·&nbsp; Studio: CoMix Wave</div>
+<div class="meta">Score: 8.1/10 &nbsp;&middot;&nbsp; Episodes: 1 &nbsp;&middot;&nbsp; Year: 2019 &nbsp;&middot;&nbsp; Studio: CoMix Wave</div>
 <div><span class="tag">Drama</span><span class="tag">Romance</span><span class="tag">Slice of Life</span><span class="tag">Supernatural</span></div>
 <p>High school student Hodaka leaves his home on an isolated island and moves to Tokyo, but he immediately becomes broke. He lives his days in isolation, but finally finds a job as a writer for a shady occult magazine. After he starts his job, the weather has been rainy day after day. In a corner of th</p>
 <div class="editor-note">On BOSS Anime Club, Weathering With You is filed under Drama, Romance, Slice of Life and holds a strong community score of 8.1/10. The series has completed its run, and it was produced by CoMix Wave starting in 2019. Save this page to your BOSS Anime Club playlist to track episodes and get English or Hindi narration for the synopsis.</div>
 
-<button class="listen-btn" id="listenBtn" type="button">ðŸ”Š Listen (device voice)</button>
+<button class="listen-btn" id="listenBtn" type="button">&#128266; Listen (device voice)</button>
 <span class="listen-status" id="listenStatus"></span>
 
-<a class="backlink" href="https://anime.is-cool.dev/">â–¸ Open in the BOSS Anime Club app to search, save playlists, and listen to narration</a>
-<a class="backlink" href="https://anime.is-cool.dev/anime/index.html">â–¸ Browse all anime</a>
+<a class="backlink" href="https://anime.is-cool.dev/">&#9656; Open in the BOSS Anime Club app to search, save playlists, and listen to narration</a>
+<a class="backlink" href="https://anime.is-cool.dev/anime/index.html">&#9656; Browse all anime</a>
 
 <script>
 (function(){
   var btn = document.getElementById('listenBtn');
   var status = document.getElementById('listenStatus');
   var text = "High school student Hodaka leaves his home on an isolated island and moves to Tokyo, but he immediately becomes broke. He lives his days in isolation, but finally finds a job as a writer for a shady occult magazine. After he starts his job, the weather has been rainy day after day. In a corner of th On BOSS Anime Club, Weathering With You is filed under Drama, Romance, Slice of Life and holds a strong community score of 8.1/10. The series has completed its run, and it was produced by CoMix Wave starting in 2019. Save this page to your BOSS Anime Club playlist to track episodes and get English or Hindi narration for the synopsis.";
+  var LABEL_LISTEN = '\uD83D\uDD0A Listen (device voice)';
+  var LABEL_STOP = '\u23F9 Stop';
   if(!('speechSynthesis' in window)){
     btn.disabled = true;
     status.textContent = 'Not supported on this browser/device.';
@@ -63,16 +65,16 @@
     if(speaking){
       window.speechSynthesis.cancel();
       speaking = false;
-      btn.textContent = 'ðŸ”Š Listen (device voice)';
+      btn.textContent = LABEL_LISTEN;
       status.textContent = '';
       return;
     }
     window.speechSynthesis.cancel();
     var utter = new SpeechSynthesisUtterance(text);
     utter.lang = 'en-US';
-    utter.onstart = function(){ speaking = true; btn.textContent = 'â¹ Stop'; status.textContent = 'Playingâ€¦'; };
-    utter.onend = function(){ speaking = false; btn.textContent = 'ðŸ”Š Listen (device voice)'; status.textContent = ''; };
-    utter.onerror = function(){ speaking = false; btn.textContent = 'ðŸ”Š Listen (device voice)'; status.textContent = 'Could not play audio.'; };
+    utter.onstart = function(){ speaking = true; btn.textContent = LABEL_STOP; status.textContent = 'Playing...'; };
+    utter.onend = function(){ speaking = false; btn.textContent = LABEL_LISTEN; status.textContent = ''; };
+    utter.onerror = function(){ speaking = false; btn.textContent = LABEL_LISTEN; status.textContent = 'Could not play audio.'; };
     window.speechSynthesis.speak(utter);
   });
 })();
