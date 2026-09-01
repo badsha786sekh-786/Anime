@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Hero Academia Season 5 — Watch Guide, Info &amp; Episodes | BOSS Anime Club</title>
-<meta name="description" content="My Hero Academia Season 5 (2021) — The rivalry between Class 1-A and Class 1-B heats up in a joint training battle. Eager to be a part of the hero course, brainwashing buff Shinso is ta">
+<title>My Hero Academia Season 5 â€” Watch Guide, Info &amp; Episodes | BOSS Anime Club</title>
+<meta name="description" content="My Hero Academia Season 5 (2021) â€” The rivalry between Class 1-A and Class 1-B heats up in a joint training battle. Eager to be a part of the hero course, brainwashing buff Shinso is ta">
 <link rel="canonical" href="https://anime.is-cool.dev/anime/my-hero-academia-season-5-117193.html">
-<meta property="og:title" content="My Hero Academia Season 5 — BOSS Anime Club">
+<meta property="og:title" content="My Hero Academia Season 5 â€” BOSS Anime Club">
 <meta property="og:description" content="The rivalry between Class 1-A and Class 1-B heats up in a joint training battle. Eager to be a part of the hero course, brainwashing buff Shinso is tasked with competing on both sides.
   
 But as each ">
@@ -14,7 +14,7 @@ But as each ">
 <meta property="og:type" content="video.tv_show">
 <meta property="og:url" content="https://anime.is-cool.dev/anime/my-hero-academia-season-5-117193.html">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="My Hero Academia Season 5 — BOSS Anime Club">
+<meta name="twitter:title" content="My Hero Academia Season 5 â€” BOSS Anime Club">
 <meta name="twitter:description" content="The rivalry between Class 1-A and Class 1-B heats up in a joint training battle. Eager to be a part of the hero course, brainwashing buff Shinso is tasked with competing on both sides.
   
 But as each ">
@@ -28,18 +28,60 @@ But as each ">
   .meta{font-size:14px;color:#8B93A7;margin-bottom:16px;}
   .editor-note{border-left:2px solid #FFB454;padding:10px 14px;margin:20px 0;background:#171B24;font-size:14px;color:#F4F1EA;}
   .backlink{margin-top:32px;display:block;}
+  .listen-btn{
+    font-family:inherit;font-size:13px;letter-spacing:0.3px;text-transform:uppercase;
+    background:#171B24;border:1px solid #5B8DEF;color:#F4F1EA;padding:9px 16px;
+    border-radius:6px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;margin:16px 0;
+  }
+  .listen-btn:hover{border-color:#6FA3FF;color:#9FC1FF;}
+  .listen-btn:disabled{opacity:0.5;cursor:default;}
+  .listen-status{font-size:12px;color:#8B93A7;margin-left:8px;}
 </style>
 </head>
 <body>
 <h1>My Hero Academia Season 5</h1>
 <img src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx117193-E75BlZmDh1aB.jpg" alt="My Hero Academia Season 5 cover" loading="lazy">
-<div class="meta">Score: 7.3/10 &nbsp;·&nbsp; Episodes: 25 &nbsp;·&nbsp; Year: 2021 &nbsp;·&nbsp; Studio: bones</div>
+<div class="meta">Score: 7.3/10 &nbsp;Â·&nbsp; Episodes: 25 &nbsp;Â·&nbsp; Year: 2021 &nbsp;Â·&nbsp; Studio: bones</div>
 <div><span class="tag">Action</span><span class="tag">Adventure</span><span class="tag">Comedy</span><span class="tag">Sci-Fi</span></div>
 <p>The rivalry between Class 1-A and Class 1-B heats up in a joint training battle. Eager to be a part of the hero course, brainwashing buff Shinso is tasked with competing on both sides.
   
 But as each team faces their own weaknesses and discovers new strengths, this showdown might just become a toss-</p>
 <div class="editor-note">On BOSS Anime Club, My Hero Academia Season 5 is filed under Action, Adventure, Comedy and sits at a solid 7.3/10 with viewers. The series has completed its run, and it was produced by bones starting in 2021. Save this page to your BOSS Anime Club playlist to track episodes and get English or Hindi narration for the synopsis.</div>
-<a class="backlink" href="https://anime.is-cool.dev/">▸ Open in the BOSS Anime Club app to search, save playlists, and listen to narration</a>
-<a class="backlink" href="https://anime.is-cool.dev/anime/index.html">▸ Browse all anime</a>
+
+<button class="listen-btn" id="listenBtn" type="button">ðŸ”Š Listen (device voice)</button>
+<span class="listen-status" id="listenStatus"></span>
+
+<a class="backlink" href="https://anime.is-cool.dev/">â–¸ Open in the BOSS Anime Club app to search, save playlists, and listen to narration</a>
+<a class="backlink" href="https://anime.is-cool.dev/anime/index.html">â–¸ Browse all anime</a>
+
+<script>
+(function(){
+  var btn = document.getElementById('listenBtn');
+  var status = document.getElementById('listenStatus');
+  var text = "The rivalry between Class 1-A and Class 1-B heats up in a joint training battle. Eager to be a part of the hero course, brainwashing buff Shinso is tasked with competing on both sides.\n  \nBut as each team faces their own weaknesses and discovers new strengths, this showdown might just become a toss- On BOSS Anime Club, My Hero Academia Season 5 is filed under Action, Adventure, Comedy and sits at a solid 7.3/10 with viewers. The series has completed its run, and it was produced by bones starting in 2021. Save this page to your BOSS Anime Club playlist to track episodes and get English or Hindi narration for the synopsis.";
+  if(!('speechSynthesis' in window)){
+    btn.disabled = true;
+    status.textContent = 'Not supported on this browser/device.';
+    return;
+  }
+  var speaking = false;
+  btn.addEventListener('click', function(){
+    if(speaking){
+      window.speechSynthesis.cancel();
+      speaking = false;
+      btn.textContent = 'ðŸ”Š Listen (device voice)';
+      status.textContent = '';
+      return;
+    }
+    window.speechSynthesis.cancel();
+    var utter = new SpeechSynthesisUtterance(text);
+    utter.lang = 'en-US';
+    utter.onstart = function(){ speaking = true; btn.textContent = 'â¹ Stop'; status.textContent = 'Playingâ€¦'; };
+    utter.onend = function(){ speaking = false; btn.textContent = 'ðŸ”Š Listen (device voice)'; status.textContent = ''; };
+    utter.onerror = function(){ speaking = false; btn.textContent = 'ðŸ”Š Listen (device voice)'; status.textContent = 'Could not play audio.'; };
+    window.speechSynthesis.speak(utter);
+  });
+})();
+</script>
 </body>
 </html>

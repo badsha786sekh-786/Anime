@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SPY x FAMILY Cour 2 — Watch Guide, Info &amp; Episodes | BOSS Anime Club</title>
-<meta name="description" content="SPY x FAMILY Cour 2 (2022) — The second half of SPYxFAMILY.
+<title>SPY x FAMILY Cour 2 â€” Watch Guide, Info &amp; Episodes | BOSS Anime Club</title>
+<meta name="description" content="SPY x FAMILY Cour 2 (2022) â€” The second half of SPYxFAMILY.
   
 With Anya Forger successfully enrolled at the renowned Eden Academy, Operation Strix advances to its second phase. T">
 <link rel="canonical" href="https://anime.is-cool.dev/anime/spy-x-family-cour-2-142838.html">
-<meta property="og:title" content="SPY x FAMILY Cour 2 — BOSS Anime Club">
+<meta property="og:title" content="SPY x FAMILY Cour 2 â€” BOSS Anime Club">
 <meta property="og:description" content="The second half of SPYxFAMILY.
   
 With Anya Forger successfully enrolled at the renowned Eden Academy, Operation Strix advances to its second phase. To investigate Ostanian politician Donovan Desmond,">
@@ -16,7 +16,7 @@ With Anya Forger successfully enrolled at the renowned Eden Academy, Operation S
 <meta property="og:type" content="video.tv_show">
 <meta property="og:url" content="https://anime.is-cool.dev/anime/spy-x-family-cour-2-142838.html">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="SPY x FAMILY Cour 2 — BOSS Anime Club">
+<meta name="twitter:title" content="SPY x FAMILY Cour 2 â€” BOSS Anime Club">
 <meta name="twitter:description" content="The second half of SPYxFAMILY.
   
 With Anya Forger successfully enrolled at the renowned Eden Academy, Operation Strix advances to its second phase. To investigate Ostanian politician Donovan Desmond,">
@@ -30,18 +30,60 @@ With Anya Forger successfully enrolled at the renowned Eden Academy, Operation S
   .meta{font-size:14px;color:#8B93A7;margin-bottom:16px;}
   .editor-note{border-left:2px solid #FFB454;padding:10px 14px;margin:20px 0;background:#171B24;font-size:14px;color:#F4F1EA;}
   .backlink{margin-top:32px;display:block;}
+  .listen-btn{
+    font-family:inherit;font-size:13px;letter-spacing:0.3px;text-transform:uppercase;
+    background:#171B24;border:1px solid #5B8DEF;color:#F4F1EA;padding:9px 16px;
+    border-radius:6px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;margin:16px 0;
+  }
+  .listen-btn:hover{border-color:#6FA3FF;color:#9FC1FF;}
+  .listen-btn:disabled{opacity:0.5;cursor:default;}
+  .listen-status{font-size:12px;color:#8B93A7;margin-left:8px;}
 </style>
 </head>
 <body>
 <h1>SPY x FAMILY Cour 2</h1>
 <img src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx142838-26JrqcFU1ljB.jpg" alt="SPY x FAMILY Cour 2 cover" loading="lazy">
-<div class="meta">Score: 8.1/10 &nbsp;·&nbsp; Episodes: 13 &nbsp;·&nbsp; Year: 2022 &nbsp;·&nbsp; Studio: WIT STUDIO, CloverWorks</div>
+<div class="meta">Score: 8.1/10 &nbsp;Â·&nbsp; Episodes: 13 &nbsp;Â·&nbsp; Year: 2022 &nbsp;Â·&nbsp; Studio: WIT STUDIO, CloverWorks</div>
 <div><span class="tag">Action</span><span class="tag">Comedy</span><span class="tag">Slice of Life</span><span class="tag">Supernatural</span></div>
 <p>The second half of SPYxFAMILY.
   
 With Anya Forger successfully enrolled at the renowned Eden Academy, Operation Strix advances to its second phase. To investigate Ostanian politician Donovan Desmond, Anya must either befriend his son Damian or collect eight Stella Stars to become an Imperial Schola</p>
 <div class="editor-note">On BOSS Anime Club, SPY x FAMILY Cour 2 is filed under Action, Comedy, Slice of Life and holds a strong community score of 8.1/10. The series has completed its run, and it was produced by WIT STUDIO, CloverWorks starting in 2022. Save this page to your BOSS Anime Club playlist to track episodes and get English or Hindi narration for the synopsis.</div>
-<a class="backlink" href="https://anime.is-cool.dev/">▸ Open in the BOSS Anime Club app to search, save playlists, and listen to narration</a>
-<a class="backlink" href="https://anime.is-cool.dev/anime/index.html">▸ Browse all anime</a>
+
+<button class="listen-btn" id="listenBtn" type="button">ðŸ”Š Listen (device voice)</button>
+<span class="listen-status" id="listenStatus"></span>
+
+<a class="backlink" href="https://anime.is-cool.dev/">â–¸ Open in the BOSS Anime Club app to search, save playlists, and listen to narration</a>
+<a class="backlink" href="https://anime.is-cool.dev/anime/index.html">â–¸ Browse all anime</a>
+
+<script>
+(function(){
+  var btn = document.getElementById('listenBtn');
+  var status = document.getElementById('listenStatus');
+  var text = "The second half of SPYxFAMILY.\n  \nWith Anya Forger successfully enrolled at the renowned Eden Academy, Operation Strix advances to its second phase. To investigate Ostanian politician Donovan Desmond, Anya must either befriend his son Damian or collect eight Stella Stars to become an Imperial Schola On BOSS Anime Club, SPY x FAMILY Cour 2 is filed under Action, Comedy, Slice of Life and holds a strong community score of 8.1/10. The series has completed its run, and it was produced by WIT STUDIO, CloverWorks starting in 2022. Save this page to your BOSS Anime Club playlist to track episodes and get English or Hindi narration for the synopsis.";
+  if(!('speechSynthesis' in window)){
+    btn.disabled = true;
+    status.textContent = 'Not supported on this browser/device.';
+    return;
+  }
+  var speaking = false;
+  btn.addEventListener('click', function(){
+    if(speaking){
+      window.speechSynthesis.cancel();
+      speaking = false;
+      btn.textContent = 'ðŸ”Š Listen (device voice)';
+      status.textContent = '';
+      return;
+    }
+    window.speechSynthesis.cancel();
+    var utter = new SpeechSynthesisUtterance(text);
+    utter.lang = 'en-US';
+    utter.onstart = function(){ speaking = true; btn.textContent = 'â¹ Stop'; status.textContent = 'Playingâ€¦'; };
+    utter.onend = function(){ speaking = false; btn.textContent = 'ðŸ”Š Listen (device voice)'; status.textContent = ''; };
+    utter.onerror = function(){ speaking = false; btn.textContent = 'ðŸ”Š Listen (device voice)'; status.textContent = 'Could not play audio.'; };
+    window.speechSynthesis.speak(utter);
+  });
+})();
+</script>
 </body>
 </html>

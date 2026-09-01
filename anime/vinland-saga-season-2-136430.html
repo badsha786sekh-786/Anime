@@ -3,18 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vinland Saga Season 2 — Watch Guide, Info &amp; Episodes | BOSS Anime Club</title>
-<meta name="description" content="Vinland Saga Season 2 (2023) — The second season of Vinland Saga.   
+<title>Vinland Saga Season 2 â€” Watch Guide, Info &amp; Episodes | BOSS Anime Club</title>
+<meta name="description" content="Vinland Saga Season 2 (2023) â€” The second season of Vinland Saga.   
 After his father&#39;s death and the destruction of his village at the hands of English raiders, Einar wishes for a ">
 <link rel="canonical" href="https://anime.is-cool.dev/anime/vinland-saga-season-2-136430.html">
-<meta property="og:title" content="Vinland Saga Season 2 — BOSS Anime Club">
+<meta property="og:title" content="Vinland Saga Season 2 â€” BOSS Anime Club">
 <meta property="og:description" content="The second season of Vinland Saga.   
 After his father&#39;s death and the destruction of his village at the hands of English raiders, Einar wishes for a peaceful life with his family on their newly rebui">
 <meta property="og:image" content="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx136430-gsBsJjA7hGh9.jpg">
 <meta property="og:type" content="video.tv_show">
 <meta property="og:url" content="https://anime.is-cool.dev/anime/vinland-saga-season-2-136430.html">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Vinland Saga Season 2 — BOSS Anime Club">
+<meta name="twitter:title" content="Vinland Saga Season 2 â€” BOSS Anime Club">
 <meta name="twitter:description" content="The second season of Vinland Saga.   
 After his father&#39;s death and the destruction of his village at the hands of English raiders, Einar wishes for a peaceful life with his family on their newly rebui">
 <meta name="twitter:image" content="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx136430-gsBsJjA7hGh9.jpg">
@@ -27,17 +27,59 @@ After his father&#39;s death and the destruction of his village at the hands of 
   .meta{font-size:14px;color:#8B93A7;margin-bottom:16px;}
   .editor-note{border-left:2px solid #FFB454;padding:10px 14px;margin:20px 0;background:#171B24;font-size:14px;color:#F4F1EA;}
   .backlink{margin-top:32px;display:block;}
+  .listen-btn{
+    font-family:inherit;font-size:13px;letter-spacing:0.3px;text-transform:uppercase;
+    background:#171B24;border:1px solid #5B8DEF;color:#F4F1EA;padding:9px 16px;
+    border-radius:6px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;margin:16px 0;
+  }
+  .listen-btn:hover{border-color:#6FA3FF;color:#9FC1FF;}
+  .listen-btn:disabled{opacity:0.5;cursor:default;}
+  .listen-status{font-size:12px;color:#8B93A7;margin-left:8px;}
 </style>
 </head>
 <body>
 <h1>Vinland Saga Season 2</h1>
 <img src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx136430-gsBsJjA7hGh9.jpg" alt="Vinland Saga Season 2 cover" loading="lazy">
-<div class="meta">Score: 8.8/10 &nbsp;·&nbsp; Episodes: 24 &nbsp;·&nbsp; Year: 2023 &nbsp;·&nbsp; Studio: MAPPA</div>
+<div class="meta">Score: 8.8/10 &nbsp;Â·&nbsp; Episodes: 24 &nbsp;Â·&nbsp; Year: 2023 &nbsp;Â·&nbsp; Studio: MAPPA</div>
 <div><span class="tag">Action</span><span class="tag">Adventure</span><span class="tag">Drama</span></div>
 <p>The second season of Vinland Saga.   
 After his father&#39;s death and the destruction of his village at the hands of English raiders, Einar wishes for a peaceful life with his family on their newly rebuilt farms. However, fate has other plans: his village is invaded once again. Einar watches helplessly</p>
 <div class="editor-note">On BOSS Anime Club, Vinland Saga Season 2 is filed under Action, Adventure, Drama and holds a strong community score of 8.8/10. The series has completed its run, and it was produced by MAPPA starting in 2023. Save this page to your BOSS Anime Club playlist to track episodes and get English or Hindi narration for the synopsis.</div>
-<a class="backlink" href="https://anime.is-cool.dev/">▸ Open in the BOSS Anime Club app to search, save playlists, and listen to narration</a>
-<a class="backlink" href="https://anime.is-cool.dev/anime/index.html">▸ Browse all anime</a>
+
+<button class="listen-btn" id="listenBtn" type="button">ðŸ”Š Listen (device voice)</button>
+<span class="listen-status" id="listenStatus"></span>
+
+<a class="backlink" href="https://anime.is-cool.dev/">â–¸ Open in the BOSS Anime Club app to search, save playlists, and listen to narration</a>
+<a class="backlink" href="https://anime.is-cool.dev/anime/index.html">â–¸ Browse all anime</a>
+
+<script>
+(function(){
+  var btn = document.getElementById('listenBtn');
+  var status = document.getElementById('listenStatus');
+  var text = "The second season of Vinland Saga.   \nAfter his father's death and the destruction of his village at the hands of English raiders, Einar wishes for a peaceful life with his family on their newly rebuilt farms. However, fate has other plans: his village is invaded once again. Einar watches helplessly On BOSS Anime Club, Vinland Saga Season 2 is filed under Action, Adventure, Drama and holds a strong community score of 8.8/10. The series has completed its run, and it was produced by MAPPA starting in 2023. Save this page to your BOSS Anime Club playlist to track episodes and get English or Hindi narration for the synopsis.";
+  if(!('speechSynthesis' in window)){
+    btn.disabled = true;
+    status.textContent = 'Not supported on this browser/device.';
+    return;
+  }
+  var speaking = false;
+  btn.addEventListener('click', function(){
+    if(speaking){
+      window.speechSynthesis.cancel();
+      speaking = false;
+      btn.textContent = 'ðŸ”Š Listen (device voice)';
+      status.textContent = '';
+      return;
+    }
+    window.speechSynthesis.cancel();
+    var utter = new SpeechSynthesisUtterance(text);
+    utter.lang = 'en-US';
+    utter.onstart = function(){ speaking = true; btn.textContent = 'â¹ Stop'; status.textContent = 'Playingâ€¦'; };
+    utter.onend = function(){ speaking = false; btn.textContent = 'ðŸ”Š Listen (device voice)'; status.textContent = ''; };
+    utter.onerror = function(){ speaking = false; btn.textContent = 'ðŸ”Š Listen (device voice)'; status.textContent = 'Could not play audio.'; };
+    window.speechSynthesis.speak(utter);
+  });
+})();
+</script>
 </body>
 </html>

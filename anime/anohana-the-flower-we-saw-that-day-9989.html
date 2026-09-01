@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Anohana: The Flower We Saw That Day — Watch Guide, Info &amp; Episodes | BOSS Anime Club</title>
-<meta name="description" content="Anohana: The Flower We Saw That Day (2011) — Jinta Yadomi and his group of childhood friends have become estranged after a tragic accident split them apart. Now in their high school years, a sudd">
+<title>Anohana: The Flower We Saw That Day â€” Watch Guide, Info &amp; Episodes | BOSS Anime Club</title>
+<meta name="description" content="Anohana: The Flower We Saw That Day (2011) â€” Jinta Yadomi and his group of childhood friends have become estranged after a tragic accident split them apart. Now in their high school years, a sudd">
 <link rel="canonical" href="https://anime.is-cool.dev/anime/anohana-the-flower-we-saw-that-day-9989.html">
-<meta property="og:title" content="Anohana: The Flower We Saw That Day — BOSS Anime Club">
+<meta property="og:title" content="Anohana: The Flower We Saw That Day â€” BOSS Anime Club">
 <meta property="og:description" content="Jinta Yadomi and his group of childhood friends have become estranged after a tragic accident split them apart. Now in their high school years, a sudden surprise forces each of them to confront their ">
 <meta property="og:image" content="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx9989-hImMg6kCMm6I.jpg">
 <meta property="og:type" content="video.tv_show">
 <meta property="og:url" content="https://anime.is-cool.dev/anime/anohana-the-flower-we-saw-that-day-9989.html">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Anohana: The Flower We Saw That Day — BOSS Anime Club">
+<meta name="twitter:title" content="Anohana: The Flower We Saw That Day â€” BOSS Anime Club">
 <meta name="twitter:description" content="Jinta Yadomi and his group of childhood friends have become estranged after a tragic accident split them apart. Now in their high school years, a sudden surprise forces each of them to confront their ">
 <meta name="twitter:image" content="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx9989-hImMg6kCMm6I.jpg">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"TVSeries","name":"Anohana: The Flower We Saw That Day","image":"https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx9989-hImMg6kCMm6I.jpg","description":"Jinta Yadomi and his group of childhood friends have become estranged after a tragic accident split them apart. Now in their high school years, a sudden surprise forces each of them to confront their guilt over what happened that day and come to terms with the ghosts of their past.   \n(Source: NIS A","genre":["Drama","Romance","Slice of Life","Supernatural"],"datePublished":"2011","numberOfEpisodes":11}</script>
@@ -24,17 +24,59 @@
   .meta{font-size:14px;color:#8B93A7;margin-bottom:16px;}
   .editor-note{border-left:2px solid #FFB454;padding:10px 14px;margin:20px 0;background:#171B24;font-size:14px;color:#F4F1EA;}
   .backlink{margin-top:32px;display:block;}
+  .listen-btn{
+    font-family:inherit;font-size:13px;letter-spacing:0.3px;text-transform:uppercase;
+    background:#171B24;border:1px solid #5B8DEF;color:#F4F1EA;padding:9px 16px;
+    border-radius:6px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;margin:16px 0;
+  }
+  .listen-btn:hover{border-color:#6FA3FF;color:#9FC1FF;}
+  .listen-btn:disabled{opacity:0.5;cursor:default;}
+  .listen-status{font-size:12px;color:#8B93A7;margin-left:8px;}
 </style>
 </head>
 <body>
 <h1>Anohana: The Flower We Saw That Day</h1>
 <img src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx9989-hImMg6kCMm6I.jpg" alt="Anohana: The Flower We Saw That Day cover" loading="lazy">
-<div class="meta">Score: 8.0/10 &nbsp;·&nbsp; Episodes: 11 &nbsp;·&nbsp; Year: 2011 &nbsp;·&nbsp; Studio: A-1 Pictures</div>
+<div class="meta">Score: 8.0/10 &nbsp;Â·&nbsp; Episodes: 11 &nbsp;Â·&nbsp; Year: 2011 &nbsp;Â·&nbsp; Studio: A-1 Pictures</div>
 <div><span class="tag">Drama</span><span class="tag">Romance</span><span class="tag">Slice of Life</span><span class="tag">Supernatural</span></div>
 <p>Jinta Yadomi and his group of childhood friends have become estranged after a tragic accident split them apart. Now in their high school years, a sudden surprise forces each of them to confront their guilt over what happened that day and come to terms with the ghosts of their past.   
 (Source: NIS A</p>
 <div class="editor-note">On BOSS Anime Club, Anohana: The Flower We Saw That Day is filed under Drama, Romance, Slice of Life and holds a strong community score of 8.0/10. The series has completed its run, and it was produced by A-1 Pictures starting in 2011. Save this page to your BOSS Anime Club playlist to track episodes and get English or Hindi narration for the synopsis.</div>
-<a class="backlink" href="https://anime.is-cool.dev/">▸ Open in the BOSS Anime Club app to search, save playlists, and listen to narration</a>
-<a class="backlink" href="https://anime.is-cool.dev/anime/index.html">▸ Browse all anime</a>
+
+<button class="listen-btn" id="listenBtn" type="button">ðŸ”Š Listen (device voice)</button>
+<span class="listen-status" id="listenStatus"></span>
+
+<a class="backlink" href="https://anime.is-cool.dev/">â–¸ Open in the BOSS Anime Club app to search, save playlists, and listen to narration</a>
+<a class="backlink" href="https://anime.is-cool.dev/anime/index.html">â–¸ Browse all anime</a>
+
+<script>
+(function(){
+  var btn = document.getElementById('listenBtn');
+  var status = document.getElementById('listenStatus');
+  var text = "Jinta Yadomi and his group of childhood friends have become estranged after a tragic accident split them apart. Now in their high school years, a sudden surprise forces each of them to confront their guilt over what happened that day and come to terms with the ghosts of their past.   \n(Source: NIS A On BOSS Anime Club, Anohana: The Flower We Saw That Day is filed under Drama, Romance, Slice of Life and holds a strong community score of 8.0/10. The series has completed its run, and it was produced by A-1 Pictures starting in 2011. Save this page to your BOSS Anime Club playlist to track episodes and get English or Hindi narration for the synopsis.";
+  if(!('speechSynthesis' in window)){
+    btn.disabled = true;
+    status.textContent = 'Not supported on this browser/device.';
+    return;
+  }
+  var speaking = false;
+  btn.addEventListener('click', function(){
+    if(speaking){
+      window.speechSynthesis.cancel();
+      speaking = false;
+      btn.textContent = 'ðŸ”Š Listen (device voice)';
+      status.textContent = '';
+      return;
+    }
+    window.speechSynthesis.cancel();
+    var utter = new SpeechSynthesisUtterance(text);
+    utter.lang = 'en-US';
+    utter.onstart = function(){ speaking = true; btn.textContent = 'â¹ Stop'; status.textContent = 'Playingâ€¦'; };
+    utter.onend = function(){ speaking = false; btn.textContent = 'ðŸ”Š Listen (device voice)'; status.textContent = ''; };
+    utter.onerror = function(){ speaking = false; btn.textContent = 'ðŸ”Š Listen (device voice)'; status.textContent = 'Could not play audio.'; };
+    window.speechSynthesis.speak(utter);
+  });
+})();
+</script>
 </body>
 </html>
