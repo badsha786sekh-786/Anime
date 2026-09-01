@@ -2,15 +2,22 @@
 //
 // Ye script AniList se top popular + trending anime ka data leti hai, aur har
 // anime ke liye ek ALAG static HTML page banati hai (JavaScript ke bina bhi
-// pura content dikhta hai) â€” taaki Google har anime ko individually crawl aur
+// pura content dikhta hai) — taaki Google har anime ko individually crawl aur
 // index kar sake. Ye GitHub Actions se daily automatically chalti hai.
 //
 // Output: /anime/<slug>-<id>.html  (ek file per anime)
 //         /anime/index.html        (sabhi anime ki list, links ke saath)
 //         /sitemap.xml             (Google ko sabhi URLs batane ke liye)
 //
-// Kuch bhi manually chalane ki zaroorat nahi â€” GitHub Actions workflow
+// Kuch bhi manually chalane ki zaroorat nahi — GitHub Actions workflow
 // (.github/workflows/generate-pages.yml) ise apne aap chalata hai.
+//
+// NOTE: Special symbols (arrows, speaker, stop icon) yahan HTML entities
+// (jaise &#9656;) ya JS unicode escapes (jaise \u23F9) ke roop mein likhe
+// gaye hain, raw emoji/unicode characters ke bajaye. Wajah: jab is file ko
+// GitHub ke mobile web-editor mein copy-paste kiya jaata hai, raw unicode
+// characters kabhi-kabhi corrupt (mojibake) ho jaate hain. Entities/escapes
+// plain ASCII hote hain, isliye copy-paste mein kabhi kharab nahi hote.
 
 import { writeFile, mkdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
@@ -86,7 +93,7 @@ async function fetchAllAnime() {
 }
 
 // Har page ke liye thoda "apna" unique text banata hai (AniList ke raw
-// description ke alawa) â€” isse Google ko duplicate-content nahi lagta,
+// description ke alawa) — isse Google ko duplicate-content nahi lagta,
 // kyunki ye text sirf is site par hai aur data ke hisaab se generate hota hai.
 function buildEditorNote(m, title, genres, studio, year, score) {
   const genreList = genres.length ? genres.slice(0, 3).join(', ') : 'multiple genres';
@@ -106,7 +113,7 @@ function buildEditorNote(m, title, genres, studio, year, score) {
   }[m.status] || 'Current airing status is being tracked';
 
   return `On BOSS Anime Club, ${esc(title)} is filed under ${esc(genreList)} and ${scoreLine}. `
-    + `${statusLine}, and it was produced by ${esc(studio)}${year !== 'â€”' ? ` starting in ${esc(String(year))}` : ''}. `
+    + `${statusLine}, and it was produced by ${esc(studio)}${year !== 'N/A' ? ` starting in ${esc(String(year))}` : ''}. `
     + `Save this page to your BOSS Anime Club playlist to track episodes and get English or Hindi narration for the synopsis.`;
 }
 
@@ -116,9 +123,9 @@ function pageHTML(m) {
   const synopsis = (m.description || '').replace(/<br\s*\/?>/gi, ' ').replace(/<[^>]+>/g, '').slice(0, 300);
   const genres = m.genres || [];
   const studio = (m.studios?.nodes || []).map((s) => s.name).join(', ') || 'Unknown';
-  const year = m.startDate?.year || 'â€”';
-  const score = m.averageScore != null ? (m.averageScore / 10).toFixed(1) : 'â€”';
-  const episodes = m.episodes || 'â€”';
+  const year = m.startDate?.year || 'N/A';
+  const score = m.averageScore != null ? (m.averageScore / 10).toFixed(1) : '—';
+  const episodes = m.episodes || '—';
   const url = `${SITE_URL}/anime/${slugify(title)}-${m.id}.html`;
   const editorNote = buildEditorNote(m, title, genres, studio, year, score);
   // Speech synthesis reads this: synopsis + editor note, stripped of markup.
@@ -140,16 +147,16 @@ function pageHTML(m) {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>${esc(title)} â€” Watch Guide, Info &amp; Episodes | BOSS Anime Club</title>
-<meta name="description" content="${esc(title)} (${esc(year)}) â€” ${esc(synopsis.slice(0, 150))}">
+<title>${esc(title)} &mdash; Watch Guide, Info &amp; Episodes | BOSS Anime Club</title>
+<meta name="description" content="${esc(title)} (${esc(year)}) &mdash; ${esc(synopsis.slice(0, 150))}">
 <link rel="canonical" href="${url}">
-<meta property="og:title" content="${esc(title)} â€” BOSS Anime Club">
+<meta property="og:title" content="${esc(title)} &mdash; BOSS Anime Club">
 <meta property="og:description" content="${esc(synopsis.slice(0, 200))}">
 <meta property="og:image" content="${esc(img)}">
 <meta property="og:type" content="video.tv_show">
 <meta property="og:url" content="${url}">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="${esc(title)} â€” BOSS Anime Club">
+<meta name="twitter:title" content="${esc(title)} &mdash; BOSS Anime Club">
 <meta name="twitter:description" content="${esc(synopsis.slice(0, 200))}">
 <meta name="twitter:image" content="${esc(img)}">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
@@ -174,22 +181,24 @@ function pageHTML(m) {
 <body>
 <h1>${esc(title)}</h1>
 <img src="${esc(img)}" alt="${esc(title)} cover" loading="lazy">
-<div class="meta">Score: ${esc(score)}/10 &nbsp;Â·&nbsp; Episodes: ${esc(episodes)} &nbsp;Â·&nbsp; Year: ${esc(year)} &nbsp;Â·&nbsp; Studio: ${esc(studio)}</div>
+<div class="meta">Score: ${esc(score)}/10 &nbsp;&middot;&nbsp; Episodes: ${esc(episodes)} &nbsp;&middot;&nbsp; Year: ${esc(year)} &nbsp;&middot;&nbsp; Studio: ${esc(studio)}</div>
 <div>${genres.map((g) => `<span class="tag">${esc(g)}</span>`).join('')}</div>
 <p>${esc(synopsis) || 'No synopsis available.'}</p>
 <div class="editor-note">${editorNote}</div>
 
-<button class="listen-btn" id="listenBtn" type="button">ðŸ”Š Listen (device voice)</button>
+<button class="listen-btn" id="listenBtn" type="button">&#128266; Listen (device voice)</button>
 <span class="listen-status" id="listenStatus"></span>
 
-<a class="backlink" href="${SITE_URL}/">â–¸ Open in the BOSS Anime Club app to search, save playlists, and listen to narration</a>
-<a class="backlink" href="${SITE_URL}/anime/index.html">â–¸ Browse all anime</a>
+<a class="backlink" href="${SITE_URL}/">&#9656; Open in the BOSS Anime Club app to search, save playlists, and listen to narration</a>
+<a class="backlink" href="${SITE_URL}/anime/index.html">&#9656; Browse all anime</a>
 
 <script>
 (function(){
   var btn = document.getElementById('listenBtn');
   var status = document.getElementById('listenStatus');
   var text = ${JSON.stringify(speakText)};
+  var LABEL_LISTEN = '\\uD83D\\uDD0A Listen (device voice)';
+  var LABEL_STOP = '\\u23F9 Stop';
   if(!('speechSynthesis' in window)){
     btn.disabled = true;
     status.textContent = 'Not supported on this browser/device.';
@@ -200,16 +209,16 @@ function pageHTML(m) {
     if(speaking){
       window.speechSynthesis.cancel();
       speaking = false;
-      btn.textContent = 'ðŸ”Š Listen (device voice)';
+      btn.textContent = LABEL_LISTEN;
       status.textContent = '';
       return;
     }
     window.speechSynthesis.cancel();
     var utter = new SpeechSynthesisUtterance(text);
     utter.lang = 'en-US';
-    utter.onstart = function(){ speaking = true; btn.textContent = 'â¹ Stop'; status.textContent = 'Playingâ€¦'; };
-    utter.onend = function(){ speaking = false; btn.textContent = 'ðŸ”Š Listen (device voice)'; status.textContent = ''; };
-    utter.onerror = function(){ speaking = false; btn.textContent = 'ðŸ”Š Listen (device voice)'; status.textContent = 'Could not play audio.'; };
+    utter.onstart = function(){ speaking = true; btn.textContent = LABEL_STOP; status.textContent = 'Playing...'; };
+    utter.onend = function(){ speaking = false; btn.textContent = LABEL_LISTEN; status.textContent = ''; };
+    utter.onerror = function(){ speaking = false; btn.textContent = LABEL_LISTEN; status.textContent = 'Could not play audio.'; };
     window.speechSynthesis.speak(utter);
   });
 })();
@@ -232,7 +241,7 @@ function indexHTML(list) {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Browse All Anime | BOSS Anime Club</title>
-<meta name="description" content="Browse the full list of anime on BOSS Anime Club â€” info, episodes, genres and more.">
+<meta name="description" content="Browse the full list of anime on BOSS Anime Club &mdash; info, episodes, genres and more.">
 <link rel="canonical" href="${SITE_URL}/anime/index.html">
 <style>
   body{background:#0E1116;color:#F4F1EA;font-family:sans-serif;max-width:720px;margin:0 auto;padding:24px 16px 60px;}
@@ -242,7 +251,7 @@ function indexHTML(list) {
 </head>
 <body>
 <h1>Browse All Anime</h1>
-<p><a href="${SITE_URL}/">â† Back to BOSS Anime Club</a></p>
+<p><a href="${SITE_URL}/">&larr; Back to BOSS Anime Club</a></p>
 <ul>
 ${rows}
 </ul>
@@ -291,3 +300,4 @@ main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
