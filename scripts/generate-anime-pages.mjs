@@ -2,14 +2,14 @@
 //
 // Ye script AniList se top popular + trending anime ka data leti hai, aur har
 // anime ke liye ek ALAG static HTML page banati hai (JavaScript ke bina bhi
-// pura content dikhta hai) — taaki Google har anime ko individually crawl aur
+// pura content dikhta hai) â€” taaki Google har anime ko individually crawl aur
 // index kar sake. Ye GitHub Actions se daily automatically chalti hai.
 //
 // Output: /anime/<slug>-<id>.html  (ek file per anime)
 //         /anime/index.html        (sabhi anime ki list, links ke saath)
 //         /sitemap.xml             (Google ko sabhi URLs batane ke liye)
 //
-// Kuch bhi manually chalane ki zaroorat nahi — GitHub Actions workflow
+// Kuch bhi manually chalane ki zaroorat nahi â€” GitHub Actions workflow
 // (.github/workflows/generate-pages.yml) ise apne aap chalata hai.
 
 import { writeFile, mkdir, readFile } from 'node:fs/promises';
@@ -86,7 +86,7 @@ async function fetchAllAnime() {
 }
 
 // Har page ke liye thoda "apna" unique text banata hai (AniList ke raw
-// description ke alawa) — isse Google ko duplicate-content nahi lagta,
+// description ke alawa) â€” isse Google ko duplicate-content nahi lagta,
 // kyunki ye text sirf is site par hai aur data ke hisaab se generate hota hai.
 function buildEditorNote(m, title, genres, studio, year, score) {
   const genreList = genres.length ? genres.slice(0, 3).join(', ') : 'multiple genres';
@@ -106,7 +106,7 @@ function buildEditorNote(m, title, genres, studio, year, score) {
   }[m.status] || 'Current airing status is being tracked';
 
   return `On BOSS Anime Club, ${esc(title)} is filed under ${esc(genreList)} and ${scoreLine}. `
-    + `${statusLine}, and it was produced by ${esc(studio)}${year !== '—' ? ` starting in ${esc(String(year))}` : ''}. `
+    + `${statusLine}, and it was produced by ${esc(studio)}${year !== 'â€”' ? ` starting in ${esc(String(year))}` : ''}. `
     + `Save this page to your BOSS Anime Club playlist to track episodes and get English or Hindi narration for the synopsis.`;
 }
 
@@ -116,11 +116,13 @@ function pageHTML(m) {
   const synopsis = (m.description || '').replace(/<br\s*\/?>/gi, ' ').replace(/<[^>]+>/g, '').slice(0, 300);
   const genres = m.genres || [];
   const studio = (m.studios?.nodes || []).map((s) => s.name).join(', ') || 'Unknown';
-  const year = m.startDate?.year || '—';
-  const score = m.averageScore != null ? (m.averageScore / 10).toFixed(1) : '—';
-  const episodes = m.episodes || '—';
+  const year = m.startDate?.year || 'â€”';
+  const score = m.averageScore != null ? (m.averageScore / 10).toFixed(1) : 'â€”';
+  const episodes = m.episodes || 'â€”';
   const url = `${SITE_URL}/anime/${slugify(title)}-${m.id}.html`;
   const editorNote = buildEditorNote(m, title, genres, studio, year, score);
+  // Speech synthesis reads this: synopsis + editor note, stripped of markup.
+  const speakText = `${synopsis} ${editorNote}`.replace(/<[^>]+>/g, '');
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -138,16 +140,16 @@ function pageHTML(m) {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>${esc(title)} — Watch Guide, Info &amp; Episodes | BOSS Anime Club</title>
-<meta name="description" content="${esc(title)} (${esc(year)}) — ${esc(synopsis.slice(0, 150))}">
+<title>${esc(title)} â€” Watch Guide, Info &amp; Episodes | BOSS Anime Club</title>
+<meta name="description" content="${esc(title)} (${esc(year)}) â€” ${esc(synopsis.slice(0, 150))}">
 <link rel="canonical" href="${url}">
-<meta property="og:title" content="${esc(title)} — BOSS Anime Club">
+<meta property="og:title" content="${esc(title)} â€” BOSS Anime Club">
 <meta property="og:description" content="${esc(synopsis.slice(0, 200))}">
 <meta property="og:image" content="${esc(img)}">
 <meta property="og:type" content="video.tv_show">
 <meta property="og:url" content="${url}">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="${esc(title)} — BOSS Anime Club">
+<meta name="twitter:title" content="${esc(title)} â€” BOSS Anime Club">
 <meta name="twitter:description" content="${esc(synopsis.slice(0, 200))}">
 <meta name="twitter:image" content="${esc(img)}">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
@@ -159,17 +161,59 @@ function pageHTML(m) {
   .meta{font-size:14px;color:#8B93A7;margin-bottom:16px;}
   .editor-note{border-left:2px solid #FFB454;padding:10px 14px;margin:20px 0;background:#171B24;font-size:14px;color:#F4F1EA;}
   .backlink{margin-top:32px;display:block;}
+  .listen-btn{
+    font-family:inherit;font-size:13px;letter-spacing:0.3px;text-transform:uppercase;
+    background:#171B24;border:1px solid #5B8DEF;color:#F4F1EA;padding:9px 16px;
+    border-radius:6px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;margin:16px 0;
+  }
+  .listen-btn:hover{border-color:#6FA3FF;color:#9FC1FF;}
+  .listen-btn:disabled{opacity:0.5;cursor:default;}
+  .listen-status{font-size:12px;color:#8B93A7;margin-left:8px;}
 </style>
 </head>
 <body>
 <h1>${esc(title)}</h1>
 <img src="${esc(img)}" alt="${esc(title)} cover" loading="lazy">
-<div class="meta">Score: ${esc(score)}/10 &nbsp;·&nbsp; Episodes: ${esc(episodes)} &nbsp;·&nbsp; Year: ${esc(year)} &nbsp;·&nbsp; Studio: ${esc(studio)}</div>
+<div class="meta">Score: ${esc(score)}/10 &nbsp;Â·&nbsp; Episodes: ${esc(episodes)} &nbsp;Â·&nbsp; Year: ${esc(year)} &nbsp;Â·&nbsp; Studio: ${esc(studio)}</div>
 <div>${genres.map((g) => `<span class="tag">${esc(g)}</span>`).join('')}</div>
 <p>${esc(synopsis) || 'No synopsis available.'}</p>
 <div class="editor-note">${editorNote}</div>
-<a class="backlink" href="${SITE_URL}/">▸ Open in the BOSS Anime Club app to search, save playlists, and listen to narration</a>
-<a class="backlink" href="${SITE_URL}/anime/index.html">▸ Browse all anime</a>
+
+<button class="listen-btn" id="listenBtn" type="button">ðŸ”Š Listen (device voice)</button>
+<span class="listen-status" id="listenStatus"></span>
+
+<a class="backlink" href="${SITE_URL}/">â–¸ Open in the BOSS Anime Club app to search, save playlists, and listen to narration</a>
+<a class="backlink" href="${SITE_URL}/anime/index.html">â–¸ Browse all anime</a>
+
+<script>
+(function(){
+  var btn = document.getElementById('listenBtn');
+  var status = document.getElementById('listenStatus');
+  var text = ${JSON.stringify(speakText)};
+  if(!('speechSynthesis' in window)){
+    btn.disabled = true;
+    status.textContent = 'Not supported on this browser/device.';
+    return;
+  }
+  var speaking = false;
+  btn.addEventListener('click', function(){
+    if(speaking){
+      window.speechSynthesis.cancel();
+      speaking = false;
+      btn.textContent = 'ðŸ”Š Listen (device voice)';
+      status.textContent = '';
+      return;
+    }
+    window.speechSynthesis.cancel();
+    var utter = new SpeechSynthesisUtterance(text);
+    utter.lang = 'en-US';
+    utter.onstart = function(){ speaking = true; btn.textContent = 'â¹ Stop'; status.textContent = 'Playingâ€¦'; };
+    utter.onend = function(){ speaking = false; btn.textContent = 'ðŸ”Š Listen (device voice)'; status.textContent = ''; };
+    utter.onerror = function(){ speaking = false; btn.textContent = 'ðŸ”Š Listen (device voice)'; status.textContent = 'Could not play audio.'; };
+    window.speechSynthesis.speak(utter);
+  });
+})();
+</script>
 </body>
 </html>`;
 }
@@ -188,7 +232,7 @@ function indexHTML(list) {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Browse All Anime | BOSS Anime Club</title>
-<meta name="description" content="Browse the full list of anime on BOSS Anime Club — info, episodes, genres and more.">
+<meta name="description" content="Browse the full list of anime on BOSS Anime Club â€” info, episodes, genres and more.">
 <link rel="canonical" href="${SITE_URL}/anime/index.html">
 <style>
   body{background:#0E1116;color:#F4F1EA;font-family:sans-serif;max-width:720px;margin:0 auto;padding:24px 16px 60px;}
@@ -198,7 +242,7 @@ function indexHTML(list) {
 </head>
 <body>
 <h1>Browse All Anime</h1>
-<p><a href="${SITE_URL}/">← Back to BOSS Anime Club</a></p>
+<p><a href="${SITE_URL}/">â† Back to BOSS Anime Club</a></p>
 <ul>
 ${rows}
 </ul>
@@ -247,4 +291,3 @@ main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
-
