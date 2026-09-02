@@ -18,8 +18,14 @@
 // GitHub ke mobile web-editor mein copy-paste kiya jaata hai, raw unicode
 // characters kabhi-kabhi corrupt (mojibake) ho jaate hain. Entities/escapes
 // plain ASCII hote hain, isliye copy-paste mein kabhi kharab nahi hote.
+//
+// NOTE (cleanup): Har run mein, agar koi purani anime page ab top-200
+// popularity list mein nahi hai, to uski file automatically delete ho jaati
+// hai — taaki repo mein "dead weight" (stale/unused files) jama na ho. Ye
+// har roz (daily workflow run ke saath) apne aap hota hai, kisi manual check
+// ki zaroorat nahi.
 
-import { writeFile, mkdir, readFile } from 'node:fs/promises';
+import { writeFile, mkdir, readFile, readdir, unlink } from 'node:fs/promises';
 import path from 'node:path';
 
 const SITE_URL = 'https://anime.is-cool.dev';
@@ -283,21 +289,38 @@ async function main() {
 
   await mkdir(OUT_DIR, { recursive: true });
 
+  const currentFiles = new Set();
   for (const m of list) {
     const title = m.title?.english || m.title?.romaji || 'Untitled';
     const slug = slugify(title);
-    const filePath = path.join(OUT_DIR, `${slug}-${m.id}.html`);
+    const fileName = `${slug}-${m.id}.html`;
+    currentFiles.add(fileName);
+    const filePath = path.join(OUT_DIR, fileName);
     await writeFile(filePath, pageHTML(m), 'utf8');
+  }
+
+  // Cleanup: koi bhi purani anime page jo ab top-200 popularity list mein
+  // nahi hai, use delete kar do — taaki dead weight jama na ho. index.html
+  // ko chhod dete hain kyunki wo har baar niche dobara likha jaata hai.
+  const existingFiles = await readdir(OUT_DIR);
+  let deletedCount = 0;
+  for (const file of existingFiles) {
+    if (file === 'index.html') continue;
+    if (!file.endsWith('.html')) continue;
+    if (!currentFiles.has(file)) {
+      await unlink(path.join(OUT_DIR, file));
+      deletedCount++;
+      console.log(`Deleted stale page: ${file}`);
+    }
   }
 
   await writeFile(path.join(OUT_DIR, 'index.html'), indexHTML(list), 'utf8');
   await writeFile(path.join(process.cwd(), 'sitemap.xml'), sitemapXML(list), 'utf8');
 
-  console.log(`Done. Generated ${list.length} anime pages + index + sitemap.xml.`);
+  console.log(`Done. Generated ${list.length} anime pages, deleted ${deletedCount} stale pages, + index + sitemap.xml.`);
 }
 
 main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
-
